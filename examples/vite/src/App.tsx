@@ -184,14 +184,16 @@ export function App() {
 
   const renderTitleBarRight = useCallback(
     () => (
+      // absolutely positioned into the title bar top row (adjust right/top to tune placement)
       <div
         style={{
+          position: 'absolute',
+          top: 10,
+          right: 160,
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
           gap: '8px',
-          minWidth: 300,
-          marginRight: 8,
+          zIndex: 60,
         }}
       >
         <label style={styles.fileInputLabel} onMouseDown={(e) => e.stopPropagation()}>
@@ -203,7 +205,6 @@ export function App() {
           />
           Open DOCX
         </label>
-        {/* New button hidden as requested */}
         <button style={styles.button} onClick={handleSave}>
           Save
         </button>

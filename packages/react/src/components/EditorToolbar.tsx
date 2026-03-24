@@ -48,6 +48,7 @@ function EditorToolbarBase({
       <div
         className={cn('flex flex-col bg-white shadow-sm flex-shrink-0', className)}
         data-testid="editor-toolbar"
+        style={{ position: 'relative' }}
       >
         {children}
       </div>
