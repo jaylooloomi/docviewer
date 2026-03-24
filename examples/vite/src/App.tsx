@@ -228,6 +228,9 @@ export function App() {
                 const now = Date.now();
                 const items = blocks.map((b, i) => ({
                   id: `import-${now}-${i}`,
+                  // anchorPos required by SidebarItem interface — use 0 and provide fixedY
+                  anchorPos: 0,
+                  fixedY: 120 + i * 140,
                   render: ({ isExpanded, onToggleExpand, measureRef }: any) => (
                     <div
                       ref={measureRef}
