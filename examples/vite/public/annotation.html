@@ -57,7 +57,14 @@
       </div>
     </div>
     <div id="contractBody">
-      <div id="emptyContractState" style="display:flex; align-items:center; justify-content:center; height:100%; color:#bbb; font-size:15px; background:#f5f6fa;">請上傳合約 HTML 文件</div>
+      <!-- Embedded editor (keep) -->
+      <div id="editorEmbed" style="height:100%;">
+        <iframe id="editorFrame" src="/?embed=1" title="Editor" style="width:100%; height:100%; border:0;"></iframe>
+      </div>
+      <!-- Contract content injected here (preserve iframe above) -->
+      <div id="contractContent" style="flex:1; overflow:auto; background:#fff;">
+        <div id="emptyContractState" style="display:flex; align-items:center; justify-content:center; height:100%; color:#bbb; font-size:15px; background:#f5f6fa;">請上傳合約 HTML 文件</div>
+      </div>
     </div>
   </div>
 
@@ -82,6 +89,7 @@
   const htmlStatus = document.getElementById('htmlStatus');
   const jsonStatus = document.getElementById('jsonStatus');
   const contractBody = document.getElementById('contractBody');
+  const contractContent = document.getElementById('contractContent');
   const contractPanelHeader = document.getElementById('contractPanelHeader');
   const contractTitleText = document.getElementById('contractTitleText');
   const missingBanner = document.getElementById('missingBanner');
@@ -128,16 +136,16 @@
       document.head.appendChild(override);
     }
 
-    // clear old
-    contractBody.innerHTML = '';
+    // clear old content (but keep editor iframe in #editorEmbed)
+    contractContent.innerHTML = '';
 
     const pageContainer = doc.getElementById('page-container');
     if (pageContainer) {
-      contractBody.appendChild(document.adoptNode(pageContainer));
+      contractContent.appendChild(document.adoptNode(pageContainer));
     } else {
       const wrapper = document.createElement('div');
       wrapper.innerHTML = doc.body.innerHTML;
-      contractBody.appendChild(wrapper);
+      contractContent.appendChild(wrapper);
     }
 
     contractPanelHeader.style.display = 'block';
@@ -180,7 +188,7 @@
     });
 
     let currentBlock = '0';
-    const divTs = contractBody.querySelectorAll('.t');
+    const divTs = contractContent.querySelectorAll('.t');
     divTs.forEach(div => {
       const text = div.textContent.trim();
       if (articleToBlock[text] !== undefined) {
@@ -276,7 +284,7 @@
   /* 5. Highlight */
   function highlightBlocks(blockIds, result) {
     const hlClass = result === '不符合' ? 'hl-fail' : 'hl-pass';
-    contractBody.querySelectorAll('.t.hl-fail, .t.hl-pass').forEach(el => {
+    contractContent.querySelectorAll('.t.hl-fail, .t.hl-pass').forEach(el => {
       el.classList.remove('hl-fail', 'hl-pass');
     });
 
@@ -294,7 +302,7 @@
     let firstEl = null;
 
     ids.forEach(id => {
-      contractBody.querySelectorAll(`.t[data-block="${id}"]`).forEach(el => {
+      contractContent.querySelectorAll(`.t[data-block="${id}"]`).forEach(el => {
         el.classList.add(hlClass);
         if (!firstEl) firstEl = el;
       });
