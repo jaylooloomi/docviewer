@@ -185,12 +185,13 @@ export function App() {
 
   const renderTitleBarRight = useCallback(
     () => (
-      // absolutely positioned into the title bar top row (adjust right/top to tune placement)
+      // absolutely positioned into the title bar top row and centered
       <div
         style={{
           position: 'absolute',
           top: 10,
-          right: 160,
+          left: '50%',
+          transform: 'translateX(-50%)',
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
