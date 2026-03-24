@@ -184,7 +184,16 @@ export function App() {
 
   const renderTitleBarRight = useCallback(
     () => (
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          minWidth: 300,
+          marginRight: 8,
+        }}
+      >
         <label style={styles.fileInputLabel} onMouseDown={(e) => e.stopPropagation()}>
           <input
             type="file"
@@ -194,16 +203,14 @@ export function App() {
           />
           Open DOCX
         </label>
-        <button style={styles.newButton} onClick={handleNewDocument}>
-          New
-        </button>
+        {/* New button hidden as requested */}
         <button style={styles.button} onClick={handleSave}>
           Save
         </button>
         {status && <span style={styles.status}>{status}</span>}
       </div>
     ),
-    [handleFileSelect, handleNewDocument, handleSave, status]
+    [handleFileSelect, handleSave, status]
   );
 
   return (
