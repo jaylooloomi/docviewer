@@ -74,6 +74,16 @@
   </style>
 
   <script>
+    // If not embedded, redirect to annotation viewer as the homepage.
+    try {
+      const params = new URLSearchParams(location.search);
+      if (params.get('embed') !== '1') {
+        location.replace('/annotation.html');
+      }
+    } catch (e) {
+      // ignore and continue
+    }
+
     // Detect when Material Symbols font is loaded
     if (document.fonts) {
       document.fonts.ready.then(function() {
