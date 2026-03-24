@@ -13,12 +13,12 @@
     "next": "^15.3.3",
     "openai": "^4.78.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/react-dom": "^19.2.3",
     "typescript": "^5.3.3"
   }
 }
