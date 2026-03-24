@@ -58,7 +58,7 @@ export function UnifiedSidebar({
     [items, anchorPositions, renderedDomContext, zoom, positionVersion]
   );
 
-  const hasPositions = resolved.length > 0;
+  const hasPositions = resolved.length > 0 || fixed;
 
   // Build position map for O(1) lookup by item ID
   const positionMap = useMemo(() => {
@@ -217,7 +217,7 @@ export function UnifiedSidebar({
     setExpandedItem((prev) => (prev === itemId ? null : itemId));
   }, []);
 
-  if (items.length === 0) return null;
+  if (items.length === 0 && !fixed) return null;
   const topVal = fixed ? (topOffset ?? 72) : 0;
   const heightVal = fixed ? `calc(100% - ${topVal}px)` : undefined;
 

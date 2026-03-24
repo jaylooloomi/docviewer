@@ -3545,12 +3545,24 @@ body { background: white; }
                       pluginOverlays={pluginOverlays}
                       onHyperlinkClick={handleHyperlinkClick}
                       onContextMenu={handleContextMenu}
-                      commentsSidebarOpen={false}
+                      commentsSidebarOpen={sidebarOpen}
                       onAnchorPositionsChange={setAnchorPositions}
                       scrollContainerRef={scrollContainerRef}
                     />
 
                     {/* Fixed right-side unified sidebar (renders outside scroll container) */}
+                    <UnifiedSidebar
+                      items={allSidebarItems}
+                      anchorPositions={anchorPositions}
+                      renderedDomContext={pluginRenderedDomContext ?? null}
+                      pageWidth={(() => {
+                        const sp = history.state?.package?.document?.finalSectionProperties;
+                        return sp?.pageWidth ? Math.round(sp.pageWidth / 15) : 816;
+                      })()}
+                      zoom={state.zoom}
+                      editorContainerRef={scrollContainerRef}
+                      fixed
+                    />
                     {allSidebarItems.length > 0 && (
                       <UnifiedSidebar
                         items={allSidebarItems}
