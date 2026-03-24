@@ -19,6 +19,7 @@ export interface UnifiedSidebarProps {
   pageWidth: number;
   zoom: number;
   editorContainerRef: React.RefObject<HTMLDivElement | null>;
+  fixed?: boolean;
 }
 
 export function UnifiedSidebar({
@@ -28,9 +29,11 @@ export function UnifiedSidebar({
   pageWidth,
   zoom,
   editorContainerRef,
+  fixed = false,
 }: UnifiedSidebarProps) {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [initialPositionsDone, setInitialPositionsDone] = useState(false);
+  const [topOffset, setTopOffset] = useState<number | null>(null);
   const cardHeightsRef = useRef<Map<string, number>>(new Map());
   const lastKnownRef = useRef<Map<string, number>>(new Map());
   const knownCardsRef = useRef<Set<string>>(new Set());
@@ -156,6 +159,43 @@ export function UnifiedSidebar({
     return () => container.removeEventListener('click', handleDocClick);
   }, [editorContainerRef, items]);
 
+  // Measure top toolbar/banner height so fixed sidebar can align under it.
+  useEffect(() => {
+    if (!fixed) return;
+
+    const measure = () => {
+      const toolbarEl = document.querySelector(
+        '[data-testid="editor-toolbar"]'
+      ) as HTMLElement | null;
+      if (toolbarEl) {
+        const r = toolbarEl.getBoundingClientRect();
+        const gap = 8; // small gap between toolbar and sidebar
+        setTopOffset(Math.round(r.bottom + gap));
+      } else {
+        // fallback default top when toolbar not found
+        setTopOffset(72);
+      }
+    };
+
+    measure();
+    window.addEventListener('resize', measure);
+    window.addEventListener('scroll', measure, { passive: true });
+
+    // Observe toolbar size changes
+    const tb = document.querySelector('[data-testid="editor-toolbar"]') as HTMLElement | null;
+    let ro: ResizeObserver | null = null;
+    if (tb && typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => measure());
+      ro.observe(tb);
+    }
+
+    return () => {
+      window.removeEventListener('resize', measure);
+      window.removeEventListener('scroll', measure);
+      if (ro && tb) ro.disconnect();
+    };
+  }, [fixed]);
+
   const getMeasureRef = useCallback((itemId: string): ((el: HTMLDivElement | null) => void) => {
     let fn = measureRefsRef.current.get(itemId);
     if (!fn) {
@@ -178,6 +218,8 @@ export function UnifiedSidebar({
   }, []);
 
   if (items.length === 0) return null;
+  const topVal = fixed ? (topOffset ?? 72) : 0;
+  const heightVal = fixed ? `calc(100% - ${topVal}px)` : undefined;
 
   return (
     <aside
@@ -186,14 +228,17 @@ export function UnifiedSidebar({
       role="complementary"
       aria-label="Annotations sidebar"
       style={{
-        position: 'absolute',
-        top: 0,
+        position: fixed ? 'fixed' : 'absolute',
+        top: topVal,
         left: `calc(50% - ${SIDEBAR_DOCUMENT_SHIFT}px + ${(pageWidth * zoom) / 2 + SIDEBAR_PAGE_GAP}px)`,
         width: SIDEBAR_WIDTH,
+        height: heightVal,
         fontFamily: "'Google Sans', Roboto, Arial, sans-serif",
         zIndex: 40,
-        backgroundColor: 'transparent',
-        overflowY: 'visible',
+        backgroundColor: fixed ? '#ffffff' : 'transparent',
+        boxShadow: fixed ? '0 6px 24px rgba(15,23,42,0.08)' : undefined,
+        borderLeft: fixed ? '1px solid rgba(0,0,0,0.04)' : undefined,
+        overflowY: fixed ? 'auto' : 'visible',
         overflowX: 'visible',
         opacity: hasPositions ? 1 : 0,
         transition: 'opacity 0.15s ease',

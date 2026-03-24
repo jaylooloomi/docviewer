@@ -3545,25 +3545,26 @@ body { background: white; }
                       pluginOverlays={pluginOverlays}
                       onHyperlinkClick={handleHyperlinkClick}
                       onContextMenu={handleContextMenu}
-                      commentsSidebarOpen={sidebarOpen}
+                      commentsSidebarOpen={false}
                       onAnchorPositionsChange={setAnchorPositions}
                       scrollContainerRef={scrollContainerRef}
-                      sidebarOverlay={
-                        allSidebarItems.length > 0 ? (
-                          <UnifiedSidebar
-                            items={allSidebarItems}
-                            anchorPositions={anchorPositions}
-                            renderedDomContext={pluginRenderedDomContext ?? null}
-                            pageWidth={(() => {
-                              const sp = history.state?.package?.document?.finalSectionProperties;
-                              return sp?.pageWidth ? Math.round(sp.pageWidth / 15) : 816;
-                            })()}
-                            zoom={state.zoom}
-                            editorContainerRef={scrollContainerRef}
-                          />
-                        ) : undefined
-                      }
                     />
+
+                    {/* Fixed right-side unified sidebar (renders outside scroll container) */}
+                    {allSidebarItems.length > 0 && (
+                      <UnifiedSidebar
+                        items={allSidebarItems}
+                        anchorPositions={anchorPositions}
+                        renderedDomContext={pluginRenderedDomContext ?? null}
+                        pageWidth={(() => {
+                          const sp = history.state?.package?.document?.finalSectionProperties;
+                          return sp?.pageWidth ? Math.round(sp.pageWidth / 15) : 816;
+                        })()}
+                        zoom={state.zoom}
+                        editorContainerRef={scrollContainerRef}
+                        fixed
+                      />
+                    )}
 
                     {/* Floating "add comment" button — appears on right edge of page at selection */}
                     {floatingCommentBtn != null && !isAddingComment && !readOnly && (
