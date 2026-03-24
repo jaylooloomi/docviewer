@@ -51,10 +51,13 @@
   <div id="contractPanel">
     <div id="contractPanelHeader" style="display:block;">
       <h2 id="contractTitleText">編輯器＋合約檢視</h2>
+      <div id="missingBanner" style="display:none; background:#fde8e8; border:2px solid #e53e3e; border-left:6px solid #e53e3e; border-radius:8px; padding:14px 16px; margin-top:8px; color:#c0392b;">
+        <div class="banner-title">合約缺漏此條文</div>
+        <div class="banner-sub">本合約中未包含此審查項目所要求的相關條款，建議補充。</div>
+      </div>
     </div>
     <div id="contractBody">
-      <!-- Embed the editor app here via iframe (use ?embed=1 to avoid redirect) -->
-      <iframe id="editorFrame" src="/?embed=1" title="Editor"></iframe>
+      <div id="emptyContractState" style="display:flex; align-items:center; justify-content:center; height:100%; color:#bbb; font-size:15px; background:#f5f6fa;">請上傳合約 HTML 文件</div>
     </div>
   </div>
 
@@ -67,25 +70,239 @@
 
 </div>
 
-<!-- Lightweight client script to proxy file inputs to parent frame when possible -->
 <script>
-  (function(){
-    const htmlInput = document.getElementById('htmlInput');
-    const jsonInput = document.getElementById('jsonInput');
-    const editorFrame = document.getElementById('editorFrame');
-    function forwardFile(input) {
-      input.addEventListener('change', (e) => {
-        const files = e.target.files;
-        try {
-          if (editorFrame && editorFrame.contentWindow && editorFrame.contentWindow.postMessage) {
-            editorFrame.contentWindow.postMessage({ type: 'annotation-file', files: Array.from(files).map(f=>f.name) }, '*');
-          }
-        } catch (err) { }
+  /* State */
+  let htmlLoaded = false;
+  let parsedData = null;
+  let currentSelected = null;
+
+  /* DOM refs */
+  const htmlInput = document.getElementById('htmlInput');
+  const jsonInput = document.getElementById('jsonInput');
+  const htmlStatus = document.getElementById('htmlStatus');
+  const jsonStatus = document.getElementById('jsonStatus');
+  const contractBody = document.getElementById('contractBody');
+  const contractPanelHeader = document.getElementById('contractPanelHeader');
+  const contractTitleText = document.getElementById('contractTitleText');
+  const missingBanner = document.getElementById('missingBanner');
+  const reviewCards = document.getElementById('reviewCards');
+
+  /* 1. Upload contract HTML */
+  htmlInput.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    htmlStatus.textContent = '讀取中...';
+    htmlStatus.className = 'status-badge';
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      injectContractHTML(ev.target.result, file.name);
+      htmlLoaded = true;
+      htmlStatus.textContent = '✓ ' + file.name;
+      htmlStatus.className = 'status-badge loaded';
+      if (parsedData) runBlockMapping(parsedData);
+    };
+    reader.onerror = () => {
+      htmlStatus.textContent = '❌ 讀取失敗';
+      htmlStatus.className = 'status-badge error';
+    };
+    reader.readAsText(file, 'UTF-8');
+  });
+
+  function injectContractHTML(htmlContent, fileName) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
+
+    // Inject styles from uploaded HTML (once)
+    if (!document.querySelector('style[data-pdfhtml]')) {
+      doc.querySelectorAll('style').forEach(style => {
+        const s = document.createElement('style');
+        s.setAttribute('data-pdfhtml', '1');
+        s.textContent = style.textContent;
+        document.head.appendChild(s);
       });
+
+      const override = document.createElement('style');
+      override.setAttribute('data-pdfhtml', 'override');
+      override.textContent = `#page-container { position: relative !important; top: auto !important; left: auto !important; bottom: auto !important; right: auto !important; overflow: visible !important; }`;
+      document.head.appendChild(override);
     }
-    forwardFile(htmlInput);
-    forwardFile(jsonInput);
-  })();
+
+    // clear old
+    contractBody.innerHTML = '';
+
+    const pageContainer = doc.getElementById('page-container');
+    if (pageContainer) {
+      contractBody.appendChild(document.adoptNode(pageContainer));
+    } else {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = doc.body.innerHTML;
+      contractBody.appendChild(wrapper);
+    }
+
+    contractPanelHeader.style.display = 'block';
+    contractTitleText.textContent = fileName.replace(/\.[^.]+$/, '');
+  }
+
+  /* 2. Upload API JSON/TXT */
+  jsonInput.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    jsonStatus.textContent = '讀取中...';
+    jsonStatus.className = 'status-badge';
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        parsedData = JSON.parse(ev.target.result);
+        renderReviewCards(parsedData);
+        jsonStatus.textContent = '✓ ' + file.name;
+        jsonStatus.className = 'status-badge loaded';
+        if (htmlLoaded) runBlockMapping(parsedData);
+      } catch(err) {
+        jsonStatus.textContent = '❌ 解析失敗：' + err.message;
+        jsonStatus.className = 'status-badge error';
+      }
+    };
+    reader.readAsText(file, 'UTF-8');
+  });
+
+  /* 3. Block mapping */
+  function runBlockMapping(data) {
+    const chunks = data.return_content && data.return_content.contract_chunks;
+    if (!chunks) return;
+
+    const articleToBlock = {};
+    Object.entries(chunks).forEach(([key, chunk]) => {
+      if (chunk.article_no && chunk.article_no.trim()) {
+        articleToBlock[chunk.article_no.trim()] = key;
+      }
+    });
+
+    let currentBlock = '0';
+    const divTs = contractBody.querySelectorAll('.t');
+    divTs.forEach(div => {
+      const text = div.textContent.trim();
+      if (articleToBlock[text] !== undefined) {
+        currentBlock = articleToBlock[text];
+      }
+      div.setAttribute('data-block', currentBlock);
+    });
+  }
+
+  /* 4. Render review cards */
+  function renderReviewCards(data) {
+    const reviewResults = data.return_content && data.return_content.review_results || {};
+    document.getElementById('reviewContent').style.display = 'block';
+    reviewCards.innerHTML = '';
+
+    const categoryOrder = ['合規性', '合理性', '完整性'];
+    categoryOrder.forEach(cat => {
+      if (!reviewResults[cat] || !reviewResults[cat].length) return;
+      const sec = document.createElement('div');
+      sec.className = 'section-title';
+      sec.textContent = cat;
+      reviewCards.appendChild(sec);
+      reviewResults[cat].forEach(item => reviewCards.appendChild(buildCard(item)));
+    });
+
+    Object.keys(reviewResults).forEach(cat => {
+      if (categoryOrder.includes(cat) || !reviewResults[cat] || !reviewResults[cat].length) return;
+      const sec = document.createElement('div');
+      sec.className = 'section-title';
+      sec.textContent = cat;
+      reviewCards.appendChild(sec);
+      reviewResults[cat].forEach(item => reviewCards.appendChild(buildCard(item)));
+    });
+  }
+
+  function buildCard(item) {
+    const detail = item.detail || {};
+    const result = detail['審查結果'] || '';
+    const isFail = result === '不符合';
+
+    const card = document.createElement('div');
+    card.className = 'review-card';
+
+    const header = document.createElement('div');
+    header.className = 'card-header';
+
+    const badge = document.createElement('span');
+    badge.className = `card-badge ${isFail ? 'badge-fail' : 'badge-pass'}`;
+    badge.textContent = result || '—';
+
+    const name = document.createElement('span');
+    name.className = `card-name ${isFail ? 'fail' : 'pass'}`;
+    name.textContent = item.name;
+
+    header.appendChild(badge);
+    header.appendChild(name);
+    card.appendChild(header);
+
+    const hint = document.createElement('div');
+    hint.className = 'block-ids-hint';
+    hint.textContent = item.block_ids === '無' ? '📄 條文對應：合約缺漏' : `📄 條文對應：第 ${item.block_ids} 區塊`;
+    card.appendChild(hint);
+
+    const detailEl = document.createElement('div');
+    detailEl.className = 'card-detail';
+    ['審查說明', '應當遵循的標準', '條文範例'].forEach(field => {
+      if (!detail[field]) return;
+      const lbl = document.createElement('div');
+      lbl.className = 'detail-label';
+      lbl.textContent = field;
+      const txt = document.createElement('div');
+      txt.className = 'detail-text';
+      txt.textContent = detail[field];
+      detailEl.appendChild(lbl);
+      detailEl.appendChild(txt);
+    });
+    card.appendChild(detailEl);
+
+    card.addEventListener('click', () => {
+      if (currentSelected && currentSelected !== card) {
+        currentSelected.classList.remove('card-selected');
+        currentSelected.querySelector('.card-detail').classList.remove('open');
+      }
+      detailEl.classList.add('open');
+      card.classList.add('card-selected');
+      currentSelected = card;
+      highlightBlocks(item.block_ids, result);
+    });
+
+    return card;
+  }
+
+  /* 5. Highlight */
+  function highlightBlocks(blockIds, result) {
+    const hlClass = result === '不符合' ? 'hl-fail' : 'hl-pass';
+    contractBody.querySelectorAll('.t.hl-fail, .t.hl-pass').forEach(el => {
+      el.classList.remove('hl-fail', 'hl-pass');
+    });
+
+    missingBanner.style.display = 'none';
+
+    if (!blockIds || blockIds === '無') {
+      missingBanner.style.animation = 'none';
+      missingBanner.offsetHeight;
+      missingBanner.style.animation = '';
+      missingBanner.style.display = 'block';
+      return;
+    }
+
+    const ids = blockIds.split(',').map(s => s.trim()).filter(Boolean);
+    let firstEl = null;
+
+    ids.forEach(id => {
+      contractBody.querySelectorAll(`.t[data-block="${id}"]`).forEach(el => {
+        el.classList.add(hlClass);
+        if (!firstEl) firstEl = el;
+      });
+    });
+
+    if (firstEl) firstEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
 </script>
 
 </body>
