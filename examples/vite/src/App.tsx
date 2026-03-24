@@ -102,16 +102,10 @@ export function App() {
   const { zoom: autoZoom, isMobile } = useResponsiveLayout();
 
   useEffect(() => {
-    fetch('/comments-and-templates.docx')
-      .then((res) => res.arrayBuffer())
-      .then((buffer) => {
-        setDocumentBuffer(buffer);
-        setFileName('comments-and-templates.docx');
-      })
-      .catch(() => {
-        setCurrentDocument(createEmptyDocument());
-        setFileName('Untitled.docx');
-      });
+    // Start with an empty document by default (do not auto-load sample DOCX)
+    setCurrentDocument(createEmptyDocument());
+    setDocumentBuffer(null);
+    setFileName('Untitled.docx');
   }, []);
 
   const handleNewDocument = useCallback(() => {
@@ -172,15 +166,7 @@ export function App() {
     console.log('Fonts loaded');
   }, []);
 
-  const renderLogo = useCallback(
-    () => (
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <GitHubBadge />
-        <ExampleSwitcher current="Vite" />
-      </div>
-    ),
-    []
-  );
+  const renderLogo = useCallback(() => null, []);
 
   const renderTitleBarRight = useCallback(
     () => (
