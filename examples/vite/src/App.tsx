@@ -98,6 +98,7 @@ export function App() {
   const [documentBuffer, setDocumentBuffer] = useState<ArrayBuffer | null>(null);
   const [fileName, setFileName] = useState<string>('docx-editor-demo.docx');
   const [status, setStatus] = useState<string>('');
+  const [importedItems, setImportedItems] = useState<any[]>([]);
 
   const { zoom: autoZoom, isMobile } = useResponsiveLayout();
 
@@ -208,6 +209,56 @@ export function App() {
         <button style={styles.button} onClick={handleSave}>
           Save
         </button>
+        <label style={{ ...styles.button, marginLeft: 6, cursor: 'pointer' }}>
+          <input
+            type="file"
+            accept=".txt"
+            style={{ display: 'none' }}
+            onChange={async (e) => {
+              const f = e.target.files?.[0];
+              if (!f) return;
+              try {
+                const txt = await f.text();
+                // Simple parsing: split into blocks separated by blank lines
+                const blocks = txt
+                  .split(/\n\s*\n+/)
+                  .map((b) => b.trim())
+                  .filter(Boolean);
+                const now = Date.now();
+                const items = blocks.map((b, i) => ({
+                  id: `import-${now}-${i}`,
+                  render: ({ isExpanded, onToggleExpand, measureRef }: any) => (
+                    <div
+                      ref={measureRef}
+                      style={{
+                        padding: 12,
+                        borderRadius: 8,
+                        background: '#fff',
+                        boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                        border: '1px solid #eef2f7',
+                        maxWidth: 320,
+                      }}
+                    >
+                      <div style={{ fontWeight: 600, color: '#b91c1c', marginBottom: 6 }}>
+                        審核結果
+                      </div>
+                      <div style={{ fontSize: 13, color: '#374151', whiteSpace: 'pre-wrap' }}>
+                        {b}
+                      </div>
+                    </div>
+                  ),
+                }));
+                setImportedItems((prev) => [...items, ...prev]);
+                setStatus('Imported');
+                setTimeout(() => setStatus(''), 1500);
+              } catch (err) {
+                setStatus('Import failed');
+                setTimeout(() => setStatus(''), 2000);
+              }
+            }}
+          />
+          Import
+        </label>
         {status && <span style={styles.status}>{status}</span>}
       </div>
     ),
@@ -233,6 +284,7 @@ export function App() {
             documentName={fileName}
             onDocumentNameChange={setFileName}
             renderTitleBarRight={renderTitleBarRight}
+            pluginSidebarItems={importedItems}
           />
         </PluginHost>
       </main>
