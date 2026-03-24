@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智能審約結果檢視器</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+    font-size: 14px;
+    background: #f5f6fa;
+    color: #333;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── 頂部工具列 ── */
+  #topbar {
+    background: #fff;
+    border-bottom: 1px solid #dde1e7;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    flex-wrap: wrap;
+  }
+  .file-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .file-group label {
+    font-weight: 600;
+    color: #555;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+  .file-group input[type="file"] {
+    border: 1px dashed #aaa;
+    border-radius: 6px;
+    padding: 4px 8px;
+    cursor: pointer;
+    background: #fafafa;
+    font-size: 12px;
+    max-width: 300px;
+  }
+  .file-group input[type="file"]:hover { border-color: #4a90e2; background: #f0f6ff; }
+  .status-badge {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #eee;
+    color: #888;
+    white-space: nowrap;
+  }
+  .status-badge.loaded { background: #e8f8e8; color: #27ae60; }
+  .status-badge.error  { background: #fde8e8; color: #c0392b; }
+
+  /* ── 主體雙欄 ── */
+  #main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── 左側：合約文件 ── */
+  #contractPanel {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #dde1e7;
+    overflow: hidden;
+  }
+
+  /* 固定標頭 */
+  #contractPanelHeader {
+    flex-shrink: 0;
+    padding: 10px 14px 0;
+    background: #fff;
+    border-bottom: 1px solid #dde1e7;
+  }
+  #contractPanelHeader h2 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #444;
+    padding-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* 缺漏 banner（固定於標頭，不隨文件捲動） */
+  #missingBanner {
+    display: none;
+    background: #fde8e8;
+    border: 2px solid #e53e3e;
+    border-left: 6px solid #e53e3e;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    color: #c0392b;
+    animation: bannerPop 0.3s ease;
+  }
+  #missingBanner .banner-icon  { font-size: 26px; line-height: 1; margin-bottom: 4px; }
+  #missingBanner .banner-title { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
+  #missingBanner .banner-sub   { font-size: 12px; color: #a93226; }
+  @keyframes bannerPop {
+    0%   { transform: scale(0.97); opacity: 0; }
+    100% { transform: scale(1);    opacity: 1; }
+  }
+
+  /* 可捲動文件區 */
+  #contractBody {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: auto;
+    background: #9e9e9e;
+  }
+
+  /* 空白提示 */
+  #emptyContractState {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #bbb;
+    font-size: 15px;
+    background: #f5f6fa;
+  }
+
+  /* ── 右側：審核卡片 ── */
+  #reviewPanel {
+    width: 35%;
+    overflow-y: auto;
+    padding: 16px 14px;
+    background: #f9fafc;
+  }
+  #reviewPanel h2 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #444;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #4a90e2;
+  }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #888;
+    margin: 16px 0 6px;
+    text-transform: uppercase;
+  }
+  .section-title:first-of-type { margin-top: 0; }
+
+  .review-card {
+    background: #fff;
+    border: 1px solid #e0e4ed;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: box-shadow 0.15s, border-color 0.15s;
+    overflow: hidden;
+  }
+  .review-card:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.1); border-color: #4a90e2; }
+  .review-card.card-selected { border-color: #4a90e2; box-shadow: 0 0 0 2px #c5d9f8; }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+  .card-badge {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-top: 1px;
+    white-space: nowrap;
+  }
+  .badge-fail { background: #fde8e8; color: #c0392b; }
+  .badge-pass { background: #e8f8e8; color: #27ae60; }
+
+  .card-name { font-size: 13px; line-height: 1.5; flex: 1; }
+  .card-name.fail { font-weight: 700; color: #c0392b; }
+  .card-name.pass { color: #333; }
+
+  .card-detail { display: none; padding: 0 12px 12px; border-top: 1px solid #f0f0f0; }
+  .card-detail.open { display: block; }
+
+  .detail-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #888;
+    margin: 10px 0 4px;
+    text-transform: uppercase;
+  }
+  .detail-text {
+    font-size: 12px;
+    color: #555;
+    white-space: pre-wrap;
+    line-height: 1.65;
+    background: #f9fafc;
+    border-radius: 4px;
+    padding: 8px 10px;
+    border: 1px solid #eee;
+  }
+  .block-ids-hint { font-size: 11px; color: #aaa; padding: 0 12px 8px; }
+
+  /* ── 高亮樣式（套用於 div.t 元素） ── */
+  /* 不符合 → 紅色螢光 */
+  .t.hl-fail {
+    background-color: rgba(255, 180, 180, 0.75) !important;
+  }
+  /* 符合 → 黃色螢光 */
+  .t.hl-pass {
+    background-color: rgba(255, 245, 100, 0.75) !important;
+  }
+
+  /* 捲軸 */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #aaa; }
+</style>
+</head>
+<body>
+
+<!-- 頂部工具列 -->
+<div id="topbar">
+  <div class="file-group">
+    <label>📄 合約文件 (HTML)：</label>
+    <input type="file" id="htmlInput" accept=".html,.htm">
+    <span id="htmlStatus" class="status-badge">未上傳</span>
+  </div>
+  <div class="file-group">
+    <label>📋 API 結果 (TXT/JSON)：</label>
+    <input type="file" id="jsonInput" accept=".txt,.json">
+    <span id="jsonStatus" class="status-badge">未上傳</span>
+  </div>
+</div>
+
+<!-- 主體雙欄 -->
+<div id="main">
+
+  <!-- 左側：合約文件 -->
+  <div id="contractPanel">
+    <div id="contractPanelHeader" style="display:none;">
+      <h2 id="contractTitleText"></h2>
+      <div id="missingBanner">
+        <div class="banner-icon">⚠️</div>
+        <div class="banner-title">合約缺漏此條文</div>
+        <div class="banner-sub">本合約中未包含此審查項目所要求的相關條款，建議補充。</div>
+      </div>
+    </div>
+    <div id="contractBody">
+      <div id="emptyContractState">請上傳合約 HTML 文件</div>
+    </div>
+  </div>
+
+  <!-- 右側：審核卡片 -->
+  <div id="reviewPanel">
+    <div id="emptyReviewState" style="color:#bbb; margin-top:60px; text-align:center;">
+      <p>請上傳 API 結果檔以顯示審核結果</p>
+    </div>
+    <div id="reviewContent" style="display:none;">
+      <h2>違規條款分析</h2>
+      <div id="reviewCards"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  /* ── 狀態 ── */
+  let htmlLoaded      = false;
+  let parsedData      = null;
+  let currentSelected = null;
+
+  /* ── DOM refs ── */
+  const htmlInput           = document.getElementById('htmlInput');
+  const jsonInput           = document.getElementById('jsonInput');
+  const htmlStatus          = document.getElementById('htmlStatus');
+  const jsonStatus          = document.getElementById('jsonStatus');
+  const contractBody        = document.getElementById('contractBody');
+  const contractPanelHeader = document.getElementById('contractPanelHeader');
+  const contractTitleText   = document.getElementById('contractTitleText');
+  const missingBanner       = document.getElementById('missingBanner');
+  const reviewCards         = document.getElementById('reviewCards');
+
+  /* ════════════════════════════
+     1. 上傳合約 HTML
+  ════════════════════════════ */
+  htmlInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    htmlStatus.textContent = '讀取中...';
+    htmlStatus.className = 'status-badge';
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      injectContractHTML(ev.target.result, file.name);
+      htmlLoaded = true;
+      htmlStatus.textContent = '✓ ' + file.name;
+      htmlStatus.className = 'status-badge loaded';
+      if (parsedData) runBlockMapping(parsedData);
+    };
+    reader.onerror = () => {
+      htmlStatus.textContent = '❌ 讀取失敗';
+      htmlStatus.className = 'status-badge error';
+    };
+    reader.readAsText(file, 'UTF-8');
+  });
+
+  function injectContractHTML(htmlContent, fileName) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
+
+    // 注入 PDF HTML 的 <style>（只注入一次）
+    if (!document.querySelector('style[data-pdfhtml]')) {
+      doc.querySelectorAll('style').forEach(style => {
+        const s = document.createElement('style');
+        s.setAttribute('data-pdfhtml', '1');
+        s.textContent = style.textContent;
+        document.head.appendChild(s);
+      });
+
+      // 覆寫 #page-container 為相對定位，讓它在 flex 容器內正常流排
+      const override = document.createElement('style');
+      override.setAttribute('data-pdfhtml', 'override');
+      override.textContent = `
+        #page-container {
+          position: relative !important;
+          top: auto !important;
+          left: auto !important;
+          bottom: auto !important;
+          right: auto !important;
+          overflow: visible !important;
+        }
+      `;
+      document.head.appendChild(override);
+    }
+
+    // 清空舊內容
+    contractBody.innerHTML = '';
+
+    // 取出 #page-container 並注入
+    const pageContainer = doc.getElementById('page-container');
+    if (pageContainer) {
+      contractBody.appendChild(document.adoptNode(pageContainer));
+    } else {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = doc.body.innerHTML;
+      contractBody.appendChild(wrapper);
+    }
+
+    // 顯示標頭
+    contractPanelHeader.style.display = 'block';
+    contractTitleText.textContent = fileName.replace(/\.[^.]+$/, '');
+  }
+
+  /* ════════════════════════════
+     2. 上傳 API 結果 JSON
+  ════════════════════════════ */
+  jsonInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    jsonStatus.textContent = '讀取中...';
+    jsonStatus.className = 'status-badge';
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        parsedData = JSON.parse(ev.target.result);
+        renderReviewCards(parsedData);
+        jsonStatus.textContent = '✓ ' + file.name;
+        jsonStatus.className = 'status-badge loaded';
+        if (htmlLoaded) runBlockMapping(parsedData);
+      } catch(err) {
+        jsonStatus.textContent = '❌ 解析失敗：' + err.message;
+        jsonStatus.className = 'status-badge error';
+      }
+    };
+    reader.readAsText(file, 'UTF-8');
+  });
+
+  /* ════════════════════════════
+     3. Block Mapping
+     掃描 div.t，比對條文號碼，標記 data-block
+  ════════════════════════════ */
+  function runBlockMapping(data) {
+    const chunks = data.return_content.contract_chunks;
+
+    // 建立 article_no → key 對照表
+    // e.g. "第五條" → "5"
+    const articleToBlock = {};
+    Object.entries(chunks).forEach(([key, chunk]) => {
+      if (chunk.article_no && chunk.article_no.trim()) {
+        articleToBlock[chunk.article_no.trim()] = key;
+      }
+    });
+
+    // 初始為 block "0"（前言，無 article_no）
+    let currentBlock = '0';
+
+    const divTs = contractBody.querySelectorAll('.t');
+    divTs.forEach(div => {
+      // 取得純文字（去除子元素的裝飾字元）
+      const text = div.textContent.trim();
+      if (articleToBlock[text] !== undefined) {
+        currentBlock = articleToBlock[text];
+      }
+      div.setAttribute('data-block', currentBlock);
+    });
+  }
+
+  /* ════════════════════════════
+     4. 審核卡片渲染
+  ════════════════════════════ */
+  function renderReviewCards(data) {
+    const reviewResults = data.return_content.review_results || {};
+
+    document.getElementById('emptyReviewState').style.display = 'none';
+    document.getElementById('reviewContent').style.display = 'block';
+    reviewCards.innerHTML = '';
+
+    const categoryOrder = ['合規性', '合理性', '完整性'];
+    categoryOrder.forEach(cat => {
+      if (!reviewResults[cat]?.length) return;
+      const sec = document.createElement('div');
+      sec.className = 'section-title';
+      sec.textContent = cat;
+      reviewCards.appendChild(sec);
+      reviewResults[cat].forEach(item => reviewCards.appendChild(buildCard(item)));
+    });
+
+    // 其他類別
+    Object.keys(reviewResults).forEach(cat => {
+      if (categoryOrder.includes(cat) || !reviewResults[cat]?.length) return;
+      const sec = document.createElement('div');
+      sec.className = 'section-title';
+      sec.textContent = cat;
+      reviewCards.appendChild(sec);
+      reviewResults[cat].forEach(item => reviewCards.appendChild(buildCard(item)));
+    });
+  }
+
+  function buildCard(item) {
+    const detail = item.detail || {};
+    const result = detail['審查結果'] || '';
+    const isFail = result === '不符合';
+
+    const card = document.createElement('div');
+    card.className = 'review-card';
+
+    // 標頭
+    const header = document.createElement('div');
+    header.className = 'card-header';
+
+    const badge = document.createElement('span');
+    badge.className = `card-badge ${isFail ? 'badge-fail' : 'badge-pass'}`;
+    badge.textContent = result || '—';
+
+    const name = document.createElement('span');
+    name.className = `card-name ${isFail ? 'fail' : 'pass'}`;
+    name.textContent = item.name;
+
+    header.appendChild(badge);
+    header.appendChild(name);
+    card.appendChild(header);
+
+    // 條文對應提示
+    const hint = document.createElement('div');
+    hint.className = 'block-ids-hint';
+    hint.textContent = item.block_ids === '無'
+      ? '📄 條文對應：合約缺漏'
+      : `📄 條文對應：第 ${item.block_ids} 區塊`;
+    card.appendChild(hint);
+
+    // 詳情展開區
+    const detailEl = document.createElement('div');
+    detailEl.className = 'card-detail';
+    ['審查說明', '應當遵循的標準', '條文範例'].forEach(field => {
+      if (!detail[field]) return;
+      const lbl = document.createElement('div');
+      lbl.className = 'detail-label';
+      lbl.textContent = field;
+      const txt = document.createElement('div');
+      txt.className = 'detail-text';
+      txt.textContent = detail[field];
+      detailEl.appendChild(lbl);
+      detailEl.appendChild(txt);
+    });
+    card.appendChild(detailEl);
+
+    // 點擊事件
+    card.addEventListener('click', () => {
+      if (currentSelected && currentSelected !== card) {
+        currentSelected.classList.remove('card-selected');
+        currentSelected.querySelector('.card-detail').classList.remove('open');
+      }
+      detailEl.classList.add('open');
+      card.classList.add('card-selected');
+      currentSelected = card;
+      highlightBlocks(item.block_ids, result);
+    });
+
+    return card;
+  }
+
+  /* ════════════════════════════
+     5. 高亮
+  ════════════════════════════ */
+  function highlightBlocks(blockIds, result) {
+    const hlClass = result === '不符合' ? 'hl-fail' : 'hl-pass';
+
+    // 清除舊高亮
+    contractBody.querySelectorAll('.t.hl-fail, .t.hl-pass').forEach(el => {
+      el.classList.remove('hl-fail', 'hl-pass');
+    });
+
+    // 隱藏 banner
+    missingBanner.style.display = 'none';
+
+    if (!blockIds || blockIds === '無') {
+      // 重新觸發 banner 動畫
+      missingBanner.style.animation = 'none';
+      missingBanner.offsetHeight; // reflow
+      missingBanner.style.animation = '';
+      missingBanner.style.display = 'block';
+      return;
+    }
+
+    const ids = blockIds.split(',').map(s => s.trim()).filter(Boolean);
+    let firstEl = null;
+
+    ids.forEach(id => {
+      contractBody.querySelectorAll(`.t[data-block="${id}"]`).forEach(el => {
+        el.classList.add(hlClass);
+        if (!firstEl) firstEl = el;
+      });
+    });
+
+    if (firstEl) {
+      firstEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+</script>
+</body>
+</html>
