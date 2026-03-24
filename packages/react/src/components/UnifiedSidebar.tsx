@@ -230,7 +230,10 @@ export function UnifiedSidebar({
       style={{
         position: fixed ? 'fixed' : 'absolute',
         top: topVal,
-        left: `calc(50% - ${SIDEBAR_DOCUMENT_SHIFT}px + ${(pageWidth * zoom) / 2 + SIDEBAR_PAGE_GAP}px)`,
+        left: fixed
+          ? undefined
+          : `calc(50% - ${SIDEBAR_DOCUMENT_SHIFT}px + ${(pageWidth * zoom) / 2 + SIDEBAR_PAGE_GAP}px)`,
+        right: fixed ? '16px' : undefined,
         width: SIDEBAR_WIDTH,
         height: heightVal,
         fontFamily: "'Google Sans', Roboto, Arial, sans-serif",
