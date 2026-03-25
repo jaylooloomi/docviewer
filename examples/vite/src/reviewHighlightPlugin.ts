@@ -46,6 +46,12 @@ export function setReviewHighlight(
 ) {
   if (!view) return;
 
+  console.debug('[reviewHighlight] setReviewHighlight called', {
+    blockIds,
+    hasChunks: !!chunks,
+    result,
+  });
+
   const hlClass = result === '不符合' ? 'hl-fail' : 'hl-pass';
   const doc = view.state.doc;
   const decorations: Decoration[] = [];
@@ -62,6 +68,12 @@ export function setReviewHighlight(
       if (!node.isBlock || node.type.name !== 'paragraph') return true;
       const text = normalizeText(node.textContent);
       if (text.includes(anchor)) {
+        console.debug('[reviewHighlight] match anchor', {
+          id,
+          from: pos,
+          anchor,
+          nodeTextSample: node.textContent.slice(0, 40),
+        });
         const from = pos;
         let to = pos + node.nodeSize;
         let curPos = pos + node.nodeSize;

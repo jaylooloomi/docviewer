@@ -105,6 +105,7 @@ export function App() {
   useEffect(() => {
     const handler = (event: MessageEvent) => {
       if (event.data?.type !== 'HIGHLIGHT_BLOCKS') return;
+      console.debug('[App] message received', event.data);
       const { blockIds, result, chunks } = event.data as {
         blockIds: string[];
         result: string;
@@ -113,7 +114,11 @@ export function App() {
 
       const pagedRef = editorRef.current?.getEditorRef();
       const view = pagedRef?.getView();
-      if (!view || !pagedRef) return;
+      console.debug('[App] pagedRef/view', !!pagedRef, !!view, 'blockIds', blockIds);
+      if (!view || !pagedRef) {
+        console.warn('[App] no view/pagedRef available');
+        return;
+      }
 
       try {
         setReviewHighlight(view, pagedRef, blockIds, chunks, result);
