@@ -186,7 +186,7 @@ export const ShapeExtension = createNodeExtension({
         'data-shape-type': attrs.shapeType || 'rect',
       };
 
-      // Data attributes for round-trip
+      // Data attributes for round-trip (保持原邏輯)
       if (attrs.shapeId) domAttrs['data-shape-id'] = attrs.shapeId;
       domAttrs['data-width'] = String(w);
       domAttrs['data-height'] = String(h);
@@ -221,47 +221,35 @@ export const ShapeExtension = createNodeExtension({
         'line-height: 0',
       ];
 
-      if (attrs.transform) {
-        styles.push(`transform: ${attrs.transform}`);
-      }
+      if (attrs.transform) styles.push(`transform: ${attrs.transform}`);
 
       if (attrs.displayMode === 'float' && attrs.cssFloat && attrs.cssFloat !== 'none') {
-        styles.push(`float: ${attrs.cssFloat}`);
-        styles.push('margin: 4px 8px');
+        styles.push(`float: ${attrs.cssFloat}`, 'margin: 4px 8px');
       } else if (attrs.displayMode === 'block') {
-        styles.push('display: block');
-        styles.push('margin: 4px auto');
+        styles.push('display: block', 'margin: 4px auto');
       }
 
-      // Shadow via CSS box-shadow on the container
+      // Shadow / Glow via CSS filter
+      const filters: string[] = [];
       if (attrs.shadowColor) {
         const sx = attrs.shadowOffsetX || 2;
         const sy = attrs.shadowOffsetY || 2;
         const sb = attrs.shadowBlur || 4;
-        styles.push(`filter: drop-shadow(${sx}px ${sy}px ${sb}px ${attrs.shadowColor})`);
+        filters.push(`drop-shadow(${sx}px ${sy}px ${sb}px ${attrs.shadowColor})`);
       }
-
-      // Glow via CSS filter
       if (attrs.glowColor && attrs.glowRadius) {
-        const existingFilter = styles.find((s) => s.startsWith('filter:'));
-        const glowFilter = `drop-shadow(0 0 ${attrs.glowRadius}px ${attrs.glowColor})`;
-        if (existingFilter) {
-          // Append glow to existing filter
-          const idx = styles.indexOf(existingFilter);
-          styles[idx] = existingFilter + ' ' + glowFilter;
-        } else {
-          styles.push(`filter: ${glowFilter}`);
-        }
+        filters.push(`drop-shadow(0 0 ${attrs.glowRadius}px ${attrs.glowColor})`);
       }
+      if (filters.length > 0) styles.push(`filter: ${filters.join(' ')}`);
 
       domAttrs.style = styles.join('; ');
 
-      // Build SVG gradient defs if needed
+      // Build SVG gradient defs
       let svgDefs = '';
       let fill: string;
+      const gradId = `grad-${attrs.shapeId || Math.random().toString(36).slice(2, 8)}`;
 
       if (attrs.fillType === 'gradient' && attrs.gradientStops) {
-        const gradId = `grad-${attrs.shapeId || Math.random().toString(36).slice(2, 8)}`;
         fill = `url(#${gradId})`;
         svgDefs = buildSVGGradientDef(gradId, attrs);
       } else {
@@ -279,7 +267,8 @@ export const ShapeExtension = createNodeExtension({
 
       const svgContent = getShapeSVG(attrs.shapeType || 'rect', w, h);
 
-      // Create SVG element as innerHTML
+      // --- 重點修正區 ---
+      // 1. 建立字串樣板
       const svgHtml =
         `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" ` +
         `style="fill:${fill};stroke:${strokeColor};stroke-width:${strokeWidth}${strokeDash}">` +
@@ -287,13 +276,35 @@ export const ShapeExtension = createNodeExtension({
         svgContent +
         `</svg>`;
 
-      // Use a span wrapper with innerHTML
-      // ProseMirror will handle this as an atom node
+      // 2. 初始化容器
       const span = document.createElement('span');
       Object.entries(domAttrs).forEach(([key, value]) => {
         span.setAttribute(key, value);
       });
-      span.innerHTML = svgHtml;
+
+      // 3. 安全解析 SVG 字串
+      try {
+        const parser = new DOMParser();
+        // 使用 image/svg+xml 解析，這比 text/html 更嚴格，且不會執行腳本
+        const svgDoc = parser.parseFromString(svgHtml, 'image/svg+xml');
+        const svgElement = svgDoc.documentElement;
+
+        // 檢查是否包含解析錯誤標籤（Parser Error）
+        if (svgElement.tagName.toLowerCase() !== 'parsererror') {
+          // 使用 importNode 將解析出來的節點合法移入目前的 document 空間
+          const importedSvg = document.importNode(svgElement, true);
+          span.appendChild(importedSvg);
+        } else {
+          console.error('SVG Parsing Error:', svgElement.textContent);
+          // 回退方案：如果解析失敗，至少顯示一個空的框，不使用 innerHTML
+          const fallbackSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          fallbackSvg.setAttribute('width', String(w));
+          fallbackSvg.setAttribute('height', String(h));
+          span.appendChild(fallbackSvg);
+        }
+      } catch (e) {
+        console.error('Failed to render SVG safely', e);
+      }
 
       return { dom: span };
     },
