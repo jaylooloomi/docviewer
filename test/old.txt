@@ -1,0 +1,152 @@
+<div id="reviewPanel">
+    <div id="emptyReviewState" style="color: rgb(187, 187, 187); margin-top: 60px; text-align: center; display: none;">
+      <p>請上傳 API 結果檔以顯示審核結果</p>
+    </div>
+    <div id="reviewContent" style="display: block;">
+      <h2>違規條款分析</h2>
+      <div id="reviewCards"><div class="section-title">合規性</div><div class="review-card card-selected"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">【人員管理】需完整涵蓋人員管理條款項目要求</span></div><div class="block-ids-hint">📄 條文對應：第 6 區塊</div><div class="card-detail open"><div class="detail-label">審查說明</div><div class="detail-text">● 條款要件缺漏
+?? 乙方之人員、設備及使用儀器進出甲方辦公場所，應遵守甲方大樓管理、電腦機房安 全管理、電腦系統安全管理及網路安全管理等之相關規定，並配戴識別證件
+?? 乙方如有派駐人員進駐甲方辦公場所，應將人員名冊送 甲方核可後，始得進駐工作，其異動時亦同；若派駐人員有二人以上者，並應指派一人為領班，負責管理乙方派駐人員
+?? 乙方人員如 有素質或行為不良、工作怠忽或態度不佳者，甲方得隨時通知乙方，乙方應於接獲甲方通知之日起15日內無條件更換
+?? 第二項約定之 乙方派駐人員，乙方應就其對派駐人員之晉用、考核及處分等規定情事，於派駐人員進駐甲方辦公場所前，連同人員名冊送交甲方核可
+
+● 條款要件不完整
+無
+
+● 條款要件充分完整
+無</div><div class="detail-label">應當遵循的標準</div><div class="detail-text">(1) 乙方之人員、設備及使用儀器進出甲方辦公場所，應遵守甲方大樓管理、電腦機房安全管理、電 腦系統安全管理及網路安全管理等之相關規定，並配戴識別證件
+(2) 乙方如有派駐人員進駐甲方辦公場所，應將人員名冊送甲方核可後，始得進駐工作，其異動時亦同；若派駐人員有二人以上者，並應指派一人為領班，負責管理乙方派駐人員
+(3) 乙方人員如有素質或行為不良、工作怠忽或態度不佳者，甲方得隨時通知乙方，乙方應於接獲甲方通知之日起15日內無條件更換
+(4) 第二項約定之乙方派駐人員，乙方應就其對派駐人員之晉用、考核及處分等規定情事，於派駐人員進駐甲方辦公場所前，連同人員名冊送交甲方核可</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">【罰則】違約金比例符合最低標準</span></div><div class="block-ids-hint">📄 條文對應：第 7 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【合規標準】
+(1) 當未依定期保養或檢測約定實施定期保養/定期檢測時，每逾一日應按當期維護費用 5% 給付。
+【合約條文內容】
+乙方未依約履行本合約之義務時，或違反本合約書內容，或未能於規定工作天內完成，除賠償甲方所受之損失外，每逾一個工作天，應罰以維護費用總金額之千分之二。甲方得逕由下一期付款費用扣除，乙方不得異議。
+【判斷原因】
+違約金比例為千分之二（0.2%）每逾一工作天，低於合規標準每逾一日5%之比例，故不符合合規標準。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">【罰則】不應有違約金限額</span></div><div class="block-ids-hint">📄 條文對應：第 7 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">不符合，本條文不建議有違約金限額。該條文僅以維護費用總金額之千分之二作為每日罰金，未明確設定違 約金上限。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">【維護方式】應有軟體更新與升級配合時效</span></div><div class="block-ids-hint">📄 條文對應：第 5,6 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">不符合，本條文建議應有軟體更新與升級配合時效。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">【保密義務】需完整涵蓋保密義務條款項目要求</span></div><div class="block-ids-hint">📄 條文對應：第 6 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">● 條款要件缺漏
+?? (2) 因法令強制規定、主管機關或法院之要求提供前項資料時，乙方得於必要範圍內 提供資料，但應事前通知甲方
+?? (3) 本條保密義務於本契約期滿、解除或終止後，仍為有效
+?? (4) 乙方應對第一項之資料進行適當防止洩漏、竊取、竄改、毀損及滅失等之安全維護措施（包括但不限於責其履行輔助人簽署保密書面）。如有前述情事發生時，應立即通知甲方、阻止侵害擴大，並說明違反事項及採取補救措施
+?? (5) 乙方於本契約期滿、解除、終止或經甲方指示後，不得以任何形式儲 存第一項之資料，如由甲方交付者，並應立即返還甲方或刪除之（如經甲方要求，並應以書面聲明已完成）
+
+● 條款要件不完整
+=== ( 1 / 1 ) ===
+【條款要件】
+(1) 方應擔保並責其履行輔助人及其分包人，就因履行本契約所知悉、取得或偶然獲悉甲方或甲方客戶、員工之一切資料，以善良管理人之注意義務善盡保密責任，除法令有強制規定、主管機關或法院之要求或經甲方事前書面同意者外，不得直接或間接以任何形式洩漏予第三人，亦不得使用於本契約目的以外之用途
+【合約條文內容】
+甲、乙雙方並應負責要求所屬員工遵守保密規定如附件，若有員工違反者，視同該方當事人違反本合約，將按民、刑法追究責任及賠償。 甲、乙雙方應善盡管理人之責，妥 善保管他方提供有關本系統之所有資料。
+【不一致原因】
+合約條文未包含履行輔助人及其分包人、法令強制規定、主管機關或法院之要求、經甲方事前書面同意者外等細節，亦未明確禁止使用於本契約目的以外之用途，故不完整。
+
+● 條款要件充分完整
+無</div><div class="detail-label">應當遵循的標準</div><div class="detail-text">(1) 方應擔保並責其履行輔助人及其分包人，就因履行本契約所知悉、取得或偶然獲悉甲方或甲方客 戶、員工之一切資料，以善良管理人之注意義務善盡保密責任，除法令有強制規定、主管機關或法院之要求或經甲方事前書面同意者外，不得直接或間接以任何形式洩漏予第三人，亦不得使用於本契約目的以外之用途
+(2) 因法令強制規定、主管機關或法院之要求提供前項資料時，乙方得於必要範圍內提供資料，但應事前通知甲方
+(3) 本條保密義務於本契約期滿、解除或終止後，仍為有效
+(4) 乙方應對第一項之資料進行適當防止洩漏、竊取、竄改、毀損及滅失等之安全維護措施（包括但不限於責其履行輔助人簽署保密書面）。如有前述情事發生時，應立即通知甲方、阻止侵害擴大，並說明違反事項及採取補救措施
+(5) 乙方於本契約期滿、解除、終止或經甲方指示後，不得以任何形式儲存第一項之資料，如由甲方交付者，並應立即返還甲方或刪除之（如經甲方要求，並應以書面聲明已完成）</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-pass">符合</span><span class="card-name pass">【契約終止或解除】需完整涵蓋契約終止或解除條款項目要求</span></div><div class="block-ids-hint">📄 條文對應：第 10 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">● 條款要件缺漏
+?? 未於維護方式第二款約定時限內處理、到場檢修、完成修復、提供相同或同等級之備 用機器設備，且逾12小時者
+?? 未於維護方式第二款約定時限內完成修復，且單月達3次（含）者
+?? 同一維護標的發生故障達10次（ 含）；或當月發生故障達3次（含）者
+?? 材料不全或更換之設備零件品質與原設備零件之品質不相當（即非同級品）者
+?? 維護人員 欠缺維護能力，經甲方認定有不能履行本契約之虞者
+?? 違反保密義務、保證條款、次承攬禁止、消費者權益及個資保障、資安條款任 一條約定者
+?? 違約之事項無法補正者
+?? 甲方得隨時終止本契約，但應於60日前以書面預先通知乙方
+?? 甲方除給付乙方已完成維 護之維護費用外，乙方不得為其他請求
+?? 甲方因主管機關通知或法令規定應終止本契約時，不受前項但書事前通知之限制
+?? 本契約之終止或解除，不妨礙甲方損害賠償、罰款或違約金之請求
+
+● 條款要件不完整
+=== ( 1 / 1 ) ===
+【條款要件】
+本契約因前條約定原因終止/解除時，甲方不負給付當期維護費用之義務，乙方如已收受者，應返還之
+【合約條文內容】
+如因可歸責於乙方之事由 致本合約提前終止者，乙方應按實際情形結算維護費用，如甲方所撥付費用有超額之情形時，乙方應無息返還予甲方。
+【不一致原因】
+合約僅規定乙方返還超額費用，未明確規定甲方不負給付當期維護費用之義務，且未說明返還時機與條件，與條款要件不完全一致。
+
+● 條款要件充分完整
+無</div><div class="detail-label">應當遵循的標準</div><div class="detail-text">(1) 未於維護方式第二款約定時限內處理、到場檢修、完成修復、提供相同或同等級之備用機器設備 ，且逾12小時者
+(2) 未於維護方式第二款約定時限內完成修復，且單月達3次（含）者
+(3) 同一維護標的發生故障達10次（含）；或 當月發生故障達3次（含）者
+(4) 材料不全或更換之設備零件品質與原設備零件之品質不相當（即非同級品）者
+(5) 維護人員欠缺維 護能力，經甲方認定有不能履行本契約之虞者
+(6) 違反保密義務、保證條款、次承攬禁止、消費者權益及個資保障、資安條款任一條約定者
+(7) 違約之事項無法補正者
+(8) 本契約因前條約定原因終止/解除時，甲方不負給付當期維護費用之義務，乙方如已收受者，應 返還之
+(9) 甲方得隨時終止本契約，但應於60日前以書面預先通知乙方
+(10) 甲方除給付乙方已完成維護之維護費用外，乙方不得為 其他請求
+(11) 甲方因主管機關通知或法令規定應終止本契約時，不受前項但書事前通知之限制
+(12) 本契約之終止或解除，不妨礙甲方損害賠償、罰款或違約金之請求</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-pass">符合</span><span class="card-name pass">【維護方式】不應有清潔工作列表的項目</span></div><div class="block-ids-hint">📄 條文對應：第 5,6 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">符合，本條文未有清潔工作項目或類似義務要求及限制。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-pass">符合</span><span class="card-name pass">【維護方式】不應有例行到場檢測維護要求</span></div><div class="block-ids-hint">📄 條文對應：第 5,6 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">符合，本條文未有例行到場檢測維護要求或類似義務要求及限制。</div></div></div><div class="section-title">合理性</div><div class="review-card"><div class="card-header"><span class="card-badge badge-pass">符合</span><span class="card-name pass">【維護方式】到場檢修通知時限與電話及遠端連線修復通知時限應不相同</span></div><div class="block-ids-hint">📄 條文對應：第 5,6 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">● 所有條款要件結果
+=== ( 1 / 2 ) ===
+【條款要件】
+到場檢修通知時限
+【合約條文內容】
+如甲 方要求乙方基本維護時間外提供維護服務，雙方可另議計費辦法，且於選定維護時間兩天前通知乙方安排配合。
+=== ( 2 / 2 ) ===
+ 【條款要件】
+遠端連線修復通知時限
+【合約條文內容】
+維護需求發生時，乙方接獲甲方提出「需求反應單」；但情況急迫時，甲方得逕以電話或其他方式通知乙方即時處理，乙方不得拒絕，惟事後甲方仍應填列「需求反應單」。
+
+● 判斷原因
+符合，到場檢修通 知時限與遠端連線修復通知時限不相同。</div></div></div><div class="section-title">完整性</div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">除外責任</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【除外責任】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">維護標的因下列原因故障時，乙方不負維護保養之責，惟就該故障之排除、修復，乙方仍應提供必要之協助 ，並得向甲方酌收維護費用：
+一、甲方未依正常使用方式操作或使用維護標的者。
+二、經乙方測定並通知甲方改善維護標的作業（工作）環境，而甲方仍未改善者。
+三、非由乙方或未通知乙方，就維護標的所為之修護、調整或搬遷，致維護標的不能正常運作者。
+四、甲方使用非經乙方提供或認可之零件或軟、硬體設備者。
+五、天災或其他不可抗力之事故所致者。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">安全責任</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【安全責任】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方所派遣之技術人員須為合格技術人員，並投保意外險。
+乙方於本契約工作期間應做好安全防範措施， 以維護人員及設備安全，如發生意外事故造成人員傷亡或財物損失，概由乙方負完全責任，與甲方無涉。
+乙方於本契約工作期間所發生之任何傷亡事故，致甲方因法令規定遭主管機關裁罰或須向第三人負連帶賠償責任者，甲方於繳納罰款或賠償後，對乙方有求償權。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">資安條款</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【資安條款】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方於履行本契約時，應遵守下列事項：
+一、遵循資訊安全相關法令及甲方資訊安全管理相關規定。如發 現有違反約定時，應於知悉後4小時內通知甲方，並配合甲方之要求採取補救措施。
+二、資安事件之處理方式如下：
+ （一）如發現有資訊安全事件（包括但不限於甲方客戶、員工之個人資料、交易往來資料等資料遭棄置、非法入侵或病毒攻擊等），除應立即採取防制措施外，並應即時通報甲方及協助甲方進行相關處理程序。
+ （二）如有前目之情事發生，應配合甲方維持現場環境及設備（包括但不限 於所使用之連線裝置）狀況，以避免造成重要資料或數位證據遺失，如需進行系統重建，應取得甲方同意。
+三、機敏文件（包括但不限於個人資料、身分認證資料、信用卡卡號、信用卡驗證碼或個人化資料等）如以電子方式傳輸者，應使用加密機制。
+四、交付之系統或程式碼，應先行進行安全性檢測（包括但不限於病毒、蠕蟲、特洛伊木馬或間諜軟體等），甲方並得要求乙方以書面聲明所提供之系統或程式碼無植入惡意程式及後門程式。
+五、乙方無法交付設備予甲方時，甲方得要求乙方依指定方式進行設備檢測後，將檢測報告交付甲方；或要求乙方依指定方式以書面聲明設備無植入惡意程式或後門程式之虞。
+六、若相關系統或依本契約有備用機器者，除經甲方事前書面同意者外，該相關系統及備用機器使用之特權帳號不得綁定預設密碼，正式上線前，應協助甲方變更相關密碼，並刪除測試相關資訊（包括但不限於資料、帳號等）。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">次承攬禁止</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【次承攬禁止】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方應自行完成本契約約定之全部工作。除依法令規定須由專業廠商辦理或經甲方事前書面同意者外，乙方 不得將本契約工作之一部或全部委由第三人為之。
+乙方依前項約定將本契約工作之一部或全部委由第三人為之者，該第三人關於本契約工作之履行有故意或過失時，乙方應與自己之故意或過失負同一責任。
+甲方如認為第三人有不能履行本契約之虞者，甲方得通知乙方，乙方應於接獲甲方通知之日起15日內無條件更換。
+如本契約工作為保險業作業委託他人處理應注意事項所規範，且乙方依本條約定委由第三人辦理者，其與該第三人間應約定工作範圍、限制或條件，並準用前述注意事項相關規定訂之。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">權益及個資保障</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【權益及個資保障】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方履行本契約時，如涉及甲方客戶之權益或其個人資料者，應遵守下列事項：
+一、就甲方客戶權益之保 障訂定標準作業程序（如附件四），執行消費者權益保障及風險管理，並進行定期與不定期內部查核，且留存紀錄以供查核。
+二、設置專責處理單位並指定專人擔任申訴窗口，如接獲甲方客戶申訴，應即以電話及書面（含傳真或電子郵件）通知甲方，並分別依下列方式處理：
+ （一）一般客戶申訴案件：
+     乙方接獲甲方通報申訴案件後，甲乙雙方應即進行發生原因之徹查與釐清，若為乙方之作業疏失，乙方應於48小時內以書面回覆甲方，且須清楚詳述發生時間、原因經過及處理情形。
+ （二）緊急或重大申訴案件：
+     乙方接獲申訴案件後，甲乙雙方應即進行發生原因之徹查與釐清，若查證確為乙方故意或重大過失導致甲方客戶發生損害者，乙方應於24小時內以書面回覆甲方，詳述發生時間、原因經過及處理情形。如甲方為保障客戶權益，而先行賠償客戶之損害時，得向乙方求償。
+ （三） 「一般客戶申訴案件」或「緊急或重大申訴案件」認定有疑義時，以甲方之認定為準。
+三、為保障甲方客戶權益及保護甲方客戶資料，乙方應採取下列措施：
+ （一）配置管理之專責人員及相當資源。
+ （二）界定個人資料之範圍。
+ （三）個人資料之風險評估及管 理機制。
+ （四）事故之預防、通報及應變機制。
+ （五）個人資料之蒐集、處理及利用之內部管理程序。
+ （六）資料安全管理及 人員管理。 
+ （七）認知宣導及教育訓練。
+ （八）設備安全管理。
+ （九）資料安全稽核機制。
+ （十）使用紀錄、軌跡資料及 證據保存。
+ （十一）個人資料安全維護之整體持續改善。
+四、方對甲方之指示認為有違反個人資料保護法或其他相關法令規定之情 事者，應於24小時內通知甲方。
+五、乙方應擔保並責其履行輔助人妥善保管因履行本契約所取得之個人資料，不得外洩。
+六、如個人資料有被竊取、外洩、竄改或受其他侵害之情事者，乙方應即進行防制且通知甲方，並於24小時內詳細說明事件經過及採取之補救措施。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">損害賠償</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【損害賠償】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方有下列情事之一者，對甲方應負損害賠償之責：
+一、使用之材料、機具或人員施工、維護不當或延誤 、怠忽維修時間，致甲方設備毀損或人員傷亡者。
+二、將送修或接受委託運送之設備遺失或毀損者。
+三、違反本契約任一條約定或相關法令規定，致甲方受有損害、遭主管機關裁罰或為第三人求償，除應依本契約約定給付罰款或違約金外，對甲方因此所受之損害、遭裁處之罰款或支出費用（包括但不限於律師費及訴訟費）者。
+乙方依本契約應給付甲方之罰款、違約金或賠償，甲方得逕自應給付乙方之維護費用扣抵。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">保證條款</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【保證條款】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方聲明並保證就本契約所約定之工作事項，係乙方合法得辦理之營業事項。
+於履行本契約期間若有重大 異常或缺失，乙方應立即通知甲方。
+乙方保證其就本契約所約定之工作事項，絕無侵害他人智慧財產權或其他權利之情事。
+如乙方依本契約約定所完成之工作事項涉及利用非其自行開發之資源者，乙方應以書面說明非自行開發之內容及其來源，並將第三人之授權證明文件提供甲方。
+任一方接獲第三人通知本契約所約定之工作事項有侵害他人權利之虞時，乙方應即進行發生原因之徹查與釐清，並於10日內委請專業第三方出具評估報告（包括但不限於著作權侵害鑑定或專利技術分析比對資料等），且應提出相關證明資料予甲方，乙方並應積極與主張權利之人協商。
+乙方未於約定期限委請專業第三方出具評估報告者，甲方得自行委託之，乙方除應提供評估報告所需資料外，並應負擔甲方因此支出之一切費用（包括但不限於委請專業第三方出具評估報告之費用）。
+如本契約所約定之工作事項等因侵害他人權利致甲方不得繼續利用時，乙方應於知悉或接獲甲方通知後10日內，修改侵害部分（包括但不限於取得他人授權），使甲方得以合法繼續利用，其所產生之一切費用，概由乙方負擔。
+乙方違反本條約定者，其相關之法律責任概由乙方負責，與甲方無關。如第三人因此對甲方為任何之主張、請求或訴訟時，乙方應負責排除或為甲方從事相關和解、談判及其他賠償事宜；如甲方因此受有任何損害（包括但不限於甲方所支出之律師費及訴訟費），乙方並應負賠償之責。
+乙方於履行本契約時，不得於甲方之電腦植入任何病毒、後門程式或讀取任何資料，且不得影響甲方電腦系統之正常運作。
+乙方所提供之物聯網設備，應關閉不必要之網路連線及服務（包含但不限於FTP、SMTP等）。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">法令遵循與企業社會責任</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【法令遵循與企業社會責任】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方於履行本契約時，不得違反法令強制或禁止規定、公共秩序或善良風俗，並應遵循保險法、洗錢防制法 、資恐防制法、個人資料保護法、消費者保護法、金融消費者保護法、環保法規及其他甲方主管機關訂定之相關法令規定。
+乙方於履行本契約時，應確實遵守各項勞動條件、職業安全衛生、勞動人權及環境保護等相關法令規定。如有違反，乙方應負完全責任，概與甲方無涉。
+乙方如有違反或未達前二項所列法令規定之虞時，甲方得隨時就乙方之遵循情形進行查核或要求乙方提供檢驗（查）報告。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">內部控制及稽核</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【內部控制及稽核】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方應就本契約工作之作業流程訂定標準作業程序（如附件五），執行內部控制及進行定期與不定期內部稽 核，並留存紀錄以供查核。
+乙方同意甲方得派員或委由專業第三人就本契約工作之作業流程、內部控制、內部稽核及其他事項進行定期或不定期之稽核，並同意甲方之主管機關得取得本契約相關事項之資料或報告及進行檢查，或命令其於限期內提供相關資料或報告。
+甲方依前【二】項約定進行（查）稽核後，若認定乙方有待改善情形，得定相當期限催告乙方改善完成，乙方於期限內未改善完成者，甲方得終止或解除本契約。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">法律關係</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【法律關係】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">甲乙雙方為獨立之契約當事人，並非互為他方之受僱人、代理人、代表人、經銷人或保證人。
+甲乙任一方 未於事前取得他方書面同意，不得使用他方之商標、服務標章、名稱、或對外表示（包括但不限於廣告）與他方或其子公司、關係企業之營業或服務有任何關係或關連，亦不得為其他使人對提供營業或服務之主體發生混淆之任何行為或為其他不公平競爭之行為。</div></div></div></div>
+    </div>
+  </div>

@@ -6,29 +6,270 @@
 <title>智能審約結果檢視器</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; font-size: 14px; background: #f5f6fa; color: #333; height: 100vh; display: flex; flex-direction: column; }
-  #topbar { background: #fff; border-bottom: 1px solid #dde1e7; padding: 10px 16px; display: flex; align-items: center; gap: 20px; flex-shrink: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); flex-wrap: wrap; }
-  .file-group { display: flex; align-items: center; gap: 8px; }
-  .file-group label { font-weight: 600; color: #555; white-space: nowrap; font-size: 13px; }
-  .status-badge { font-size: 12px; padding: 2px 8px; border-radius: 10px; background: #eee; color: #888; white-space: nowrap; }
-  #main { display: flex; flex: 1; overflow: hidden; }
-  #contractPanel { width: 65%; display: flex; flex-direction: column; border-right: 1px solid #dde1e7; overflow: hidden; }
-  #contractPanelHeader { flex-shrink: 0; padding: 10px 14px 0; background: #fff; border-bottom: 1px solid #dde1e7; }
-  #contractPanelHeader h2 { font-size: 13px; font-weight: 700; color: #444; padding-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  #contractBody { flex: 1; overflow: hidden; background: #fff; }
-  #reviewPanel { width: 35%; overflow-y: auto; padding: 16px 14px; background: #f9fafc; }
-  #reviewPanel h2 { font-size: 15px; font-weight: 700; color: #444; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid #4a90e2; }
-  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 0.05em; color: #888; margin: 16px 0 6px; text-transform: uppercase; }
-  .review-card { background: #fff; border: 1px solid #e0e4ed; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: box-shadow 0.15s, border-color 0.15s; overflow: hidden; }
-  .card-header { display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; }
-  .card-badge { flex-shrink: 0; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 4px; margin-top: 1px; white-space: nowrap; }
+
+  body {
+    font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+    font-size: 14px;
+    background: #f5f6fa;
+    color: #333;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── 頂部工具列 ── */
+  #topbar {
+    background: #fff;
+    border-bottom: 1px solid #dde1e7;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    flex-wrap: wrap;
+  }
+  .file-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .file-group label {
+    font-weight: 600;
+    color: #555;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+  .file-group input[type="file"] {
+    border: 1px dashed #aaa;
+    border-radius: 6px;
+    padding: 4px 8px;
+    cursor: pointer;
+    background: #fafafa;
+    font-size: 12px;
+    max-width: 300px;
+  }
+  .file-group input[type="file"]:hover { border-color: #4a90e2; background: #f0f6ff; }
+  .status-badge {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #eee;
+    color: #888;
+    white-space: nowrap;
+  }
+  .status-badge.loaded { background: #e8f8e8; color: #27ae60; }
+  .status-badge.error  { background: #fde8e8; color: #c0392b; }
+
+  /* ── 主體雙欄 ── */
+  #main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── 左側：合約文件 ── */
+  #contractPanel {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #dde1e7;
+    overflow: hidden;
+  }
+
+  /* 固定標頭 */
+  #contractPanelHeader {
+    flex-shrink: 0;
+    padding: 10px 14px 0;
+    background: #fff;
+    border-bottom: 1px solid #dde1e7;
+  }
+  #contractPanelHeader h2 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #444;
+    padding-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* 缺漏 banner（固定於標頭，不隨文件捲動） */
+  #missingBanner {
+    display: none;
+    background: #fde8e8;
+    border: 2px solid #e53e3e;
+    border-left: 6px solid #e53e3e;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    color: #c0392b;
+    animation: bannerPop 0.3s ease;
+  }
+  #missingBanner .banner-icon  { font-size: 26px; line-height: 1; margin-bottom: 4px; }
+  #missingBanner .banner-title { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
+  #missingBanner .banner-sub   { font-size: 12px; color: #a93226; }
+  @keyframes bannerPop {
+    0%   { transform: scale(0.97); opacity: 0; }
+    100% { transform: scale(1);    opacity: 1; }
+  }
+
+  /* 可捲動文件區 */
+  #contractBody {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: auto;
+    background: #9e9e9e;
+  }
+
+  /* 空白提示 */
+  #emptyContractState {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #bbb;
+    font-size: 15px;
+    background: #f5f6fa;
+  }
+
+  /* ── 右側：審核卡片 ── */
+  #reviewPanel {
+    width: 35%;
+    overflow-y: auto;
+    padding: 18px;
+    background: #f4f8ff;
+    border-left: 1px solid #e6eefc;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+  #reviewPanel h2 {
+    font-size: 15px;
+    font-weight: 800;
+    color: #2b4f8a;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #d7e7ff;
+  }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #888;
+    margin: 16px 0 6px;
+    text-transform: uppercase;
+  }
+  .section-title:first-of-type { margin-top: 0; }
+
+  .review-card {
+    background: #fff;
+    border: 1px solid #e6eefc;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: box-shadow 0.15s, border-color 0.15s, transform 0.08s;
+    overflow: hidden;
+    padding: 12px;
+  }
+  .review-card:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.1); border-color: #4a90e2; }
+  .review-card.card-selected { border-color: #4a90e2; box-shadow: 0 0 0 2px #c5d9f8; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-badge {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-top: 0;
+    white-space: nowrap;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,0.02);
+  }
   .badge-fail { background: #fde8e8; color: #c0392b; }
   .badge-pass { background: #e8f8e8; color: #27ae60; }
-  .card-name { font-size: 13px; line-height: 1.5; flex: 1; }
-  .card-detail { display: none; padding: 0 12px 12px; border-top: 1px solid #f0f0f0; }
+
+  .card-name { font-size: 14px; line-height: 1.4; flex: 1; font-weight: 700; }
+  .card-name.fail { color: #b93737; font-weight: 800; }
+  .card-name.pass { color: #1f2d3d; }
+
+  .card-detail { display: none; padding: 12px; border-top: 1px solid #f0f6ff; background: #fbfcff; }
   .card-detail.open { display: block; }
-  /* ensure iframe fills contract area */
-  #editorFrame { width: 100%; height: 100%; border: 0; }
+
+  .detail-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #888;
+    margin: 10px 0 4px;
+    text-transform: uppercase;
+  }
+  .detail-text {
+    font-size: 13px;
+    color: #333;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 12px 12px;
+    border: 1px solid #eef4ff;
+  }
+  .block-ids-hint { font-size: 12px; color: #6b7280; padding: 8px 0 6px; }
+
+  /* ── 高亮樣式（套用於 div.t 元素） ── */
+  /* 不符合 → 紅色螢光 */
+  .t.hl-fail {
+    background-color: rgba(255, 180, 180, 0.75) !important;
+  }
+  /* 符合 → 黃色螢光 */
+  .t.hl-pass {
+    background-color: rgba(255, 245, 100, 0.75) !important;
+  }
+
+  /* 聚焦輪廓與淡入動畫：當使用者點選卡片時加入 .hl-focus */
+  .t.hl-fail, .t.hl-pass {
+    position: relative;
+    transition: box-shadow 220ms ease, transform 220ms ease;
+    border-radius: 4px;
+  }
+
+  @keyframes focusFade {
+    0% { opacity: 0; transform: scale(0.98); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  .t.hl-fail::after,
+  .t.hl-pass::after {
+    content: '';
+    position: absolute;
+    left: -8px;
+    right: -8px;
+    top: -6px;
+    bottom: -6px;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .t.hl-fail.hl-focus::after {
+    box-shadow: 0 0 0 4px rgba(192,57,43,0.08), 0 6px 24px rgba(192,57,43,0.06);
+    animation: focusFade 260ms cubic-bezier(.2,.9,.2,1) forwards;
+  }
+  .t.hl-pass.hl-focus::after {
+    box-shadow: 0 0 0 4px rgba(74,144,226,0.10), 0 6px 24px rgba(74,144,226,0.06);
+    animation: focusFade 260ms cubic-bezier(.2,.9,.2,1) forwards;
+  }
+
+  /* 當卡片選中時，稍微抬起卡片並強化邊框 */
+  .review-card.card-selected { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(34,60,110,0.08); }
+
+  /* 捲軸 */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #aaa; }
 </style>
 </head>
 <body>
@@ -43,7 +284,8 @@
     <label>📋 API 結果 (TXT/JSON)：</label>
     <input type="file" id="jsonInput" accept=".txt,.json">
     <span id="jsonStatus" class="status-badge">未上傳</span>
-  </div>
+    </div>
+    
 </div>
 
 <div id="main">
@@ -174,6 +416,88 @@
     };
     reader.readAsText(file, 'UTF-8');
   });
+
+  // --- Sample JSON (embedded) for quick testing ---
+  const SAMPLE_JSON = {
+  "request_id": "req-20260309143722",
+  "proc_start_time": "2026-03-09 14:54:02",
+  "proc_end_time": "2026-03-09 14:54:02",
+  "return_content": {
+    "contract_id": "202603091437",
+    "version": "00",
+    "status": 1,
+    "message": "全部條款皆已審閱完成",
+    "contract_chunks": {
+      "0": {
+        "title": "合約前言",
+        "article_no": "",
+        "content": "維 護 合 約 書\n甲方  佛光大學\n立合約書人:\n乙方  宏思科技\n茲因乙方提供甲方電腦應用軟體系統維護服 務，雙方同意並基於平等互惠之原則訂定本契約，共同遵守，其條款如下："
+      },
+      "1": {
+        "title": "標的物",
+        "article_no": "第一條",
+        "content": "本合約維護標的物係指甲方委由乙方開發之「合約管理系統」（以下簡稱本系統）。"
+      },
+      "2": {
+        "title": "維護範圍及內容",
+        "article_no": "第二條",
+        "content": "一、電話諮詢，線上即時服務：\n*本系統基本操作解說。\n*本系統環境基本設定解說。\n二、Q&A傳真或E-mail 即時服務：\n*本系統基本操作步驟/程序說明。\n*本系統使用常見問題與處理說明。\n*資訊環境一般狀況排除方法。\n三、遠端通訊連線服務(WIN:遠端桌面、TeamViewer、Skype、Email):\n*問題偵測與判斷處理。\n*程式潛在錯誤(BUG)更新。\n*遠端資料重整作業等。\n四、系統維護範圍係指簽約當時為使本系統正常運作所產生的所有程式，以及本合約書維護期間所產生的程式。\n五、甲方因校務研究 暨資訊整合需要，乙方需無償提供甲方所需標的物data\nview資料供介接使用。"
+      },
+      "3": {"title":"維護期間","article_no":"第三條","content":"本系統之維護日期自2026年12月31日至止。"},
+      "4": {"title":"維護費用及付款方式","article_no":"第四條","content":"本合約維護費用總額計新台幣10,000元整(含稅)。\n本維護費用於甲乙雙方簽署合約生效後，乙方一次請款開立統一發票向甲方請款，甲方匯入乙方指定帳戶。"},
+      "5": {"title":"維護方式","article_no":"第五條","content":"..."},
+      "6": {"title":"保密及權利義務","article_no":"第六條","content":"..."},
+      "7": {"title":"違約罰則","article_no":"第七條","content":"..."}
+    },
+    "sow_review_result": "",
+    "quotation_review_result": "",
+    "review_results": SAMPLE_REVIEW_RESULTS_PLACEHOLDER
+  }
+};
+
+  // Build a smaller placeholder review_results object using the external test file will be inserted by server-side when needed.
+  // For now we will lazily load full sample content from the test file via fetch is not available; instead we'll store only a minimal placeholder
+  const SAMPLE_REVIEW_RESULTS_PLACEHOLDER = {
+    "合規性": [],
+    "合理性": [],
+    "完整性": []
+  };
+
+  // Button handler: load sample JSON into page
+  const loadSampleBtn = document.getElementById('loadSampleBtn');
+  if (loadSampleBtn) {
+    loadSampleBtn.addEventListener('click', () => {
+      try {
+        // Attempt to read test file via fetch (served path may not exist). Fallback to embedded SAMPLE_JSON.
+        fetch('/test/智能審約API回傳審核結果.txt').then(r => {
+          if (!r.ok) throw new Error('not-found');
+          return r.text();
+        }).then(txt => {
+          try {
+            parsedData = JSON.parse(txt);
+          } catch (e) {
+            parsedData = SAMPLE_JSON; // fallback
+          }
+          renderReviewCards(parsedData);
+          jsonStatus.textContent = '✓ 範例載入';
+          jsonStatus.className = 'status-badge loaded';
+          if (htmlLoaded) runBlockMapping(parsedData);
+        }).catch(_ => {
+          parsedData = SAMPLE_JSON;
+          renderReviewCards(parsedData);
+          jsonStatus.textContent = '✓ 範例載入';
+          jsonStatus.className = 'status-badge loaded';
+          if (htmlLoaded) runBlockMapping(parsedData);
+        });
+      } catch (err) {
+        parsedData = SAMPLE_JSON;
+        renderReviewCards(parsedData);
+        jsonStatus.textContent = '✓ 範例載入';
+        jsonStatus.className = 'status-badge loaded';
+        if (htmlLoaded) runBlockMapping(parsedData);
+      }
+    });
+  }
 
   /* 3. Block mapping */
   function runBlockMapping(data) {

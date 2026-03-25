@@ -1,0 +1,137 @@
+.annotation-sidebar {
+  width: 100%;
+  max-width: 420px;
+  background: #f4f8ff;
+  padding: 18px;
+  border-left: 1px solid #e6eefc;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  overflow-y: auto;
+}
+.reviewHeader h2 {
+  font-size: 15px;
+  font-weight: 800;
+  color: #2b4f8a;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #d7e7ff;
+}
+.section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #888;
+  margin: 16px 0 6px;
+  text-transform: uppercase;
+}
+.review-card {
+  background: #fff;
+  border: 1px solid #e6eefc;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition:
+    box-shadow 0.15s,
+    border-color 0.15s,
+    transform 0.08s;
+  overflow: hidden;
+  padding: 12px;
+}
+.review-card:hover {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  border-color: #4a90e2;
+}
+.review-card.card-selected {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px #c5d9f8;
+  transform: translateY(-4px);
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-badge {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.badge-fail {
+  background: #fde8e8;
+  color: #c0392b;
+}
+.badge-pass {
+  background: #e8f8e8;
+  color: #27ae60;
+}
+.card-name {
+  font-size: 14px;
+  line-height: 1.4;
+  flex: 1;
+  font-weight: 700;
+}
+.card-name.fail {
+  color: #b93737;
+  font-weight: 800;
+}
+.card-name.pass {
+  color: #1f2d3d;
+}
+.card-detail {
+  display: none;
+  padding: 12px;
+  border-top: 1px solid #f0f6ff;
+  background: #fbfcff;
+}
+.card-detail.open {
+  display: block;
+}
+.detail-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #888;
+  margin: 10px 0 4px;
+  text-transform: uppercase;
+}
+.detail-text {
+  font-size: 13px;
+  color: #333;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 12px;
+  border: 1px solid #eef4ff;
+}
+.block-ids-hint {
+  font-size: 12px;
+  color: #6b7280;
+  padding: 8px 0 6px;
+}
+
+/* highlight helpers (for integration) */
+.t.hl-fail {
+  background-color: rgba(255, 180, 180, 0.75) !important;
+}
+.t.hl-pass {
+  background-color: rgba(255, 245, 100, 0.75) !important;
+}
+.t.hl-fail,
+.t.hl-pass {
+  position: relative;
+  transition:
+    box-shadow 220ms ease,
+    transform 220ms ease;
+  border-radius: 4px;
+}
+.t.hl-fail.hl-focus::after {
+  box-shadow:
+    0 0 0 4px rgba(192, 57, 43, 0.08),
+    0 6px 24px rgba(192, 57, 43, 0.06);
+}
+.t.hl-pass.hl-focus::after {
+  box-shadow:
+    0 0 0 4px rgba(74, 144, 226, 0.1),
+    0 6px 24px rgba(74, 144, 226, 0.06);
+}
