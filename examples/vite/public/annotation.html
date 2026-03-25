@@ -312,6 +312,8 @@
       </div>
     </div>
   </div>
+  <!-- Test highlight popup -->
+  <div id="testHighlightPopup" style="position:fixed; top:70px; left:24px; z-index:9999; display:none; background:#0f172a; color:#fff; padding:10px 12px; border-radius:8px; box-shadow:0 6px 20px rgba(2,6,23,0.2); font-size:13px;">發送中…</div>
 
   <div id="reviewPanel">
     <div id="reviewContent">
@@ -519,8 +521,22 @@
         result: '不符合',
         chunks: chunks,
       };
+      // show popup
+      const popup = document.getElementById('testHighlightPopup');
+      if (popup) {
+        popup.textContent = '發送中…';
+        popup.style.display = 'block';
+      }
       console.log('posting test highlight', payload);
       frame.contentWindow.postMessage(payload, '*');
+
+      // hide popup after timeout if no ack
+      if (popup) {
+        window._testHighlightAckTimer = window.setTimeout(() => {
+          popup.textContent = '未收到回應 (timeout)';
+          setTimeout(() => { popup.style.display = 'none'; }, 2500);
+        }, 3000);
+      }
     });
   }
 
@@ -666,6 +682,12 @@ window.addEventListener('message', (ev) => {
   if (!ev.data) return;
   if (ev.data.type === 'HIGHLIGHT_ACK') {
     console.log('[parent] HIGHLIGHT_ACK', ev.data);
+    const popup = document.getElementById('testHighlightPopup');
+    if (popup) {
+      if (window._testHighlightAckTimer) { clearTimeout(window._testHighlightAckTimer); window._testHighlightAckTimer = null; }
+      popup.textContent = `回傳 decorations=${ev.data.decorations}, firstFrom=${String(ev.data.firstFrom)}`;
+      setTimeout(() => { popup.style.display = 'none'; }, 2500);
+    }
   }
 });
 </script>
