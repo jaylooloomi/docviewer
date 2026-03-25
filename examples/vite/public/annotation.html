@@ -220,6 +220,29 @@
   }
   .block-ids-hint { font-size: 12px; color: #6b7280; padding: 8px 0 6px; }
 
+  /* 新增：卡片內顯示區塊內容（預設收合，三行截斷） */
+  .review-card__block-content {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #333;
+    background: #fbfbfe;
+    border: 1px solid #eef4ff;
+    border-radius: 6px;
+    padding: 10px;
+  }
+  .review-card__block-content .block-content-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3; /* show 3 lines */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5;
+    white-space: normal;
+    color: #333;
+  }
+  .review-card__block-content.expanded .block-content-text {
+    -webkit-line-clamp: unset;
+  }
   /* ── 高亮樣式（套用於 div.t 元素） ── */
   /* 不符合 → 紅色螢光 */
   .t.hl-fail {
@@ -577,6 +600,39 @@
     hint.className = 'block-ids-hint';
     hint.textContent = item.block_ids === '無' ? '📄 條文對應：合約缺漏' : `📄 條文對應：第 ${item.block_ids} 區塊`;
     card.appendChild(hint);
+
+    // 新增：在卡片內顯示對應區塊的內容（使用 parsedData.contract_chunks）
+    const blockContent = document.createElement('div');
+    blockContent.className = 'review-card__block-content';
+
+    try {
+      const chunks = (window.parsedData && window.parsedData.return_content && window.parsedData.return_content.contract_chunks) || (parsedData && parsedData.return_content && parsedData.return_content.contract_chunks) || null;
+      const ids = item.block_ids && item.block_ids !== '無' ? item.block_ids.split(',').map(s => s.trim()).filter(Boolean) : [];
+      if (ids.length && chunks) {
+        ids.forEach(id => {
+          const c = chunks[id];
+          const txt = document.createElement('div');
+          txt.className = 'block-content-text';
+          txt.textContent = (c && (c.content || c.title)) ? (c.content || c.title) : '（區塊內容尚未載入）';
+          blockContent.appendChild(txt);
+        });
+      } else if (ids.length) {
+        const txt = document.createElement('div');
+        txt.className = 'block-content-text';
+        txt.textContent = '（尚未載入合約內容）';
+        blockContent.appendChild(txt);
+      }
+    } catch (e) {
+      const txt = document.createElement('div');
+      txt.className = 'block-content-text';
+      txt.textContent = '（取出區塊內容時發生錯誤）';
+      blockContent.appendChild(txt);
+    }
+
+    // 點擊區塊內容則只切換展開，不觸發卡片的 highlight 行為
+    blockContent.addEventListener('click', (ev) => { ev.stopPropagation(); blockContent.classList.toggle('expanded'); });
+
+    card.appendChild(blockContent);
 
     const detailEl = document.createElement('div');
     detailEl.className = 'card-detail';
