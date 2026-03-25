@@ -1,0 +1,1773 @@
+{
+  "version": "1.156.0",
+  "results": [
+    {
+      "check_id": "javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp",
+      "path": "e2e\\agentic\\scenario-runner.ts",
+      "start": { "line": 644, "col": 23, "offset": 16196 },
+      "end": { "line": 644, "col": 58, "offset": 16231 },
+      "extra": {
+        "message": "RegExp() called with a `filter` function argument, this might allow an attacker to cause a Regular Expression Denial-of-Service (ReDoS) within your application as RegExP blocks the main thread. For this reason, it is recommended to use hardcoded regexes instead. If your regex is run on user-controlled input, consider performing input validation or use a regex checking/sanitization library such as https://www.npmjs.com/package/recheck to verify that the regex does not appear vulnerable to ReDoS.",
+        "metadata": {
+          "owasp": [
+            "A05:2021 - Security Misconfiguration",
+            "A06:2017 - Security Misconfiguration",
+            "A02:2025 - Security Misconfiguration"
+          ],
+          "cwe": ["CWE-1333: Inefficient Regular Expression Complexity"],
+          "references": [
+            "https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS"
+          ],
+          "source-rule-url": "https://github.com/nodesecurity/eslint-plugin-security/blob/master/rules/detect-non-literal-regexp.js",
+          "category": "security",
+          "technology": ["javascript"],
+          "subcategory": ["vuln"],
+          "likelihood": "MEDIUM",
+          "impact": "MEDIUM",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Denial-of-Service (DoS)"],
+          "source": "https://semgrep.dev/r/javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp",
+          "shortlink": "https://sg.run/gr65"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.browser.security.wildcard-postmessage-configuration.wildcard-postmessage-configuration",
+      "path": "e2e\\annotation.spec.ts",
+      "start": { "line": 40, "col": 7, "offset": 1326 },
+      "end": { "line": 40, "col": 75, "offset": 1394 },
+      "extra": {
+        "message": "The target origin of the window.postMessage() API is set to \"*\". This could allow for information disclosure due to the possibility of any origin allowed to receive the message.",
+        "metadata": {
+          "owasp": [
+            "A08:2021 - Software and Data Integrity Failures",
+            "A08:2025 - Software or Data Integrity Failures"
+          ],
+          "cwe": ["CWE-345: Insufficient Verification of Data Authenticity"],
+          "category": "security",
+          "technology": ["browser"],
+          "subcategory": ["audit"],
+          "likelihood": "HIGH",
+          "impact": "MEDIUM",
+          "confidence": "MEDIUM",
+          "references": ["https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures"],
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Improper Authentication"],
+          "source": "https://semgrep.dev/r/javascript.browser.security.wildcard-postmessage-configuration.wildcard-postmessage-configuration",
+          "shortlink": "https://sg.run/PJ4p"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal",
+      "path": "e2e\\fixtures\\generate-fixtures.ts",
+      "start": { "line": 65, "col": 46, "offset": 2650 },
+      "end": { "line": 65, "col": 54, "offset": 2658 },
+      "extra": {
+        "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
+        "metadata": {
+          "owasp": [
+            "A05:2017 - Broken Access Control",
+            "A01:2021 - Broken Access Control",
+            "A01:2025 - Broken Access Control"
+          ],
+          "cwe": [
+            "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+          ],
+          "category": "security",
+          "references": ["https://owasp.org/www-community/attacks/Path_Traversal"],
+          "technology": ["javascript", "node.js"],
+          "cwe2022-top25": true,
+          "cwe2021-top25": true,
+          "subcategory": ["vuln"],
+          "likelihood": "HIGH",
+          "impact": "MEDIUM",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Path Traversal"],
+          "source": "https://semgrep.dev/r/javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal",
+          "shortlink": "https://sg.run/OPqk"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal",
+      "path": "e2e\\helpers\\editor-page.ts",
+      "start": { "line": 124, "col": 36, "offset": 3540 },
+      "end": { "line": 124, "col": 44, "offset": 3548 },
+      "extra": {
+        "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
+        "metadata": {
+          "owasp": [
+            "A05:2017 - Broken Access Control",
+            "A01:2021 - Broken Access Control",
+            "A01:2025 - Broken Access Control"
+          ],
+          "cwe": [
+            "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+          ],
+          "category": "security",
+          "references": ["https://owasp.org/www-community/attacks/Path_Traversal"],
+          "technology": ["javascript", "node.js"],
+          "cwe2022-top25": true,
+          "cwe2021-top25": true,
+          "subcategory": ["vuln"],
+          "likelihood": "HIGH",
+          "impact": "MEDIUM",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Path Traversal"],
+          "source": "https://semgrep.dev/r/javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal",
+          "shortlink": "https://sg.run/OPqk"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.browser.security.wildcard-postmessage-configuration.wildcard-postmessage-configuration",
+      "path": "e2e\\send_payload.spec.ts",
+      "start": { "line": 24, "col": 7, "offset": 771 },
+      "end": { "line": 24, "col": 52, "offset": 816 },
+      "extra": {
+        "message": "The target origin of the window.postMessage() API is set to \"*\". This could allow for information disclosure due to the possibility of any origin allowed to receive the message.",
+        "metadata": {
+          "owasp": [
+            "A08:2021 - Software and Data Integrity Failures",
+            "A08:2025 - Software or Data Integrity Failures"
+          ],
+          "cwe": ["CWE-345: Insufficient Verification of Data Authenticity"],
+          "category": "security",
+          "technology": ["browser"],
+          "subcategory": ["audit"],
+          "likelihood": "HIGH",
+          "impact": "MEDIUM",
+          "confidence": "MEDIUM",
+          "references": ["https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures"],
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Improper Authentication"],
+          "source": "https://semgrep.dev/r/javascript.browser.security.wildcard-postmessage-configuration.wildcard-postmessage-configuration",
+          "shortlink": "https://sg.run/PJ4p"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal",
+      "path": "packages\\core\\src\\docx\\selectiveSave.test.ts",
+      "start": { "line": 31, "col": 44, "offset": 1117 },
+      "end": { "line": 31, "col": 48, "offset": 1121 },
+      "extra": {
+        "message": "Detected possible user input going into a `path.join` or `path.resolve` function. This could possibly lead to a path traversal vulnerability,  where the attacker can access arbitrary files stored in the file system. Instead, be sure to sanitize or validate user input first.",
+        "metadata": {
+          "owasp": [
+            "A05:2017 - Broken Access Control",
+            "A01:2021 - Broken Access Control",
+            "A01:2025 - Broken Access Control"
+          ],
+          "cwe": [
+            "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+          ],
+          "category": "security",
+          "references": ["https://owasp.org/www-community/attacks/Path_Traversal"],
+          "technology": ["javascript", "node.js"],
+          "cwe2022-top25": true,
+          "cwe2021-top25": true,
+          "subcategory": ["vuln"],
+          "likelihood": "HIGH",
+          "impact": "MEDIUM",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Path Traversal"],
+          "source": "https://semgrep.dev/r/javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal",
+          "shortlink": "https://sg.run/OPqk"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp",
+      "path": "packages\\core\\src\\docx\\selectiveXmlPatch.ts",
+      "start": { "line": 26, "col": 19, "offset": 941 },
+      "end": { "line": 26, "col": 75, "offset": 997 },
+      "extra": {
+        "message": "RegExp() called with a `paraId` function argument, this might allow an attacker to cause a Regular Expression Denial-of-Service (ReDoS) within your application as RegExP blocks the main thread. For this reason, it is recommended to use hardcoded regexes instead. If your regex is run on user-controlled input, consider performing input validation or use a regex checking/sanitization library such as https://www.npmjs.com/package/recheck to verify that the regex does not appear vulnerable to ReDoS.",
+        "metadata": {
+          "owasp": [
+            "A05:2021 - Security Misconfiguration",
+            "A06:2017 - Security Misconfiguration",
+            "A02:2025 - Security Misconfiguration"
+          ],
+          "cwe": ["CWE-1333: Inefficient Regular Expression Complexity"],
+          "references": [
+            "https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS"
+          ],
+          "source-rule-url": "https://github.com/nodesecurity/eslint-plugin-security/blob/master/rules/detect-non-literal-regexp.js",
+          "category": "security",
+          "technology": ["javascript"],
+          "subcategory": ["vuln"],
+          "likelihood": "MEDIUM",
+          "impact": "MEDIUM",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Denial-of-Service (DoS)"],
+          "source": "https://semgrep.dev/r/javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp",
+          "shortlink": "https://sg.run/gr65"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring",
+      "path": "packages\\core\\src\\mcp\\server.ts",
+      "start": { "line": 145, "col": 21, "offset": 3560 },
+      "end": { "line": 145, "col": 37, "offset": 3576 },
+      "extra": {
+        "message": "Detected string concatenation with a non-literal variable in a util.format / console.log function. If an attacker injects a format specifier in the string, it will forge the log message. Try to use constant values for the format string.",
+        "metadata": {
+          "cwe": ["CWE-134: Use of Externally-Controlled Format String"],
+          "owasp": ["A01:2021 - Broken Access Control", "A01:2025 - Broken Access Control"],
+          "category": "security",
+          "technology": ["javascript"],
+          "subcategory": ["audit"],
+          "likelihood": "MEDIUM",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "references": ["https://cwe.mitre.org/data/definitions/134.html"],
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Improper Validation"],
+          "source": "https://semgrep.dev/r/javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring",
+          "shortlink": "https://sg.run/7Y5R"
+        },
+        "severity": "INFO",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.browser.security.insecure-document-method.insecure-document-method",
+      "path": "packages\\core\\src\\prosemirror\\extensions\\nodes\\ShapeExtension.ts",
+      "start": { "line": 296, "col": 7, "offset": 11311 },
+      "end": { "line": 296, "col": 32, "offset": 11336 },
+      "extra": {
+        "message": "User controlled data in methods like `innerHTML`, `outerHTML` or `document.write` is an anti-pattern that can lead to XSS vulnerabilities",
+        "metadata": {
+          "cwe": [
+            "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+          ],
+          "owasp": [
+            "A07:2017 - Cross-Site Scripting (XSS)",
+            "A03:2021 - Injection",
+            "A05:2025 - Injection"
+          ],
+          "category": "security",
+          "technology": ["browser"],
+          "cwe2022-top25": true,
+          "cwe2021-top25": true,
+          "subcategory": ["audit"],
+          "likelihood": "LOW",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "references": ["https://owasp.org/Top10/A03_2021-Injection"],
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Cross-Site-Scripting (XSS)"],
+          "source": "https://semgrep.dev/r/javascript.browser.security.insecure-document-method.insecure-document-method",
+          "shortlink": "https://sg.run/LwA9"
+        },
+        "severity": "ERROR",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring",
+      "path": "packages\\core\\src\\utils\\fontLoader.ts",
+      "start": { "line": 129, "col": 20, "offset": 3478 },
+      "end": { "line": 129, "col": 63, "offset": 3521 },
+      "extra": {
+        "message": "Detected string concatenation with a non-literal variable in a util.format / console.log function. If an attacker injects a format specifier in the string, it will forge the log message. Try to use constant values for the format string.",
+        "metadata": {
+          "cwe": ["CWE-134: Use of Externally-Controlled Format String"],
+          "owasp": ["A01:2021 - Broken Access Control", "A01:2025 - Broken Access Control"],
+          "category": "security",
+          "technology": ["javascript"],
+          "subcategory": ["audit"],
+          "likelihood": "MEDIUM",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "references": ["https://cwe.mitre.org/data/definitions/134.html"],
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Improper Validation"],
+          "source": "https://semgrep.dev/r/javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring",
+          "shortlink": "https://sg.run/7Y5R"
+        },
+        "severity": "INFO",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring",
+      "path": "packages\\core\\src\\utils\\fontLoader.ts",
+      "start": { "line": 356, "col": 18, "offset": 9566 },
+      "end": { "line": 356, "col": 73, "offset": 9621 },
+      "extra": {
+        "message": "Detected string concatenation with a non-literal variable in a util.format / console.log function. If an attacker injects a format specifier in the string, it will forge the log message. Try to use constant values for the format string.",
+        "metadata": {
+          "cwe": ["CWE-134: Use of Externally-Controlled Format String"],
+          "owasp": ["A01:2021 - Broken Access Control", "A01:2025 - Broken Access Control"],
+          "category": "security",
+          "technology": ["javascript"],
+          "subcategory": ["audit"],
+          "likelihood": "MEDIUM",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "references": ["https://cwe.mitre.org/data/definitions/134.html"],
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Improper Validation"],
+          "source": "https://semgrep.dev/r/javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring",
+          "shortlink": "https://sg.run/7Y5R"
+        },
+        "severity": "INFO",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp",
+      "path": "packages\\react\\src\\components\\dialogs\\findReplaceUtils.ts",
+      "start": { "line": 104, "col": 12, "offset": 2534 },
+      "end": { "line": 104, "col": 38, "offset": 2560 },
+      "extra": {
+        "message": "RegExp() called with a `searchText` function argument, this might allow an attacker to cause a Regular Expression Denial-of-Service (ReDoS) within your application as RegExP blocks the main thread. For this reason, it is recommended to use hardcoded regexes instead. If your regex is run on user-controlled input, consider performing input validation or use a regex checking/sanitization library such as https://www.npmjs.com/package/recheck to verify that the regex does not appear vulnerable to ReDoS.",
+        "metadata": {
+          "owasp": [
+            "A05:2021 - Security Misconfiguration",
+            "A06:2017 - Security Misconfiguration",
+            "A02:2025 - Security Misconfiguration"
+          ],
+          "cwe": ["CWE-1333: Inefficient Regular Expression Complexity"],
+          "references": [
+            "https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS"
+          ],
+          "source-rule-url": "https://github.com/nodesecurity/eslint-plugin-security/blob/master/rules/detect-non-literal-regexp.js",
+          "category": "security",
+          "technology": ["javascript"],
+          "subcategory": ["vuln"],
+          "likelihood": "MEDIUM",
+          "impact": "MEDIUM",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Denial-of-Service (DoS)"],
+          "source": "https://semgrep.dev/r/javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp",
+          "shortlink": "https://sg.run/gr65"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp",
+      "path": "packages\\react\\src\\components\\dialogs\\findReplaceUtils.ts",
+      "start": { "line": 139, "col": 17, "offset": 3317 },
+      "end": { "line": 139, "col": 43, "offset": 3343 },
+      "extra": {
+        "message": "RegExp() called with a `searchText` function argument, this might allow an attacker to cause a Regular Expression Denial-of-Service (ReDoS) within your application as RegExP blocks the main thread. For this reason, it is recommended to use hardcoded regexes instead. If your regex is run on user-controlled input, consider performing input validation or use a regex checking/sanitization library such as https://www.npmjs.com/package/recheck to verify that the regex does not appear vulnerable to ReDoS.",
+        "metadata": {
+          "owasp": [
+            "A05:2021 - Security Misconfiguration",
+            "A06:2017 - Security Misconfiguration",
+            "A02:2025 - Security Misconfiguration"
+          ],
+          "cwe": ["CWE-1333: Inefficient Regular Expression Complexity"],
+          "references": [
+            "https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS"
+          ],
+          "source-rule-url": "https://github.com/nodesecurity/eslint-plugin-security/blob/master/rules/detect-non-literal-regexp.js",
+          "category": "security",
+          "technology": ["javascript"],
+          "subcategory": ["vuln"],
+          "likelihood": "MEDIUM",
+          "impact": "MEDIUM",
+          "confidence": "LOW",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Denial-of-Service (DoS)"],
+          "source": "https://semgrep.dev/r/javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp",
+          "shortlink": "https://sg.run/gr65"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring",
+      "path": "packages\\react\\src\\paged-editor\\PagedEditor.tsx",
+      "start": { "line": 1021, "col": 21, "offset": 36317 },
+      "end": { "line": 1021, "col": 90, "offset": 36386 },
+      "extra": {
+        "message": "Detected string concatenation with a non-literal variable in a util.format / console.log function. If an attacker injects a format specifier in the string, it will forge the log message. Try to use constant values for the format string.",
+        "metadata": {
+          "cwe": ["CWE-134: Use of Externally-Controlled Format String"],
+          "owasp": ["A01:2021 - Broken Access Control", "A01:2025 - Broken Access Control"],
+          "category": "security",
+          "technology": ["javascript"],
+          "subcategory": ["audit"],
+          "likelihood": "MEDIUM",
+          "impact": "LOW",
+          "confidence": "LOW",
+          "references": ["https://cwe.mitre.org/data/definitions/134.html"],
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Improper Validation"],
+          "source": "https://semgrep.dev/r/javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring",
+          "shortlink": "https://sg.run/7Y5R"
+        },
+        "severity": "INFO",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "javascript.browser.security.wildcard-postmessage-configuration.wildcard-postmessage-configuration",
+      "path": "scripts\\send_payload_playwright.mjs",
+      "start": { "line": 26, "col": 7, "offset": 800 },
+      "end": { "line": 26, "col": 52, "offset": 845 },
+      "extra": {
+        "message": "The target origin of the window.postMessage() API is set to \"*\". This could allow for information disclosure due to the possibility of any origin allowed to receive the message.",
+        "metadata": {
+          "owasp": [
+            "A08:2021 - Software and Data Integrity Failures",
+            "A08:2025 - Software or Data Integrity Failures"
+          ],
+          "cwe": ["CWE-345: Insufficient Verification of Data Authenticity"],
+          "category": "security",
+          "technology": ["browser"],
+          "subcategory": ["audit"],
+          "likelihood": "HIGH",
+          "impact": "MEDIUM",
+          "confidence": "MEDIUM",
+          "references": ["https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures"],
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": ["Improper Authentication"],
+          "source": "https://semgrep.dev/r/javascript.browser.security.wildcard-postmessage-configuration.wildcard-postmessage-configuration",
+          "shortlink": "https://sg.run/PJ4p"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 3,
+      "level": "warn",
+      "type": "Syntax error",
+      "message": "Syntax error at line packages\\core\\src\\utils\\clipboard.ts:1:\n `/**\n * Clipboard utilities for copy/paste with formatting\n *\n * Handles:\n * - Copy: puts formatted HTML and plain text on clipboard\n * - Paste: reads HTML clipboard, converts to runs with formatting\n * - Handles paste from Word (cleans up Word HTML)\n * - Ctrl+C, Ctrl+V, Ctrl+X keyboard shortcuts\n */\n\nimport type { Run, TextFormatting, Paragraph } from '../types/document';\n\n// ============================================================================\n// TYPES\n// ============================================================================\n\n/**\n * Clipboard content format\n */\nexport interface ClipboardContent {\n  /** Plain text representation */\n  plainText: string;\n  /** HTML representation */\n  html: string;\n  /** Internal format (JSON) for preserving full formatting */\n  internal?: string;\n}\n\n/**\n * Parsed clipboard content\n */\nexport interface ParsedClipboardContent {\n  /** Runs parsed from clipboard */\n  runs: Run[];\n  /** Whether content came from Word */\n  fromWord: boolean;\n  /** Whether content came from our editor */\n  fromEditor: boolean;\n  /** Original plain text */\n  plainText: string;\n}\n\n/**\n * Options for clipboard operations\n */\nexport interface ClipboardOptions {\n  /** Whether to include formatting in copy */\n  includeFormatting?: boolean;\n  /** Whether to clean Word-specific formatting */\n  cleanWordFormatting?: boolean;\n  /** Callback for handling errors */\n  onError?: (error: Error) => void;\n}\n\n// ============================================================================\n// CONSTANTS\n// ============================================================================\n\n/**\n * Custom MIME type for internal clipboard format\n */\nexport const INTERNAL_CLIPBOARD_TYPE = 'application/x-docx-editor';\n\n/**\n * Standard clipboard MIME types\n */\nexport const CLIPBOARD_TYPES = {\n  HTML: 'text/html',\n  PLAIN: 'text/plain',\n} as const;\n\n/**\n * Extract image files from clipboard data (if present).\n */\nexport function getClipboardImageFiles(clipboardData: DataTransfer | null): File[] {\n  if (!clipboardData) return... (truncated 20380 more characters)",
+      "path": "packages\\core\\src\\utils\\clipboard.ts"
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "examples\\agent-use-demo\\app\\page.tsx",
+            "start": { "line": 126, "col": 41, "offset": 0 },
+            "end": { "line": 126, "col": 50, "offset": 9 }
+          },
+          {
+            "path": "examples\\agent-use-demo\\app\\page.tsx",
+            "start": { "line": 141, "col": 44, "offset": 0 },
+            "end": { "line": 141, "col": 53, "offset": 9 }
+          },
+          {
+            "path": "examples\\agent-use-demo\\app\\page.tsx",
+            "start": { "line": 178, "col": 56, "offset": 0 },
+            "end": { "line": 178, "col": 65, "offset": 9 }
+          },
+          {
+            "path": "examples\\agent-use-demo\\app\\page.tsx",
+            "start": { "line": 211, "col": 62, "offset": 0 },
+            "end": { "line": 211, "col": 71, "offset": 9 }
+          },
+          {
+            "path": "examples\\agent-use-demo\\app\\page.tsx",
+            "start": { "line": 217, "col": 62, "offset": 0 },
+            "end": { "line": 217, "col": 71, "offset": 9 }
+          }
+        ]
+      ],
+      "message": "Syntax error at line examples\\agent-use-demo\\app\\page.tsx:126:\n `&#128293;` was unexpected",
+      "path": "examples\\agent-use-demo\\app\\page.tsx",
+      "spans": [
+        {
+          "file": "examples\\agent-use-demo\\app\\page.tsx",
+          "start": { "line": 126, "col": 41, "offset": 0 },
+          "end": { "line": 126, "col": 50, "offset": 9 }
+        },
+        {
+          "file": "examples\\agent-use-demo\\app\\page.tsx",
+          "start": { "line": 141, "col": 44, "offset": 0 },
+          "end": { "line": 141, "col": 53, "offset": 9 }
+        },
+        {
+          "file": "examples\\agent-use-demo\\app\\page.tsx",
+          "start": { "line": 178, "col": 56, "offset": 0 },
+          "end": { "line": 178, "col": 65, "offset": 9 }
+        },
+        {
+          "file": "examples\\agent-use-demo\\app\\page.tsx",
+          "start": { "line": 211, "col": 62, "offset": 0 },
+          "end": { "line": 211, "col": 71, "offset": 9 }
+        },
+        {
+          "file": "examples\\agent-use-demo\\app\\page.tsx",
+          "start": { "line": 217, "col": 62, "offset": 0 },
+          "end": { "line": 217, "col": 71, "offset": 9 }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "examples\\nextjs\\app\\layout.tsx",
+            "start": { "line": 18, "col": 133, "offset": 0 },
+            "end": { "line": 18, "col": 147, "offset": 14 }
+          }
+        ]
+      ],
+      "message": "Syntax error at line examples\\nextjs\\app\\layout.tsx:18:\n `&display=block` was unexpected",
+      "path": "examples\\nextjs\\app\\layout.tsx",
+      "spans": [
+        {
+          "file": "examples\\nextjs\\app\\layout.tsx",
+          "start": { "line": 18, "col": 133, "offset": 0 },
+          "end": { "line": 18, "col": 147, "offset": 14 }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "examples\\remix\\app\\root.tsx",
+            "start": { "line": 15, "col": 133, "offset": 0 },
+            "end": { "line": 15, "col": 147, "offset": 14 }
+          }
+        ]
+      ],
+      "message": "Syntax error at line examples\\remix\\app\\root.tsx:15:\n `&display=block` was unexpected",
+      "path": "examples\\remix\\app\\root.tsx",
+      "spans": [
+        {
+          "file": "examples\\remix\\app\\root.tsx",
+          "start": { "line": 15, "col": 133, "offset": 0 },
+          "end": { "line": 15, "col": 147, "offset": 14 }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "packages\\react\\src\\components\\DocxEditor.tsx",
+            "start": { "line": 241, "col": 21, "offset": 0 },
+            "end": { "line": 241, "col": 55, "offset": 34 }
+          },
+          {
+            "path": "packages\\react\\src\\components\\DocxEditor.tsx",
+            "start": { "line": 388, "col": 5, "offset": 0 },
+            "end": { "line": 388, "col": 6, "offset": 1 }
+          },
+          {
+            "path": "packages\\react\\src\\components\\DocxEditor.tsx",
+            "start": { "line": 389, "col": 1, "offset": 0 },
+            "end": { "line": 389, "col": 2, "offset": 1 }
+          }
+        ]
+      ],
+      "message": "Syntax error at line packages\\react\\src\\components\\DocxEditor.tsx:241:\n `import('prosemirror-state').Plugin` was unexpected",
+      "path": "packages\\react\\src\\components\\DocxEditor.tsx",
+      "spans": [
+        {
+          "file": "packages\\react\\src\\components\\DocxEditor.tsx",
+          "start": { "line": 241, "col": 21, "offset": 0 },
+          "end": { "line": 241, "col": 55, "offset": 34 }
+        },
+        {
+          "file": "packages\\react\\src\\components\\DocxEditor.tsx",
+          "start": { "line": 388, "col": 5, "offset": 0 },
+          "end": { "line": 388, "col": 6, "offset": 1 }
+        },
+        {
+          "file": "packages\\react\\src\\components\\DocxEditor.tsx",
+          "start": { "line": 389, "col": 1, "offset": 0 },
+          "end": { "line": 389, "col": 2, "offset": 1 }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "packages\\react\\src\\components\\dialogs\\FootnotePropertiesDialog.tsx",
+            "start": { "line": 175, "col": 67, "offset": 0 },
+            "end": { "line": 175, "col": 87, "offset": 20 }
+          }
+        ]
+      ],
+      "message": "Syntax error at line packages\\react\\src\\components\\dialogs\\FootnotePropertiesDialog.tsx:175:\n `& Endnote Properties` was unexpected",
+      "path": "packages\\react\\src\\components\\dialogs\\FootnotePropertiesDialog.tsx",
+      "spans": [
+        {
+          "file": "packages\\react\\src\\components\\dialogs\\FootnotePropertiesDialog.tsx",
+          "start": { "line": 175, "col": 67, "offset": 0 },
+          "end": { "line": 175, "col": 87, "offset": 20 }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": "packages\\react\\src\\paged-editor\\SelectionOverlay.tsx",
+            "start": { "line": 245, "col": 11, "offset": 0 },
+            "end": { "line": 245, "col": 70, "offset": 59 }
+          },
+          {
+            "path": "packages\\react\\src\\paged-editor\\SelectionOverlay.tsx",
+            "start": { "line": 246, "col": 13, "offset": 0 },
+            "end": { "line": 246, "col": 70, "offset": 57 }
+          }
+        ]
+      ],
+      "message": "Syntax error at line packages\\react\\src\\paged-editor\\SelectionOverlay.tsx:245:\n `import('@eigenpal/docx-core/layout-engine/types').FlowBlock` was unexpected",
+      "path": "packages\\react\\src\\paged-editor\\SelectionOverlay.tsx",
+      "spans": [
+        {
+          "file": "packages\\react\\src\\paged-editor\\SelectionOverlay.tsx",
+          "start": { "line": 245, "col": 11, "offset": 0 },
+          "end": { "line": 245, "col": 70, "offset": 59 }
+        },
+        {
+          "file": "packages\\react\\src\\paged-editor\\SelectionOverlay.tsx",
+          "start": { "line": 246, "col": 13, "offset": 0 },
+          "end": { "line": 246, "col": 70, "offset": 57 }
+        }
+      ]
+    }
+  ],
+  "paths": {
+    "scanned": [
+      ".changeset\\config.json",
+      ".changeset\\README.md",
+      ".claude\\commands\\opsx\\apply.md",
+      ".claude\\commands\\opsx\\archive.md",
+      ".claude\\commands\\opsx\\explore.md",
+      ".claude\\commands\\opsx\\propose.md",
+      ".claude\\skills\\openspec-apply-change\\SKILL.md",
+      ".claude\\skills\\openspec-archive-change\\SKILL.md",
+      ".claude\\skills\\openspec-explore\\SKILL.md",
+      ".claude\\skills\\openspec-propose\\SKILL.md",
+      ".github\\dependabot.yml",
+      ".github\\ISSUE_TEMPLATE\\bug_report.md",
+      ".github\\ISSUE_TEMPLATE\\feature_request.md",
+      ".github\\prompts\\opsx-apply.prompt.md",
+      ".github\\prompts\\opsx-archive.prompt.md",
+      ".github\\prompts\\opsx-explore.prompt.md",
+      ".github\\prompts\\opsx-propose.prompt.md",
+      ".github\\skills\\openspec-apply-change\\SKILL.md",
+      ".github\\skills\\openspec-archive-change\\SKILL.md",
+      ".github\\skills\\openspec-explore\\SKILL.md",
+      ".github\\skills\\openspec-propose\\SKILL.md",
+      ".github\\workflows\\ci.yml",
+      ".github\\workflows\\publish.yml",
+      ".gitignore",
+      ".husky\\pre-commit",
+      ".lintstagedrc",
+      ".openspec\\changes\\feat-edit-menu-find-replace\\design.md",
+      ".openspec\\changes\\feat-edit-menu-find-replace\\spec.md",
+      ".openspec\\changes\\feat-edit-menu-find-replace\\tasks.md",
+      ".openspec\\changes\\feat-edit-menu-find-replace\\testing.md",
+      ".openspec\\changes\\feat-format-menu-text-formatting\\design.md",
+      ".openspec\\changes\\feat-format-menu-text-formatting\\spec.md",
+      ".openspec\\changes\\feat-format-menu-text-formatting\\tasks.md",
+      ".openspec\\changes\\feat-format-menu-text-formatting\\testing.md",
+      ".openspec\\changes\\feat-paragraph-formatting-controls\\design.md",
+      ".openspec\\changes\\feat-paragraph-formatting-controls\\spec.md",
+      ".openspec\\changes\\feat-paragraph-formatting-controls\\tasks.md",
+      ".openspec\\changes\\feat-paragraph-formatting-controls\\testing.md",
+      ".openspec\\changes\\fix-blank-pdf-pages-141\\design.md",
+      ".openspec\\changes\\fix-blank-pdf-pages-141\\spec.md",
+      ".openspec\\changes\\fix-blank-pdf-pages-141\\tasks.md",
+      ".openspec\\changes\\fix-blank-pdf-pages-141\\testing.md",
+      ".openspec\\changes\\fix-gdocs-paste-181\\design.md",
+      ".openspec\\changes\\fix-gdocs-paste-181\\spec.md",
+      ".openspec\\changes\\fix-gdocs-paste-181\\tasks.md",
+      ".openspec\\changes\\fix-gdocs-paste-181\\testing.md",
+      ".prettierrc",
+      ".size-limit.json",
+      "AGENTS_README.md",
+      "assets\\editor.png",
+      "assets\\logo.png",
+      "bun.lock",
+      "bunfig.toml",
+      "CLAUDE.md",
+      "CONTRIBUTING.md",
+      "docs\\ARCHITECTURE.md",
+      "docs\\plugins\\core-plugins.md",
+      "docs\\plugins\\editor-plugins.md",
+      "docs\\plugins\\examples.md",
+      "docs\\plugins\\getting-started.md",
+      "docs\\PLUGINS.md",
+      "docs\\PROPS.md",
+      "docs\\TOOLBAR.md",
+      "e2e\\agentic\\scenario-runner.ts",
+      "e2e\\agentic\\scenario-types.ts",
+      "e2e\\annotation.spec.ts",
+      "e2e\\diagnose_render.spec.ts",
+      "e2e\\editor.spec.ts",
+      "e2e\\fixtures\\complex-styles.docx",
+      "e2e\\fixtures\\demo\\demo_1.jpg",
+      "e2e\\fixtures\\demo\\demo_10.jpg",
+      "e2e\\fixtures\\demo\\demo_2.jpg",
+      "e2e\\fixtures\\demo\\demo_3.jpg",
+      "e2e\\fixtures\\demo\\demo_4.jpg",
+      "e2e\\fixtures\\demo\\demo_5.jpg",
+      "e2e\\fixtures\\demo\\demo_6.jpg",
+      "e2e\\fixtures\\demo\\demo_7.jpg",
+      "e2e\\fixtures\\demo\\demo_8.jpg",
+      "e2e\\fixtures\\demo\\demo_9.jpg",
+      "e2e\\fixtures\\empty.docx",
+      "e2e\\fixtures\\EP_ZMVZ_MULTI_v4.docx",
+      "e2e\\fixtures\\example-with-image.docx",
+      "e2e\\fixtures\\float-wrap-comprehensive-test.docx",
+      "e2e\\fixtures\\generate-fixtures.ts",
+      "e2e\\fixtures\\generic-header-footer-horizontal-regression.docx",
+      "e2e\\fixtures\\generic-render-regression.docx",
+      "e2e\\fixtures\\README.md",
+      "e2e\\fixtures\\styled-content.docx",
+      "e2e\\fixtures\\test-image.png",
+      "e2e\\fixtures\\textbox-test.docx",
+      "e2e\\fixtures\\titlePg-header-footer.docx",
+      "e2e\\fixtures\\with-tables.docx",
+      "e2e\\helpers\\assertions.ts",
+      "e2e\\helpers\\editor-page.ts",
+      "e2e\\helpers\\index.ts",
+      "e2e\\helpers\\text-selection.ts",
+      "e2e\\scenarios\\alignment.json",
+      "e2e\\scenarios\\colors.json",
+      "e2e\\scenarios\\edge-cases.json",
+      "e2e\\scenarios\\find-replace.json",
+      "e2e\\scenarios\\fonts.json",
+      "e2e\\scenarios\\formatting.json",
+      "e2e\\scenarios\\history.json",
+      "e2e\\scenarios\\line-spacing.json",
+      "e2e\\scenarios\\lists.json",
+      "e2e\\scenarios\\paragraph-styles.json",
+      "e2e\\scenarios\\tables.json",
+      "e2e\\scenarios\\text-editing.json",
+      "e2e\\send_payload.spec.ts",
+      "e2e\\visual.spec.ts",
+      "eslint.config.js",
+      "examples\\agent-use-demo\\.env.example",
+      "examples\\agent-use-demo\\app\\api\\roast\\route.ts",
+      "examples\\agent-use-demo\\app\\globals.css",
+      "examples\\agent-use-demo\\app\\layout.tsx",
+      "examples\\agent-use-demo\\app\\page.tsx",
+      "examples\\agent-use-demo\\next-env.d.ts",
+      "examples\\agent-use-demo\\next.config.ts",
+      "examples\\agent-use-demo\\package.json",
+      "examples\\agent-use-demo\\postcss.config.js",
+      "examples\\agent-use-demo\\tsconfig.json",
+      "examples\\astro\\astro.config.mjs",
+      "examples\\astro\\bun.lock",
+      "examples\\astro\\package.json",
+      "examples\\astro\\public\\favicon.ico",
+      "examples\\astro\\public\\sample.docx",
+      "examples\\astro\\src\\components\\Editor.tsx",
+      "examples\\astro\\src\\pages\\index.astro",
+      "examples\\astro\\src\\styles.css",
+      "examples\\astro\\tailwind.config.js",
+      "examples\\astro\\tsconfig.json",
+      "examples\\astro\\vercel.json",
+      "examples\\dev-all.sh",
+      "examples\\nextjs\\app\\components\\Editor.tsx",
+      "examples\\nextjs\\app\\globals.css",
+      "examples\\nextjs\\app\\layout.tsx",
+      "examples\\nextjs\\app\\page.tsx",
+      "examples\\nextjs\\bun.lock",
+      "examples\\nextjs\\next-env.d.ts",
+      "examples\\nextjs\\next.config.ts",
+      "examples\\nextjs\\postcss.config.js",
+      "examples\\nextjs\\public\\favicon.ico",
+      "examples\\nextjs\\public\\sample.docx",
+      "examples\\nextjs\\tailwind.config.js",
+      "examples\\nextjs\\tsconfig.json",
+      "examples\\nextjs\\vercel.json",
+      "examples\\plugins\\docxtemplater\\index.html",
+      "examples\\plugins\\docxtemplater\\package.json",
+      "examples\\plugins\\docxtemplater\\public\\favicon.ico",
+      "examples\\plugins\\docxtemplater\\src\\App.tsx",
+      "examples\\plugins\\docxtemplater\\src\\main.tsx",
+      "examples\\plugins\\docxtemplater\\vite.config.ts",
+      "examples\\plugins\\hello-world\\index.html",
+      "examples\\plugins\\hello-world\\package.json",
+      "examples\\plugins\\hello-world\\src\\App.tsx",
+      "examples\\plugins\\hello-world\\src\\main.tsx",
+      "examples\\plugins\\hello-world\\src\\styles.css",
+      "examples\\plugins\\hello-world\\src\\wordCountPlugin.ts",
+      "examples\\plugins\\hello-world\\vite.config.ts",
+      "examples\\remix\\app\\components\\Editor.tsx",
+      "examples\\remix\\app\\root.tsx",
+      "examples\\remix\\app\\routes\\_index.tsx",
+      "examples\\remix\\app\\styles.css",
+      "examples\\remix\\bun.lock",
+      "examples\\remix\\package.json",
+      "examples\\remix\\public\\favicon.ico",
+      "examples\\remix\\public\\sample.docx",
+      "examples\\remix\\tailwind.config.js",
+      "examples\\remix\\tsconfig.json",
+      "examples\\remix\\vercel.json",
+      "examples\\remix\\vite.config.ts",
+      "examples\\shared\\config.ts",
+      "examples\\shared\\ExampleSwitcher.tsx",
+      "examples\\shared\\GitHubBadge.tsx",
+      "examples\\shared\\sample.docx",
+      "examples\\vite\\index.html",
+      "examples\\vite\\package.json",
+      "examples\\vite\\public\\annotation.html",
+      "examples\\vite\\public\\comments-and-templates.docx",
+      "examples\\vite\\public\\continuous-columns-test.docx",
+      "examples\\vite\\public\\docx-editor-demo.docx",
+      "examples\\vite\\public\\favicon.ico",
+      "examples\\vite\\public\\float-wrap-comprehensive-test.docx",
+      "examples\\vite\\public\\float-wrap-test.docx",
+      "examples\\vite\\public\\pr175-176-columns-test.docx",
+      "examples\\vite\\public\\sample.docx",
+      "examples\\vite\\public\\table-float-image-test.docx",
+      "examples\\vite\\public\\textbox-test.docx",
+      "examples\\vite\\public\\two-column-test.docx",
+      "examples\\vite\\public\\vanish-list-test.docx",
+      "examples\\vite\\scripts\\create-test-docx.ts",
+      "examples\\vite\\src\\App.tsx",
+      "examples\\vite\\src\\main.tsx",
+      "examples\\vite\\src\\styles.css",
+      "examples\\vite\\TODOLIST.md",
+      "examples\\vite\\tsconfig.json",
+      "examples\\vite\\vercel.json",
+      "examples\\vite\\vite.config.ts",
+      "examples\\vue\\index.html",
+      "examples\\vue\\package.json",
+      "examples\\vue\\src\\App.vue",
+      "examples\\vue\\src\\main.ts",
+      "examples\\vue\\tsconfig.json",
+      "examples\\vue\\vite.config.ts",
+      "LICENSE",
+      "openspec\\changes\\advanced-color-picker\\.openspec.yaml",
+      "openspec\\changes\\advanced-color-picker\\design.md",
+      "openspec\\changes\\advanced-color-picker\\proposal.md",
+      "openspec\\changes\\advanced-color-picker\\specs\\advanced-color-picker-ui\\spec.md",
+      "openspec\\changes\\advanced-color-picker\\specs\\color-ooxml-roundtrip\\spec.md",
+      "openspec\\changes\\advanced-color-picker\\tasks.md",
+      "openspec\\changes\\archive\\2026-03-16-float-image-text-wrapping-143-188\\.openspec.yaml",
+      "openspec\\changes\\archive\\2026-03-16-float-image-text-wrapping-143-188\\design.md",
+      "openspec\\changes\\archive\\2026-03-16-float-image-text-wrapping-143-188\\proposal.md",
+      "openspec\\changes\\archive\\2026-03-16-float-image-text-wrapping-143-188\\specs\\float-text-wrapping\\spec.md",
+      "openspec\\changes\\archive\\2026-03-16-float-image-text-wrapping-143-188\\specs\\table-cell-float-layout\\spec.md",
+      "openspec\\changes\\archive\\2026-03-16-float-image-text-wrapping-143-188\\tasks.md",
+      "openspec\\changes\\context-menu\\.openspec.yaml",
+      "openspec\\changes\\context-menu\\design.md",
+      "openspec\\changes\\context-menu\\proposal.md",
+      "openspec\\changes\\context-menu\\specs\\context-menu-core\\spec.md",
+      "openspec\\changes\\context-menu\\specs\\context-menu-image\\spec.md",
+      "openspec\\changes\\context-menu\\specs\\context-menu-link\\spec.md",
+      "openspec\\changes\\context-menu\\specs\\context-menu-table\\spec.md",
+      "openspec\\changes\\context-menu\\specs\\context-menu-text\\spec.md",
+      "openspec\\changes\\context-menu\\tasks.md",
+      "openspec\\changes\\cursor-navigation-autoscroll\\.openspec.yaml",
+      "openspec\\changes\\cursor-navigation-autoscroll\\design.md",
+      "openspec\\changes\\cursor-navigation-autoscroll\\proposal.md",
+      "openspec\\changes\\cursor-navigation-autoscroll\\tasks.md",
+      "openspec\\changes\\editor-performance\\.openspec.yaml",
+      "openspec\\changes\\editor-performance\\design.md",
+      "openspec\\changes\\editor-performance\\proposal.md",
+      "openspec\\changes\\editor-performance\\tasks.md",
+      "openspec\\changes\\extract-core-monorepo\\.openspec.yaml",
+      "openspec\\changes\\extract-core-monorepo\\design.md",
+      "openspec\\changes\\extract-core-monorepo\\proposal.md",
+      "openspec\\changes\\extract-core-monorepo\\specs\\core-package-api\\spec.md",
+      "openspec\\changes\\extract-core-monorepo\\specs\\cross-framework-plugins\\spec.md",
+      "openspec\\changes\\extract-core-monorepo\\specs\\monorepo-structure\\spec.md",
+      "openspec\\changes\\extract-core-monorepo\\tasks.md",
+      "openspec\\changes\\extract-framework-agnostic-managers\\.openspec.yaml",
+      "openspec\\changes\\extract-framework-agnostic-managers\\design.md",
+      "openspec\\changes\\extract-framework-agnostic-managers\\proposal.md",
+      "openspec\\changes\\extract-framework-agnostic-managers\\specs\\editor-coordinator\\spec.md",
+      "openspec\\changes\\extract-framework-agnostic-managers\\specs\\layout-coordinator\\spec.md",
+      "openspec\\changes\\extract-framework-agnostic-managers\\specs\\manager-classes\\spec.md",
+      "openspec\\changes\\extract-framework-agnostic-managers\\specs\\render-async-interface\\spec.md",
+      "openspec\\changes\\extract-framework-agnostic-managers\\tasks.md",
+      "openspec\\changes\\fix-default-line-spacing\\.openspec.yaml",
+      "openspec\\changes\\fix-default-line-spacing\\design.md",
+      "openspec\\changes\\fix-default-line-spacing\\proposal.md",
+      "openspec\\changes\\fix-default-line-spacing\\specs\\ooxml-default-line-spacing\\spec.md",
+      "openspec\\changes\\fix-default-line-spacing\\tasks.md",
+      "openspec\\changes\\fix-table-borders-and-fill-picker\\.openspec.yaml",
+      "openspec\\changes\\fix-table-borders-and-fill-picker\\design.md",
+      "openspec\\changes\\fix-table-borders-and-fill-picker\\proposal.md",
+      "openspec\\changes\\fix-table-borders-and-fill-picker\\specs\\table-cell-fill-picker\\spec.md",
+      "openspec\\changes\\fix-table-borders-and-fill-picker\\tasks.md",
+      "openspec\\changes\\floating-image-layout\\.openspec.yaml",
+      "openspec\\changes\\floating-image-layout\\design.md",
+      "openspec\\changes\\floating-image-layout\\proposal.md",
+      "openspec\\changes\\floating-image-layout\\tasks.md",
+      "openspec\\changes\\google-docs-toolbar\\.openspec.yaml",
+      "openspec\\changes\\google-docs-toolbar\\design.md",
+      "openspec\\changes\\google-docs-toolbar\\proposal.md",
+      "openspec\\changes\\google-docs-toolbar\\specs\\composable-toolbar\\spec.md",
+      "openspec\\changes\\google-docs-toolbar\\tasks.md",
+      "openspec\\changes\\header-footer-rendering\\.openspec.yaml",
+      "openspec\\changes\\header-footer-rendering\\design.md",
+      "openspec\\changes\\header-footer-rendering\\proposal.md",
+      "openspec\\changes\\header-footer-rendering\\tasks.md",
+      "openspec\\changes\\list-operations-fidelity\\.openspec.yaml",
+      "openspec\\changes\\list-operations-fidelity\\design.md",
+      "openspec\\changes\\list-operations-fidelity\\proposal.md",
+      "openspec\\changes\\list-operations-fidelity\\tasks.md",
+      "openspec\\changes\\ooxml-feature-gaps\\.openspec.yaml",
+      "openspec\\changes\\ooxml-feature-gaps\\design.md",
+      "openspec\\changes\\ooxml-feature-gaps\\proposal.md",
+      "openspec\\changes\\ooxml-feature-gaps\\tasks.md",
+      "openspec\\changes\\ooxml-roundtrip-fidelity\\.openspec.yaml",
+      "openspec\\changes\\ooxml-roundtrip-fidelity\\design.md",
+      "openspec\\changes\\ooxml-roundtrip-fidelity\\proposal.md",
+      "openspec\\changes\\ooxml-roundtrip-fidelity\\tasks.md",
+      "openspec\\changes\\paragraph-border-rendering\\.openspec.yaml",
+      "openspec\\changes\\paragraph-border-rendering\\design.md",
+      "openspec\\changes\\paragraph-border-rendering\\proposal.md",
+      "openspec\\changes\\paragraph-border-rendering\\tasks.md",
+      "openspec\\changes\\paste-google-docs\\.openspec.yaml",
+      "openspec\\changes\\paste-google-docs\\design.md",
+      "openspec\\changes\\paste-google-docs\\proposal.md",
+      "openspec\\changes\\paste-google-docs\\tasks.md",
+      "openspec\\changes\\review-plugin\\.openspec.yaml",
+      "openspec\\changes\\review-plugin\\design.md",
+      "openspec\\changes\\review-plugin\\proposal.md",
+      "openspec\\changes\\review-plugin\\specs\\review-actions\\spec.md",
+      "openspec\\changes\\review-plugin\\specs\\review-discovery\\spec.md",
+      "openspec\\changes\\review-plugin\\specs\\review-packaging\\spec.md",
+      "openspec\\changes\\review-plugin\\specs\\review-reading\\spec.md",
+      "openspec\\changes\\review-plugin\\tasks.md",
+      "openspec\\changes\\selective-xml-save\\.openspec.yaml",
+      "openspec\\changes\\selective-xml-save\\design.md",
+      "openspec\\changes\\selective-xml-save\\proposal.md",
+      "openspec\\changes\\selective-xml-save\\specs\\paragraph-change-tracking\\spec.md",
+      "openspec\\changes\\selective-xml-save\\specs\\selective-save\\spec.md",
+      "openspec\\changes\\selective-xml-save\\specs\\selective-xml-patch\\spec.md",
+      "openspec\\changes\\selective-xml-save\\tasks.md",
+      "openspec\\changes\\tab-leader-fidelity\\.openspec.yaml",
+      "openspec\\changes\\tab-leader-fidelity\\design.md",
+      "openspec\\changes\\tab-leader-fidelity\\proposal.md",
+      "openspec\\changes\\tab-leader-fidelity\\tasks.md",
+      "openspec\\changes\\table-editing-polish\\.openspec.yaml",
+      "openspec\\changes\\table-editing-polish\\design.md",
+      "openspec\\changes\\table-editing-polish\\proposal.md",
+      "openspec\\changes\\table-editing-polish\\tasks.md",
+      "openspec\\changes\\table-rendering-fidelity\\.openspec.yaml",
+      "openspec\\changes\\table-rendering-fidelity\\design.md",
+      "openspec\\changes\\table-rendering-fidelity\\proposal.md",
+      "openspec\\changes\\table-rendering-fidelity\\tasks.md",
+      "openspec\\changes\\toolbar-selection-interactions\\.openspec.yaml",
+      "openspec\\changes\\toolbar-selection-interactions\\design.md",
+      "openspec\\changes\\toolbar-selection-interactions\\proposal.md",
+      "openspec\\changes\\toolbar-selection-interactions\\tasks.md",
+      "openspec\\changes\\track-changes-comments\\.openspec.yaml",
+      "openspec\\changes\\track-changes-comments\\design.md",
+      "openspec\\changes\\track-changes-comments\\proposal.md",
+      "openspec\\changes\\track-changes-comments\\specs\\comment-sidebar\\spec.md",
+      "openspec\\changes\\track-changes-comments\\specs\\document-layout-shift\\spec.md",
+      "openspec\\changes\\track-changes-comments\\specs\\suggestion-mode\\spec.md",
+      "openspec\\changes\\track-changes-comments\\specs\\track-changes-review\\spec.md",
+      "openspec\\changes\\track-changes-comments\\tasks.md",
+      "openspec\\changes\\tracked-changes-edge-cases\\.openspec.yaml",
+      "openspec\\changes\\tracked-changes-edge-cases\\design.md",
+      "openspec\\changes\\tracked-changes-edge-cases\\proposal.md",
+      "openspec\\changes\\tracked-changes-edge-cases\\tasks.md",
+      "package.json",
+      "packages\\agent-use\\CHANGELOG.md",
+      "packages\\agent-use\\LICENSE",
+      "packages\\agent-use\\package.json",
+      "packages\\agent-use\\README.md",
+      "packages\\agent-use\\src\\__tests__\\DocxReviewer.test.ts",
+      "packages\\agent-use\\src\\batch.ts",
+      "packages\\agent-use\\src\\bridge.ts",
+      "packages\\agent-use\\src\\changes.ts",
+      "packages\\agent-use\\src\\comments.ts",
+      "packages\\agent-use\\src\\content.ts",
+      "packages\\agent-use\\src\\discovery.ts",
+      "packages\\agent-use\\src\\DocxReviewer.ts",
+      "packages\\agent-use\\src\\errors.ts",
+      "packages\\agent-use\\src\\index.ts",
+      "packages\\agent-use\\src\\textSearch.ts",
+      "packages\\agent-use\\src\\types.ts",
+      "packages\\agent-use\\src\\utils.ts",
+      "packages\\agent-use\\tsconfig.json",
+      "packages\\agent-use\\tsup.config.ts",
+      "packages\\core\\package.json",
+      "packages\\core\\src\\agent\\context.ts",
+      "packages\\core\\src\\agent\\DocumentAgent.ts",
+      "packages\\core\\src\\agent\\executor.ts",
+      "packages\\core\\src\\agent\\selectionContext.ts",
+      "packages\\core\\src\\agent\\text-utils.ts",
+      "packages\\core\\src\\core-plugins\\docxtemplater\\handlers.ts",
+      "packages\\core\\src\\core-plugins\\docxtemplater\\index.ts",
+      "packages\\core\\src\\core-plugins\\docxtemplater\\mcp-tools.ts",
+      "packages\\core\\src\\core-plugins\\index.ts",
+      "packages\\core\\src\\core-plugins\\registry.ts",
+      "packages\\core\\src\\core-plugins\\types.ts",
+      "packages\\core\\src\\core.ts",
+      "packages\\core\\src\\docx\\__tests__\\color-roundtrip.test.ts",
+      "packages\\core\\src\\docx\\__tests__\\numbering-vanish.test.ts",
+      "packages\\core\\src\\docx\\bookmarkParser.ts",
+      "packages\\core\\src\\docx\\commentParser.test.ts",
+      "packages\\core\\src\\docx\\commentParser.ts",
+      "packages\\core\\src\\docx\\documentParser.ts",
+      "packages\\core\\src\\docx\\drawingUtils.ts",
+      "packages\\core\\src\\docx\\explorer.ts",
+      "packages\\core\\src\\docx\\fieldParser.ts",
+      "packages\\core\\src\\docx\\footnoteParser.ts",
+      "packages\\core\\src\\docx\\headerFooterParser.ts",
+      "packages\\core\\src\\docx\\hyperlinkParser.ts",
+      "packages\\core\\src\\docx\\imageParser.ts",
+      "packages\\core\\src\\docx\\numberingParser.ts",
+      "packages\\core\\src\\docx\\paragraphParser.test.ts",
+      "packages\\core\\src\\docx\\paragraphParser.ts",
+      "packages\\core\\src\\docx\\parser.ts",
+      "packages\\core\\src\\docx\\relsParser.ts",
+      "packages\\core\\src\\docx\\rezip.ts",
+      "packages\\core\\src\\docx\\runConsolidator.ts",
+      "packages\\core\\src\\docx\\runParser.ts",
+      "packages\\core\\src\\docx\\sectionParser.ts",
+      "packages\\core\\src\\docx\\selectiveSave.test.ts",
+      "packages\\core\\src\\docx\\selectiveSave.ts",
+      "packages\\core\\src\\docx\\selectiveXmlPatch.test.ts",
+      "packages\\core\\src\\docx\\selectiveXmlPatch.ts",
+      "packages\\core\\src\\docx\\serializer\\commentSerializer.ts",
+      "packages\\core\\src\\docx\\serializer\\documentSerializer.ts",
+      "packages\\core\\src\\docx\\serializer\\headerFooterSerializer.ts",
+      "packages\\core\\src\\docx\\serializer\\paragraphSerializer.test.ts",
+      "packages\\core\\src\\docx\\serializer\\paragraphSerializer.ts",
+      "packages\\core\\src\\docx\\serializer\\runSerializer.ts",
+      "packages\\core\\src\\docx\\serializer\\tableSerializer.ts",
+      "packages\\core\\src\\docx\\serializer\\xmlUtils.ts",
+      "packages\\core\\src\\docx\\shapeParser.ts",
+      "packages\\core\\src\\docx\\styleParser.ts",
+      "packages\\core\\src\\docx\\tableParser.ts",
+      "packages\\core\\src\\docx\\tabParser.ts",
+      "packages\\core\\src\\docx\\textBoxParser.ts",
+      "packages\\core\\src\\docx\\themeParser.ts",
+      "packages\\core\\src\\docx\\unzip.ts",
+      "packages\\core\\src\\docx\\xmlParser.ts",
+      "packages\\core\\src\\headless.ts",
+      "packages\\core\\src\\layout-bridge\\clickToPosition.ts",
+      "packages\\core\\src\\layout-bridge\\clickToPositionDom.ts",
+      "packages\\core\\src\\layout-bridge\\footnoteLayout.ts",
+      "packages\\core\\src\\layout-bridge\\hitTest.ts",
+      "packages\\core\\src\\layout-bridge\\measureHeaderFooter.ts",
+      "packages\\core\\src\\layout-bridge\\measuring\\cache.ts",
+      "packages\\core\\src\\layout-bridge\\measuring\\index.ts",
+      "packages\\core\\src\\layout-bridge\\measuring\\measureContainer.ts",
+      "packages\\core\\src\\layout-bridge\\measuring\\measureParagraph.ts",
+      "packages\\core\\src\\layout-bridge\\selectionRects.ts",
+      "packages\\core\\src\\layout-bridge\\toFlowBlocks.ts",
+      "packages\\core\\src\\layout-engine\\floatingObjects.ts",
+      "packages\\core\\src\\layout-engine\\index.ts",
+      "packages\\core\\src\\layout-engine\\integration.test.ts",
+      "packages\\core\\src\\layout-engine\\keep-together.ts",
+      "packages\\core\\src\\layout-engine\\paginator.test.ts",
+      "packages\\core\\src\\layout-engine\\paginator.ts",
+      "packages\\core\\src\\layout-engine\\performance.test.ts",
+      "packages\\core\\src\\layout-engine\\section-breaks.ts",
+      "packages\\core\\src\\layout-engine\\types.ts",
+      "packages\\core\\src\\layout-painter\\index.ts",
+      "packages\\core\\src\\layout-painter\\renderFragment.ts",
+      "packages\\core\\src\\layout-painter\\renderImage.ts",
+      "packages\\core\\src\\layout-painter\\renderPage.ts",
+      "packages\\core\\src\\layout-painter\\renderParagraph.ts",
+      "packages\\core\\src\\layout-painter\\renderTable.ts",
+      "packages\\core\\src\\layout-painter\\renderTextBox.ts",
+      "packages\\core\\src\\managers\\AutoSaveManager.ts",
+      "packages\\core\\src\\managers\\ClipboardManager.ts",
+      "packages\\core\\src\\managers\\EditorCoordinator.ts",
+      "packages\\core\\src\\managers\\ErrorManager.ts",
+      "packages\\core\\src\\managers\\index.ts",
+      "packages\\core\\src\\managers\\LayoutCoordinator.ts",
+      "packages\\core\\src\\managers\\PluginLifecycleManager.ts",
+      "packages\\core\\src\\managers\\Subscribable.ts",
+      "packages\\core\\src\\managers\\TableSelectionManager.ts",
+      "packages\\core\\src\\managers\\types.ts",
+      "packages\\core\\src\\mcp\\cli.ts",
+      "packages\\core\\src\\mcp\\core-tools.ts",
+      "packages\\core\\src\\mcp\\index.ts",
+      "packages\\core\\src\\mcp\\server.ts",
+      "packages\\core\\src\\plugin-api\\index.ts",
+      "packages\\core\\src\\plugin-api\\types.ts",
+      "packages\\core\\src\\prosemirror\\commands\\comments.ts",
+      "packages\\core\\src\\prosemirror\\commands\\formatting.ts",
+      "packages\\core\\src\\prosemirror\\commands\\index.ts",
+      "packages\\core\\src\\prosemirror\\commands\\pageBreak.ts",
+      "packages\\core\\src\\prosemirror\\commands\\paragraph.ts",
+      "packages\\core\\src\\prosemirror\\commands\\table.ts",
+      "packages\\core\\src\\prosemirror\\conversion\\fromProseDoc.ts",
+      "packages\\core\\src\\prosemirror\\conversion\\index.ts",
+      "packages\\core\\src\\prosemirror\\conversion\\toProseDoc.ts",
+      "packages\\core\\src\\prosemirror\\editor.css",
+      "packages\\core\\src\\prosemirror\\extensions\\core\\DocExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\core\\HistoryExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\core\\ParagraphExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\core\\TextExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\create.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\ExtensionManager.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\features\\BaseKeymapExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\features\\BidiShortcutExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\features\\DropCursorExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\features\\ImageDragExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\features\\ImagePasteExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\features\\ListExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\features\\ParagraphChangeTrackerExtension.test.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\features\\ParagraphChangeTrackerExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\features\\PasteStyleInlinerExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\features\\SelectionTrackerExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\index.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\AllCapsExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\BoldExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\CharacterSpacingExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\CommentExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\FontFamilyExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\FontSizeExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\FootnoteRefExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\HighlightExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\HyperlinkExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\ItalicExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\markUtils.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\SmallCapsExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\StrikeExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\SubscriptExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\SuperscriptExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\TextColorExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\TextEffectsExtensions.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\TrackedChangeExtensions.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\marks\\UnderlineExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\nodes\\FieldExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\nodes\\HardBreakExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\nodes\\HorizontalRuleExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\nodes\\ImageExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\nodes\\MathExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\nodes\\PageBreakExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\nodes\\SdtExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\nodes\\ShapeExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\nodes\\TabExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\nodes\\TableExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\nodes\\TextBoxExtension.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\StarterKit.ts",
+      "packages\\core\\src\\prosemirror\\extensions\\types.ts",
+      "packages\\core\\src\\prosemirror\\index.ts",
+      "packages\\core\\src\\prosemirror\\plugins\\index.ts",
+      "packages\\core\\src\\prosemirror\\plugins\\selectionTracker.ts",
+      "packages\\core\\src\\prosemirror\\plugins\\suggestionMode.test.ts",
+      "packages\\core\\src\\prosemirror\\plugins\\suggestionMode.ts",
+      "packages\\core\\src\\prosemirror\\schema\\index.ts",
+      "packages\\core\\src\\prosemirror\\schema\\marks.ts",
+      "packages\\core\\src\\prosemirror\\schema\\nodes.ts",
+      "packages\\core\\src\\prosemirror\\selectionState.ts",
+      "packages\\core\\src\\prosemirror\\styles\\index.ts",
+      "packages\\core\\src\\prosemirror\\styles\\styleResolver.test.ts",
+      "packages\\core\\src\\prosemirror\\styles\\styleResolver.ts",
+      "packages\\core\\src\\prosemirror\\utils\\tabCalculator.test.ts",
+      "packages\\core\\src\\prosemirror\\utils\\tabCalculator.ts",
+      "packages\\core\\src\\types\\agentApi.ts",
+      "packages\\core\\src\\types\\colors.ts",
+      "packages\\core\\src\\types\\content.ts",
+      "packages\\core\\src\\types\\document.ts",
+      "packages\\core\\src\\types\\formatting.ts",
+      "packages\\core\\src\\types\\index.ts",
+      "packages\\core\\src\\types\\lists.ts",
+      "packages\\core\\src\\types\\styles.ts",
+      "packages\\core\\src\\utils\\__tests__\\clipboard.test.ts",
+      "packages\\core\\src\\utils\\__tests__\\colorResolver.test.ts",
+      "packages\\core\\src\\utils\\clipboard.ts",
+      "packages\\core\\src\\utils\\colorResolver.ts",
+      "packages\\core\\src\\utils\\createDocument.ts",
+      "packages\\core\\src\\utils\\docxInput.ts",
+      "packages\\core\\src\\utils\\fontExtractor.ts",
+      "packages\\core\\src\\utils\\fontLoader.ts",
+      "packages\\core\\src\\utils\\fontResolver.ts",
+      "packages\\core\\src\\utils\\formatToStyle.ts",
+      "packages\\core\\src\\utils\\headingCollector.ts",
+      "packages\\core\\src\\utils\\insertOperations.ts",
+      "packages\\core\\src\\utils\\keyboardNavigation.ts",
+      "packages\\core\\src\\utils\\processTemplate.ts",
+      "packages\\core\\src\\utils\\selectionHighlight.ts",
+      "packages\\core\\src\\utils\\textMeasure.ts",
+      "packages\\core\\src\\utils\\textSelection.ts",
+      "packages\\core\\src\\utils\\units.ts",
+      "packages\\core\\src\\utils\\variableDetector.ts",
+      "packages\\core\\tsconfig.json",
+      "packages\\core\\tsup.config.ts",
+      "packages\\react\\.gitignore",
+      "packages\\react\\CHANGELOG.md",
+      "packages\\react\\package.json",
+      "packages\\react\\src\\components\\ContextMenu.tsx",
+      "packages\\react\\src\\components\\dialogs\\FindReplaceDialog.tsx",
+      "packages\\react\\src\\components\\dialogs\\findReplaceUtils.ts",
+      "packages\\react\\src\\components\\dialogs\\FootnotePropertiesDialog.tsx",
+      "packages\\react\\src\\components\\dialogs\\HyperlinkDialog.tsx",
+      "packages\\react\\src\\components\\dialogs\\ImagePositionDialog.tsx",
+      "packages\\react\\src\\components\\dialogs\\ImagePropertiesDialog.tsx",
+      "packages\\react\\src\\components\\dialogs\\index.ts",
+      "packages\\react\\src\\components\\dialogs\\InsertImageDialog.tsx",
+      "packages\\react\\src\\components\\dialogs\\InsertSymbolDialog.tsx",
+      "packages\\react\\src\\components\\dialogs\\InsertTableDialog.tsx",
+      "packages\\react\\src\\components\\dialogs\\KeyboardShortcutsDialog.tsx",
+      "packages\\react\\src\\components\\dialogs\\PageSetupDialog.tsx",
+      "packages\\react\\src\\components\\dialogs\\PasteSpecialDialog.tsx",
+      "packages\\react\\src\\components\\dialogs\\TablePropertiesDialog.tsx",
+      "packages\\react\\src\\components\\dialogs\\useFindReplace.ts",
+      "packages\\react\\src\\components\\DocumentOutline.tsx",
+      "packages\\react\\src\\components\\DocxEditor.tsx",
+      "packages\\react\\src\\components\\DocxEditorHelpers.tsx",
+      "packages\\react\\src\\components\\edit\\EditableImage.tsx",
+      "packages\\react\\src\\components\\EditorToolbar.tsx",
+      "packages\\react\\src\\components\\EditorToolbarContext.tsx",
+      "packages\\react\\src\\components\\ErrorBoundary.tsx",
+      "packages\\react\\src\\components\\FormattingBar.tsx",
+      "packages\\react\\src\\components\\InlineHeaderFooterEditor.tsx",
+      "packages\\react\\src\\components\\render\\DocImage.tsx",
+      "packages\\react\\src\\components\\render\\DocTable.tsx",
+      "packages\\react\\src\\components\\render\\Field.tsx",
+      "packages\\react\\src\\components\\render\\FootnoteArea.tsx",
+      "packages\\react\\src\\components\\render\\FootnoteRef.tsx",
+      "packages\\react\\src\\components\\render\\HeaderFooter.tsx",
+      "packages\\react\\src\\components\\render\\Hyperlink.tsx",
+      "packages\\react\\src\\components\\render\\ListItem.tsx",
+      "packages\\react\\src\\components\\render\\Paragraph.tsx",
+      "packages\\react\\src\\components\\render\\Run.tsx",
+      "packages\\react\\src\\components\\render\\Shape.tsx",
+      "packages\\react\\src\\components\\render\\Tab.tsx",
+      "packages\\react\\src\\components\\render\\TextBox.tsx",
+      "packages\\react\\src\\components\\ResponsePreview.tsx",
+      "packages\\react\\src\\components\\sidebar\\AddCommentCard.tsx",
+      "packages\\react\\src\\components\\sidebar\\cardStyles.ts",
+      "packages\\react\\src\\components\\sidebar\\cardUtils.ts",
+      "packages\\react\\src\\components\\sidebar\\CommentCard.tsx",
+      "packages\\react\\src\\components\\sidebar\\constants.ts",
+      "packages\\react\\src\\components\\sidebar\\ReplyInput.tsx",
+      "packages\\react\\src\\components\\sidebar\\ReplyThread.tsx",
+      "packages\\react\\src\\components\\sidebar\\resolveItemPositions.ts",
+      "packages\\react\\src\\components\\sidebar\\TrackedChangeCard.tsx",
+      "packages\\react\\src\\components\\TextContextMenu.tsx",
+      "packages\\react\\src\\components\\TitleBar.tsx",
+      "packages\\react\\src\\components\\Toolbar.tsx",
+      "packages\\react\\src\\components\\toolbarUtils.ts",
+      "packages\\react\\src\\components\\ui\\AdvancedColorPicker.tsx",
+      "packages\\react\\src\\components\\ui\\AlignmentButtons.tsx",
+      "packages\\react\\src\\components\\ui\\Button.tsx",
+      "packages\\react\\src\\components\\ui\\ColorPicker.tsx",
+      "packages\\react\\src\\components\\ui\\FontPicker.tsx",
+      "packages\\react\\src\\components\\ui\\FontSizePicker.tsx",
+      "packages\\react\\src\\components\\ui\\HorizontalRuler.tsx",
+      "packages\\react\\src\\components\\ui\\HyperlinkPopup.tsx",
+      "packages\\react\\src\\components\\ui\\IconGridDropdown.tsx",
+      "packages\\react\\src\\components\\ui\\Icons.tsx",
+      "packages\\react\\src\\components\\ui\\ImageTransformDropdown.tsx",
+      "packages\\react\\src\\components\\ui\\ImageWrapDropdown.tsx",
+      "packages\\react\\src\\components\\ui\\LineSpacingPicker.tsx",
+      "packages\\react\\src\\components\\ui\\ListButtons.tsx",
+      "packages\\react\\src\\components\\ui\\LoadingIndicator.tsx",
+      "packages\\react\\src\\components\\ui\\MaterialSymbol.tsx",
+      "packages\\react\\src\\components\\ui\\MenuDropdown.tsx",
+      "packages\\react\\src\\components\\ui\\PrintPreview.tsx",
+      "packages\\react\\src\\components\\ui\\ResponsiveToolbar.tsx",
+      "packages\\react\\src\\components\\ui\\Select.tsx",
+      "packages\\react\\src\\components\\ui\\ShapeGallery.tsx",
+      "packages\\react\\src\\components\\ui\\StylePicker.tsx",
+      "packages\\react\\src\\components\\ui\\TableBorderColorPicker.tsx",
+      "packages\\react\\src\\components\\ui\\TableBorderPicker.tsx",
+      "packages\\react\\src\\components\\ui\\TableBorderWidthPicker.tsx",
+      "packages\\react\\src\\components\\ui\\TableCellFillPicker.tsx",
+      "packages\\react\\src\\components\\ui\\TableGridInline.tsx",
+      "packages\\react\\src\\components\\ui\\TableGridPicker.tsx",
+      "packages\\react\\src\\components\\ui\\TableInsertButtons.tsx",
+      "packages\\react\\src\\components\\ui\\TableMergeButton.tsx",
+      "packages\\react\\src\\components\\ui\\TableMoreDropdown.tsx",
+      "packages\\react\\src\\components\\ui\\TableOptionsDropdown.tsx",
+      "packages\\react\\src\\components\\ui\\TableQuickActions.tsx",
+      "packages\\react\\src\\components\\ui\\TableStyleGallery.tsx",
+      "packages\\react\\src\\components\\ui\\TableToolbar.tsx",
+      "packages\\react\\src\\components\\ui\\Tooltip.tsx",
+      "packages\\react\\src\\components\\ui\\UnsavedIndicator.tsx",
+      "packages\\react\\src\\components\\ui\\useFixedDropdown.ts",
+      "packages\\react\\src\\components\\ui\\VerticalRuler.tsx",
+      "packages\\react\\src\\components\\ui\\ZoomControl.tsx",
+      "packages\\react\\src\\components\\UnifiedSidebar.tsx",
+      "packages\\react\\src\\core-plugins-reexport.ts",
+      "packages\\react\\src\\core-reexport.ts",
+      "packages\\react\\src\\headless-reexport.ts",
+      "packages\\react\\src\\hooks\\index.ts",
+      "packages\\react\\src\\hooks\\useAutoSave.ts",
+      "packages\\react\\src\\hooks\\useClipboard.ts",
+      "packages\\react\\src\\hooks\\useCommentSidebarItems.tsx",
+      "packages\\react\\src\\hooks\\useHistory.ts",
+      "packages\\react\\src\\hooks\\useSelectionHighlight.ts",
+      "packages\\react\\src\\hooks\\useTableSelection.ts",
+      "packages\\react\\src\\hooks\\useWheelZoom.ts",
+      "packages\\react\\src\\index.ts",
+      "packages\\react\\src\\lib\\utils.ts",
+      "packages\\react\\src\\mcp-reexport.ts",
+      "packages\\react\\src\\paged-editor\\ClickPositionResolver.ts",
+      "packages\\react\\src\\paged-editor\\HiddenProseMirror.tsx",
+      "packages\\react\\src\\paged-editor\\ImageSelectionOverlay.tsx",
+      "packages\\react\\src\\paged-editor\\LayoutSelectionGate.test.ts",
+      "packages\\react\\src\\paged-editor\\LayoutSelectionGate.ts",
+      "packages\\react\\src\\paged-editor\\PagedEditor.tsx",
+      "packages\\react\\src\\paged-editor\\PointerEventHandler.ts",
+      "packages\\react\\src\\paged-editor\\SelectionOverlay.tsx",
+      "packages\\react\\src\\paged-editor\\useDragAutoScroll.ts",
+      "packages\\react\\src\\paged-editor\\useVisualLineNavigation.ts",
+      "packages\\react\\src\\plugin-api\\index.ts",
+      "packages\\react\\src\\plugin-api\\PluginHost.tsx",
+      "packages\\react\\src\\plugin-api\\RenderedDomContext.ts",
+      "packages\\react\\src\\plugin-api\\types.ts",
+      "packages\\react\\src\\plugins\\template\\components\\TemplateChip.tsx",
+      "packages\\react\\src\\plugins\\template\\components\\TemplateHighlightOverlay.tsx",
+      "packages\\react\\src\\plugins\\template\\index.ts",
+      "packages\\react\\src\\plugins\\template\\prosemirror-plugin.ts",
+      "packages\\react\\src\\react.ts",
+      "packages\\react\\src\\renderAsync.ts",
+      "packages\\react\\src\\styles\\editor.css",
+      "packages\\react\\src\\styles\\index.ts",
+      "packages\\react\\src\\ui.ts",
+      "packages\\react\\tsconfig.json",
+      "packages\\react\\tsup.config.ts",
+      "packages\\vue\\package.json",
+      "packages\\vue\\src\\index.ts",
+      "packages\\vue\\src\\plugin-api\\types.ts",
+      "packages\\vue\\src\\renderAsync.ts",
+      "packages\\vue\\tsconfig.json",
+      "playwright.config.ts",
+      "pnpm-lock.yaml",
+      "pnpm-workspace.yaml",
+      "postcss.config.js",
+      "README.md",
+      "reference\\ecma-376\\overview.pdf",
+      "reference\\ecma-376\\part1\\OfficeOpenXML-DrawingMLGeometries.zip",
+      "reference\\ecma-376\\part1\\OfficeOpenXML-RELAXNG-Strict.zip",
+      "reference\\ecma-376\\part1\\OfficeOpenXML-SpreadsheetMLStyles.zip",
+      "reference\\ecma-376\\part1\\OfficeOpenXML-XMLSchema-Strict.zip",
+      "reference\\ecma-376\\part1\\schemas\\dml-chart.xsd",
+      "reference\\ecma-376\\part1\\schemas\\dml-chartDrawing.xsd",
+      "reference\\ecma-376\\part1\\schemas\\dml-diagram.xsd",
+      "reference\\ecma-376\\part1\\schemas\\dml-lockedCanvas.xsd",
+      "reference\\ecma-376\\part1\\schemas\\dml-main.xsd",
+      "reference\\ecma-376\\part1\\schemas\\dml-picture.xsd",
+      "reference\\ecma-376\\part1\\schemas\\dml-spreadsheetDrawing.xsd",
+      "reference\\ecma-376\\part1\\schemas\\dml-wordprocessingDrawing.xsd",
+      "reference\\ecma-376\\part1\\schemas\\pml.xsd",
+      "reference\\ecma-376\\part1\\schemas\\shared-additionalCharacteristics.xsd",
+      "reference\\ecma-376\\part1\\schemas\\shared-bibliography.xsd",
+      "reference\\ecma-376\\part1\\schemas\\shared-commonSimpleTypes.xsd",
+      "reference\\ecma-376\\part1\\schemas\\shared-customXmlDataProperties.xsd",
+      "reference\\ecma-376\\part1\\schemas\\shared-customXmlSchemaProperties.xsd",
+      "reference\\ecma-376\\part1\\schemas\\shared-documentPropertiesCustom.xsd",
+      "reference\\ecma-376\\part1\\schemas\\shared-documentPropertiesExtended.xsd",
+      "reference\\ecma-376\\part1\\schemas\\shared-documentPropertiesVariantTypes.xsd",
+      "reference\\ecma-376\\part1\\schemas\\shared-math.xsd",
+      "reference\\ecma-376\\part1\\schemas\\shared-relationshipReference.xsd",
+      "reference\\ecma-376\\part1\\schemas\\sml.xsd",
+      "reference\\ecma-376\\part1\\schemas\\wml.xsd",
+      "reference\\ecma-376\\part4\\OfficeOpenXML-RELAXNG-Transitional.zip",
+      "reference\\ecma-376\\part4\\OfficeOpenXML-XMLSchema-Transitional.zip",
+      "reference\\quick-ref\\themes-colors.md",
+      "reference\\quick-ref\\wordprocessingml.md",
+      "reference\\README.md",
+      "scripts\\create-float-wrap-test.mjs",
+      "scripts\\generate-large-doc-issue68.ts",
+      "scripts\\run-annotation_playwright.mjs",
+      "scripts\\send_payload_playwright.mjs",
+      "src\\components\\annotationSidebar.css",
+      "src\\components\\AnnotationSidebar.tsx",
+      "src\\main.tsx",
+      "tailwind.config.js",
+      "tailwind.config.lib.js",
+      "tsconfig.json",
+      "vercel.json"
+    ]
+  },
+  "time": {
+    "rules": [],
+    "rules_parse_time": 0.9697535037994385,
+    "profiling_times": {
+      "config_time": 3.0090200901031494,
+      "core_time": 13.65325665473938,
+      "ignores_time": 0.0014679431915283203,
+      "total_time": 18.150411367416382
+    },
+    "parsing_time": {
+      "total_time": 0.0,
+      "per_file_time": { "mean": 0.0, "std_dev": 0.0 },
+      "very_slow_stats": { "time_ratio": 0.0, "count_ratio": 0.0 },
+      "very_slow_files": []
+    },
+    "scanning_time": {
+      "total_time": 59.93760013580322,
+      "per_file_time": { "mean": 0.030425177733910257, "std_dev": 0.039782417646718804 },
+      "very_slow_stats": { "time_ratio": 0.2216547464007019, "count_ratio": 0.0015228426395939086 },
+      "very_slow_files": [
+        {
+          "fpath": "packages\\core\\src\\prosemirror\\extensions\\nodes\\TableExtension.ts",
+          "ftime": 2.1718077659606934
+        },
+        {
+          "fpath": "packages\\react\\src\\paged-editor\\PagedEditor.tsx",
+          "ftime": 4.79285740852356
+        },
+        { "fpath": "packages\\react\\src\\components\\DocxEditor.tsx", "ftime": 6.320788383483887 }
+      ]
+    },
+    "matching_time": {
+      "total_time": 0.0,
+      "per_file_and_rule_time": { "mean": 0.0, "std_dev": 0.0 },
+      "very_slow_stats": { "time_ratio": 0.0, "count_ratio": 0.0 },
+      "very_slow_rules_on_files": []
+    },
+    "tainting_time": {
+      "total_time": 0.0,
+      "per_def_and_rule_time": { "mean": 0.0, "std_dev": 0.0 },
+      "very_slow_stats": { "time_ratio": 0.0, "count_ratio": 0.0 },
+      "very_slow_rules_on_defs": []
+    },
+    "fixpoint_timeouts": [
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at examples\\agent-use-demo\\app\\page.tsx:14:24 [rules: 1, first: javascript.express.security.audit.remote-property-injection.remote-property-injection]",
+        "location": {
+          "path": "examples\\agent-use-demo\\app\\page.tsx",
+          "start": { "line": 14, "col": 25, "offset": 313 },
+          "end": { "line": 14, "col": 29, "offset": 317 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\docx\\explorer.ts:158:9 [rules: 1, first: javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring]",
+        "location": {
+          "path": "packages\\core\\src\\docx\\explorer.ts",
+          "start": { "line": 158, "col": 10, "offset": 4013 },
+          "end": { "line": 158, "col": 19, "offset": 4022 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\docx\\parser.ts:82:22 [rules: 2, first: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal]",
+        "location": {
+          "path": "packages\\core\\src\\docx\\parser.ts",
+          "start": { "line": 82, "col": 23, "offset": 2875 },
+          "end": { "line": 82, "col": 32, "offset": 2884 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\docx\\sectionParser.ts:209:16 [rules: 1, first: javascript.express.security.cors-misconfiguration.cors-misconfiguration]",
+        "location": {
+          "path": "packages\\core\\src\\docx\\sectionParser.ts",
+          "start": { "line": 209, "col": 17, "offset": 5352 },
+          "end": { "line": 209, "col": 39, "offset": 5374 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\docx\\serializer\\runSerializer.ts:181:16 [rules: 1, first: javascript.express.security.injection.raw-html-format.raw-html-format]",
+        "location": {
+          "path": "packages\\core\\src\\docx\\serializer\\runSerializer.ts",
+          "start": { "line": 181, "col": 17, "offset": 4390 },
+          "end": { "line": 181, "col": 40, "offset": 4413 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\docx\\serializer\\runSerializer.ts:772:9 [rules: 1, first: javascript.express.security.audit.remote-property-injection.remote-property-injection]",
+        "location": {
+          "path": "packages\\core\\src\\docx\\serializer\\runSerializer.ts",
+          "start": { "line": 772, "col": 10, "offset": 23426 },
+          "end": { "line": 772, "col": 31, "offset": 23447 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\docx\\unzip.ts:90:22 [rules: 1, first: javascript.express.security.x-frame-options-misconfiguration.x-frame-options-misconfiguration]",
+        "location": {
+          "path": "packages\\core\\src\\docx\\unzip.ts",
+          "start": { "line": 90, "col": 23, "offset": 2447 },
+          "end": { "line": 90, "col": 32, "offset": 2456 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\layout-bridge\\measuring\\measureParagraph.ts:283:16 [rules: 1, first: javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring]",
+        "location": {
+          "path": "packages\\core\\src\\layout-bridge\\measuring\\measureParagraph.ts",
+          "start": { "line": 283, "col": 17, "offset": 8365 },
+          "end": { "line": 283, "col": 33, "offset": 8381 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\layout-painter\\renderPage.ts:1392:16 [rules: 1, first: javascript.express.security.audit.remote-property-injection.remote-property-injection]",
+        "location": {
+          "path": "packages\\core\\src\\layout-painter\\renderPage.ts",
+          "start": { "line": 1392, "col": 17, "offset": 47120 },
+          "end": { "line": 1392, "col": 28, "offset": 47131 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\layout-painter\\renderPage.ts:842:16 [rules: 1, first: javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring]",
+        "location": {
+          "path": "packages\\core\\src\\layout-painter\\renderPage.ts",
+          "start": { "line": 842, "col": 17, "offset": 26207 },
+          "end": { "line": 842, "col": 27, "offset": 26217 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\layout-painter\\renderParagraph.ts:103:9 [rules: 1, first: javascript.express.security.cors-misconfiguration.cors-misconfiguration]",
+        "location": {
+          "path": "packages\\core\\src\\layout-painter\\renderParagraph.ts",
+          "start": { "line": 103, "col": 10, "offset": 2558 },
+          "end": { "line": 103, "col": 24, "offset": 2572 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\layout-painter\\renderParagraph.ts:836:16 [rules: 2, first: javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring]",
+        "location": {
+          "path": "packages\\core\\src\\layout-painter\\renderParagraph.ts",
+          "start": { "line": 836, "col": 17, "offset": 27594 },
+          "end": { "line": 836, "col": 40, "offset": 27617 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\prosemirror\\conversion\\fromProseDoc.ts:323:9 [rules: 1, first: javascript.express.security.injection.raw-html-format.raw-html-format]",
+        "location": {
+          "path": "packages\\core\\src\\prosemirror\\conversion\\fromProseDoc.ts",
+          "start": { "line": 323, "col": 10, "offset": 10051 },
+          "end": { "line": 323, "col": 33, "offset": 10074 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\prosemirror\\extensions\\core\\ParagraphExtension.ts:1:0 [rules: 1, first: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal]",
+        "location": {
+          "path": "packages\\core\\src\\prosemirror\\extensions\\core\\ParagraphExtension.ts",
+          "start": { "line": 1, "col": 1, "offset": 0 },
+          "end": { "line": 1, "col": 1, "offset": 0 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\prosemirror\\extensions\\core\\ParagraphExtension.ts:678:2 [rules: 1, first: javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring]",
+        "location": {
+          "path": "packages\\core\\src\\prosemirror\\extensions\\core\\ParagraphExtension.ts",
+          "start": { "line": 678, "col": 3, "offset": 21695 },
+          "end": { "line": 678, "col": 16, "offset": 21708 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\core\\src\\prosemirror\\plugins\\suggestionMode.ts:153:9 [rules: 1, first: typescript.react.security.audit.react-unsanitized-method.react-unsanitized-method]",
+        "location": {
+          "path": "packages\\core\\src\\prosemirror\\plugins\\suggestionMode.ts",
+          "start": { "line": 153, "col": 10, "offset": 4117 },
+          "end": { "line": 153, "col": 32, "offset": 4139 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\react\\src\\components\\DocxEditor.tsx:1:0 [rules: 12, first: javascript.express.security.express-insecure-template-usage.express-insecure-template-usage]",
+        "location": {
+          "path": "packages\\react\\src\\components\\DocxEditor.tsx",
+          "start": { "line": 1, "col": 1, "offset": 0 },
+          "end": { "line": 1, "col": 1, "offset": 0 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\react\\src\\components\\ResponsePreview.tsx:1:0 [rules: 1, first: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal]",
+        "location": {
+          "path": "packages\\react\\src\\components\\ResponsePreview.tsx",
+          "start": { "line": 1, "col": 1, "offset": 0 },
+          "end": { "line": 1, "col": 1, "offset": 0 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\react\\src\\components\\dialogs\\ImagePositionDialog.tsx:138:16 [rules: 1, first: javascript.express.security.require-request.require-request]",
+        "location": {
+          "path": "packages\\react\\src\\components\\dialogs\\ImagePositionDialog.tsx",
+          "start": { "line": 138, "col": 17, "offset": 3055 },
+          "end": { "line": 138, "col": 36, "offset": 3074 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\react\\src\\components\\edit\\EditableImage.tsx:218:16 [rules: 1, first: javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring]",
+        "location": {
+          "path": "packages\\react\\src\\components\\edit\\EditableImage.tsx",
+          "start": { "line": 218, "col": 17, "offset": 5412 },
+          "end": { "line": 218, "col": 30, "offset": 5425 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\react\\src\\components\\render\\Shape.tsx:192:9 [rules: 2, first: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal]",
+        "location": {
+          "path": "packages\\react\\src\\components\\render\\Shape.tsx",
+          "start": { "line": 192, "col": 10, "offset": 4710 },
+          "end": { "line": 192, "col": 26, "offset": 4726 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\react\\src\\paged-editor\\ImageSelectionOverlay.tsx:147:16 [rules: 2, first: javascript.express.security.audit.express-ssrf.express-ssrf]",
+        "location": {
+          "path": "packages\\react\\src\\paged-editor\\ImageSelectionOverlay.tsx",
+          "start": { "line": 147, "col": 17, "offset": 4258 },
+          "end": { "line": 147, "col": 38, "offset": 4279 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\react\\src\\paged-editor\\PagedEditor.tsx:1:0 [rules: 5, first: javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring]",
+        "location": {
+          "path": "packages\\react\\src\\paged-editor\\PagedEditor.tsx",
+          "start": { "line": 1, "col": 1, "offset": 0 },
+          "end": { "line": 1, "col": 1, "offset": 0 }
+        }
+      },
+      {
+        "error_type": "Fixpoint timeout",
+        "severity": "warn",
+        "message": "Fixpoint timeout while performing taint analysis at packages\\react\\src\\paged-editor\\useVisualLineNavigation.ts:62:16 [rules: 1, first: javascript.express.security.x-frame-options-misconfiguration.x-frame-options-misconfiguration]",
+        "location": {
+          "path": "packages\\react\\src\\paged-editor\\useVisualLineNavigation.ts",
+          "start": { "line": 62, "col": 17, "offset": 2232 },
+          "end": { "line": 62, "col": 40, "offset": 2255 }
+        }
+      }
+    ],
+    "prefiltering": {
+      "project_level_time": 0.0,
+      "file_level_time": 0.0,
+      "rules_with_project_prefilters_ratio": 0.0,
+      "rules_with_file_prefilters_ratio": 0.9786004874117659,
+      "rules_selected_ratio": 0.059266163719864456,
+      "rules_matched_ratio": 0.059266163719864456
+    },
+    "targets": [],
+    "total_bytes": 0,
+    "max_memory_bytes": 2496892096
+  },
+  "engine_requested": "OSS",
+  "skipped_rules": [],
+  "profiling_results": []
+}
