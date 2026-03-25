@@ -688,6 +688,9 @@ window.addEventListener('message', (ev) => {
       popup.textContent = `回傳 decorations=${ev.data.decorations}, firstFrom=${String(ev.data.firstFrom)}`;
       setTimeout(() => { popup.style.display = 'none'; }, 2500);
     }
+    try {
+      alert(`HIGHLIGHT_ACK: decorations=${ev.data.decorations}, firstFrom=${String(ev.data.firstFrom)}`);
+    } catch (e) {}
   }
 });
 </script>
