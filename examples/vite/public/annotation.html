@@ -282,7 +282,7 @@
     <input type="file" id="htmlInput" accept=".html,.htm">
     <span id="htmlStatus" class="status-badge">未上傳</span>
   </div>
-  <button id="testHighlightBtn" style="margin-left:8px; padding:6px 10px; border-radius:6px; background:#2b6cb0; color:#fff; border:0; cursor:pointer">測試高亮</button>
+  <button id="testHighlightBtn" onclick="(function(){const frame=document.getElementById('editorFrame'); if(frame && frame.contentWindow){ frame.contentWindow.postMessage({type:'HIGHLIGHT_BLOCKS', blockIds:['0'], result:'不符合', chunks:{'0':{content:'維 護 合 約 書'}}}, '*'); alert('posted (inline fallback)'); } else { alert('iframe not available'); } })()" style="margin-left:8px; padding:6px 10px; border-radius:6px; background:#2b6cb0; color:#fff; border:0; cursor:pointer">測試高亮</button>
   <div class="file-group">
     <label>📋 API 結果 (TXT/JSON)：</label>
     <input type="file" id="jsonInput" accept=".txt,.json">
