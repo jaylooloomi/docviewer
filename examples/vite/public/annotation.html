@@ -770,7 +770,7 @@
           // small upward offset so element appears slightly above center
           try {
             const win = (first.ownerDocument && first.ownerDocument.defaultView) || window;
-            const OFFSET = 120;
+            const OFFSET = 500;
             win.scrollBy({ top: -OFFSET, left: 0, behavior: 'smooth' });
           } catch (e) {
             /* ignore offset failure */
@@ -850,7 +850,7 @@
       firstEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
       try {
         const win = (firstEl.ownerDocument && firstEl.ownerDocument.defaultView) || window;
-        const OFFSET = 120;
+        const OFFSET = 500;
         win.scrollBy({ top: -OFFSET, left: 0, behavior: 'smooth' });
       } catch (e) { /* ignore */ }
     }
