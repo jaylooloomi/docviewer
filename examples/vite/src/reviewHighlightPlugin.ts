@@ -96,6 +96,18 @@ export function setReviewHighlight(
   const decoSet = DecorationSet.create(view.state.doc, decorations);
   view.dispatch(view.state.tr.setMeta(reviewHighlightKey, decoSet));
 
+  // Send diagnostic ack back to parent window (if embedded) so parent can log results
+  try {
+    if (typeof window !== 'undefined' && window.parent && window.parent !== window) {
+      window.parent.postMessage(
+        { type: 'HIGHLIGHT_ACK', decorations: decorations.length, firstFrom },
+        '*'
+      );
+    }
+  } catch (e) {
+    // noop
+  }
+
   // Diagnostic logs for debugging highlight application
   try {
     console.debug('[reviewHighlight] decorations:', decorations.length, 'firstFrom:', firstFrom);

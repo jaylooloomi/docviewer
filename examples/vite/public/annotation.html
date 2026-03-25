@@ -660,6 +660,14 @@
     );
   }
 
+
+// Listen for ACK messages from iframe editor (diagnostic)
+window.addEventListener('message', (ev) => {
+  if (!ev.data) return;
+  if (ev.data.type === 'HIGHLIGHT_ACK') {
+    console.log('[parent] HIGHLIGHT_ACK', ev.data);
+  }
+});
 </script>
 
 </body>
