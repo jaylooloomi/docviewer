@@ -23,3 +23,22 @@
     display: none;
   }
 }
+
+/* Review highlight styles */
+.hl-review-fail,
+.layout-run.hl-review-fail {
+  background-color: rgba(255, 120, 120, 0.18);
+  box-shadow: inset 0 0 0 2px rgba(255, 60, 60, 0.12);
+}
+
+.hl-review-pass,
+.layout-run.hl-review-pass {
+  background-color: rgba(144, 238, 144, 0.18);
+  box-shadow: inset 0 0 0 2px rgba(34, 139, 34, 0.12);
+}
+
+/* If other rules override background, use a stronger selector when needed */
+.layout-run.hl-review-fail[style],
+.layout-run.hl-review-pass[style] {
+  /* inline styles take precedence; this rule just documents that inline style works */
+}

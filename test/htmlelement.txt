@@ -1,0 +1,890 @@
+<html lang="zh-TW"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智能審約結果檢視器</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+    font-size: 14px;
+    background: #f5f6fa;
+    color: #333;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── 頂部工具列 ── */
+  #topbar {
+    background: #fff;
+    border-bottom: 1px solid #dde1e7;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    flex-wrap: wrap;
+  }
+  .file-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .file-group label {
+    font-weight: 600;
+    color: #555;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+  .file-group input[type="file"] {
+    border: 1px dashed #aaa;
+    border-radius: 6px;
+    padding: 4px 8px;
+    cursor: pointer;
+    background: #fafafa;
+    font-size: 12px;
+    max-width: 300px;
+  }
+  .file-group input[type="file"]:hover { border-color: #4a90e2; background: #f0f6ff; }
+  .status-badge {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #eee;
+    color: #888;
+    white-space: nowrap;
+  }
+  /* hide the HTML file upload group by default (toggleable) */
+  #htmlFileGroup { display: none !important; }
+  .status-badge.loaded { background: #e8f8e8; color: #27ae60; }
+  .status-badge.error  { background: #fde8e8; color: #c0392b; }
+
+  /* ── 主體雙欄 ── */
+  #main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── 左側：合約文件 ── */
+  #contractPanel {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #dde1e7;
+    overflow: hidden;
+  }
+
+  /* 固定標頭 */
+  #contractPanelHeader {
+    flex-shrink: 0;
+    padding: 10px 14px 0;
+    background: #fff;
+    border-bottom: 1px solid #dde1e7;
+  }
+  #contractPanelHeader h2 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #444;
+    padding-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* 缺漏 banner（固定於標頭，不隨文件捲動） */
+  #missingBanner {
+    display: none;
+    background: #fde8e8;
+    border: 2px solid #e53e3e;
+    border-left: 6px solid #e53e3e;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    color: #c0392b;
+    animation: bannerPop 0.3s ease;
+  }
+  #missingBanner .banner-icon  { font-size: 26px; line-height: 1; margin-bottom: 4px; }
+  #missingBanner .banner-title { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
+  #missingBanner .banner-sub   { font-size: 12px; color: #a93226; }
+  @keyframes bannerPop {
+    0%   { transform: scale(0.97); opacity: 0; }
+    100% { transform: scale(1);    opacity: 1; }
+  }
+
+  /* 可捲動文件區 */
+  #contractBody {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: auto;
+    background: #9e9e9e;
+  }
+
+  /* 空白提示 */
+  #emptyContractState {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #bbb;
+    font-size: 15px;
+    background: #f5f6fa;
+  }
+
+  /* ── 右側：審核卡片 ── */
+  #reviewPanel {
+    width: 35%;
+    overflow-y: auto;
+    padding: 18px;
+    background: #f4f8ff;
+    border-left: 1px solid #e6eefc;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+  #reviewPanel h2 {
+    font-size: 15px;
+    font-weight: 800;
+    color: #2b4f8a;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #d7e7ff;
+  }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #888;
+    margin: 16px 0 6px;
+    text-transform: uppercase;
+  }
+  .section-title:first-of-type { margin-top: 0; }
+
+  .review-card {
+    background: #fff;
+    border: 1px solid #e6eefc;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: box-shadow 0.15s, border-color 0.15s, transform 0.08s;
+    overflow: hidden;
+    padding: 12px;
+  }
+  .review-card:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.1); border-color: #4a90e2; }
+  .review-card.card-selected { border-color: #4a90e2; box-shadow: 0 0 0 2px #c5d9f8; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-badge {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-top: 0;
+    white-space: nowrap;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,0.02);
+  }
+  .badge-fail { background: #fde8e8; color: #c0392b; }
+  .badge-pass { background: #e8f8e8; color: #27ae60; }
+
+  .card-name { font-size: 14px; line-height: 1.4; flex: 1; font-weight: 700; }
+  .card-name.fail { color: #b93737; font-weight: 800; }
+  .card-name.pass { color: #1f2d3d; }
+
+  .card-detail { display: none; padding: 12px; border-top: 1px solid #f0f6ff; background: #fbfcff; }
+  .card-detail.open { display: block; }
+
+  .detail-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #888;
+    margin: 10px 0 4px;
+    text-transform: uppercase;
+  }
+  .detail-text {
+    font-size: 13px;
+    color: #333;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 12px 12px;
+    border: 1px solid #eef4ff;
+  }
+  .block-ids-hint { font-size: 12px; color: #6b7280; padding: 8px 0 6px; }
+
+  /* ── 高亮樣式（套用於 div.t 元素） ── */
+  /* 不符合 → 紅色螢光 */
+  .t.hl-fail {
+    background-color: rgba(255, 180, 180, 0.75) !important;
+  }
+  /* 符合 → 黃色螢光 */
+  .t.hl-pass {
+    background-color: rgba(255, 245, 100, 0.75) !important;
+  }
+
+  /* 聚焦輪廓與淡入動畫：當使用者點選卡片時加入 .hl-focus */
+  .t.hl-fail, .t.hl-pass {
+    position: relative;
+    transition: box-shadow 220ms ease, transform 220ms ease;
+    border-radius: 4px;
+  }
+
+  @keyframes focusFade {
+    0% { opacity: 0; transform: scale(0.98); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  .t.hl-fail::after,
+  .t.hl-pass::after {
+    content: '';
+    position: absolute;
+    left: -8px;
+    right: -8px;
+    top: -6px;
+    bottom: -6px;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .t.hl-fail.hl-focus::after {
+    box-shadow: 0 0 0 4px rgba(192,57,43,0.08), 0 6px 24px rgba(192,57,43,0.06);
+    animation: focusFade 260ms cubic-bezier(.2,.9,.2,1) forwards;
+  }
+  .t.hl-pass.hl-focus::after {
+    box-shadow: 0 0 0 4px rgba(74,144,226,0.10), 0 6px 24px rgba(74,144,226,0.06);
+    animation: focusFade 260ms cubic-bezier(.2,.9,.2,1) forwards;
+  }
+
+  /* 當卡片選中時，稍微抬起卡片並強化邊框 */
+  .review-card.card-selected { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(34,60,110,0.08); }
+
+  /* 捲軸 */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #aaa; }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div id="htmlFileGroup" class="file-group">
+    <label>📄 合約文件 (HTML)：</label>
+    <input type="file" id="htmlInput" accept=".html,.htm">
+    <span id="htmlStatus" class="status-badge">未上傳</span>
+  </div>
+  <button id="testHighlightBtn" onclick="(function(){const frame=document.getElementById('editorFrame'); if(frame &amp;&amp; frame.contentWindow){ frame.contentWindow.postMessage({type:'HIGHLIGHT_BLOCKS', blockIds:['0'], result:'不符合', chunks:{'0':{content:'維 護 合 約 書'}}}, '*'); alert('posted (inline fallback)'); } else { alert('iframe not available'); } })()" style="margin-left:8px; padding:6px 10px; border-radius:6px; background:#2b6cb0; color:#fff; border:0; cursor:pointer">測試高亮</button>
+  <div class="file-group">
+    <label>📋 API 結果 (TXT/JSON)：</label>
+    <input type="file" id="jsonInput" accept=".txt,.json">
+    <span id="jsonStatus" class="status-badge loaded">✓ 智能審約API回傳審核結果.txt</span>
+    </div>
+    
+</div>
+
+<div id="main">
+
+  <div id="contractPanel">
+    <div id="contractPanelHeader" style="display:block;">
+      <h2 id="contractTitleText">編輯器＋合約檢視</h2>
+      <div id="missingBanner" style="display:none; background:#fde8e8; border:2px solid #e53e3e; border-left:6px solid #e53e3e; border-radius:8px; padding:14px 16px; margin-top:8px; color:#c0392b;">
+        <div class="banner-title">合約缺漏此條文</div>
+        <div class="banner-sub">本合約中未包含此審查項目所要求的相關條款，建議補充。</div>
+      </div>
+    </div>
+    <div id="contractBody">
+      <!-- Embedded editor (keep) -->
+      <div id="editorEmbed" style="height:100%;">
+        <iframe id="editorFrame" src="/?embed=1" title="Editor" style="width:100%; height:100%; border:0;"></iframe>
+      </div>
+      <!-- Contract content injected here (preserve iframe above) -->
+      <div id="contractContent" style="flex:1; overflow:auto; background:#fff;">
+        <div id="emptyContractState" style="display:flex; align-items:center; justify-content:center; height:100%; color:#bbb; font-size:15px; background:#f5f6fa;">請上傳合約 HTML 文件</div>
+      </div>
+    </div>
+  </div>
+  <!-- Test highlight popup -->
+  <div id="testHighlightPopup" style="position:fixed; top:70px; left:24px; z-index:9999; display:none; background:#0f172a; color:#fff; padding:10px 12px; border-radius:8px; box-shadow:0 6px 20px rgba(2,6,23,0.2); font-size:13px;">發送中…</div>
+
+  <div id="reviewPanel">
+    <div id="reviewContent" style="display: block;">
+      <h2>違規條款分析</h2>
+      <div id="reviewCards"><div class="section-title">合規性</div><div class="review-card card-selected"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">【人員管理】需完整涵蓋人員管理條款項目要求</span></div><div class="block-ids-hint">📄 條文對應：第 6 區塊</div><div class="card-detail open"><div class="detail-label">審查說明</div><div class="detail-text">● 條款要件缺漏
+?? 乙方之人員、設備及使用儀器進出甲方辦公場所，應遵守甲方大樓管理、電腦機房安 全管理、電腦系統安全管理及網路安全管理等之相關規定，並配戴識別證件
+?? 乙方如有派駐人員進駐甲方辦公場所，應將人員名冊送 甲方核可後，始得進駐工作，其異動時亦同；若派駐人員有二人以上者，並應指派一人為領班，負責管理乙方派駐人員
+?? 乙方人員如 有素質或行為不良、工作怠忽或態度不佳者，甲方得隨時通知乙方，乙方應於接獲甲方通知之日起15日內無條件更換
+?? 第二項約定之 乙方派駐人員，乙方應就其對派駐人員之晉用、考核及處分等規定情事，於派駐人員進駐甲方辦公場所前，連同人員名冊送交甲方核可
+
+● 條款要件不完整
+無
+
+● 條款要件充分完整
+無</div><div class="detail-label">應當遵循的標準</div><div class="detail-text">(1) 乙方之人員、設備及使用儀器進出甲方辦公場所，應遵守甲方大樓管理、電腦機房安全管理、電 腦系統安全管理及網路安全管理等之相關規定，並配戴識別證件
+(2) 乙方如有派駐人員進駐甲方辦公場所，應將人員名冊送甲方核可後，始得進駐工作，其異動時亦同；若派駐人員有二人以上者，並應指派一人為領班，負責管理乙方派駐人員
+(3) 乙方人員如有素質或行為不良、工作怠忽或態度不佳者，甲方得隨時通知乙方，乙方應於接獲甲方通知之日起15日內無條件更換
+(4) 第二項約定之乙方派駐人員，乙方應就其對派駐人員之晉用、考核及處分等規定情事，於派駐人員進駐甲方辦公場所前，連同人員名冊送交甲方核可</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">【罰則】違約金比例符合最低標準</span></div><div class="block-ids-hint">📄 條文對應：第 7 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【合規標準】
+(1) 當未依定期保養或檢測約定實施定期保養/定期檢測時，每逾一日應按當期維護費用 5% 給付。
+【合約條文內容】
+乙方未依約履行本合約之義務時，或違反本合約書內容，或未能於規定工作天內完成，除賠償甲方所受之損失外，每逾一個工作天，應罰以維護費用總金額之千分之二。甲方得逕由下一期付款費用扣除，乙方不得異議。
+【判斷原因】
+違約金比例為千分之二（0.2%）每逾一工作天，低於合規標準每逾一日5%之比例，故不符合合規標準。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">【罰則】不應有違約金限額</span></div><div class="block-ids-hint">📄 條文對應：第 7 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">不符合，本條文不建議有違約金限額。該條文僅以維護費用總金額之千分之二作為每日罰金，未明確設定違 約金上限。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">【維護方式】應有軟體更新與升級配合時效</span></div><div class="block-ids-hint">📄 條文對應：第 5,6 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">不符合，本條文建議應有軟體更新與升級配合時效。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">【保密義務】需完整涵蓋保密義務條款項目要求</span></div><div class="block-ids-hint">📄 條文對應：第 6 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">● 條款要件缺漏
+?? (2) 因法令強制規定、主管機關或法院之要求提供前項資料時，乙方得於必要範圍內 提供資料，但應事前通知甲方
+?? (3) 本條保密義務於本契約期滿、解除或終止後，仍為有效
+?? (4) 乙方應對第一項之資料進行適當防止洩漏、竊取、竄改、毀損及滅失等之安全維護措施（包括但不限於責其履行輔助人簽署保密書面）。如有前述情事發生時，應立即通知甲方、阻止侵害擴大，並說明違反事項及採取補救措施
+?? (5) 乙方於本契約期滿、解除、終止或經甲方指示後，不得以任何形式儲 存第一項之資料，如由甲方交付者，並應立即返還甲方或刪除之（如經甲方要求，並應以書面聲明已完成）
+
+● 條款要件不完整
+=== ( 1 / 1 ) ===
+【條款要件】
+(1) 方應擔保並責其履行輔助人及其分包人，就因履行本契約所知悉、取得或偶然獲悉甲方或甲方客戶、員工之一切資料，以善良管理人之注意義務善盡保密責任，除法令有強制規定、主管機關或法院之要求或經甲方事前書面同意者外，不得直接或間接以任何形式洩漏予第三人，亦不得使用於本契約目的以外之用途
+【合約條文內容】
+甲、乙雙方並應負責要求所屬員工遵守保密規定如附件，若有員工違反者，視同該方當事人違反本合約，將按民、刑法追究責任及賠償。 甲、乙雙方應善盡管理人之責，妥 善保管他方提供有關本系統之所有資料。
+【不一致原因】
+合約條文未包含履行輔助人及其分包人、法令強制規定、主管機關或法院之要求、經甲方事前書面同意者外等細節，亦未明確禁止使用於本契約目的以外之用途，故不完整。
+
+● 條款要件充分完整
+無</div><div class="detail-label">應當遵循的標準</div><div class="detail-text">(1) 方應擔保並責其履行輔助人及其分包人，就因履行本契約所知悉、取得或偶然獲悉甲方或甲方客 戶、員工之一切資料，以善良管理人之注意義務善盡保密責任，除法令有強制規定、主管機關或法院之要求或經甲方事前書面同意者外，不得直接或間接以任何形式洩漏予第三人，亦不得使用於本契約目的以外之用途
+(2) 因法令強制規定、主管機關或法院之要求提供前項資料時，乙方得於必要範圍內提供資料，但應事前通知甲方
+(3) 本條保密義務於本契約期滿、解除或終止後，仍為有效
+(4) 乙方應對第一項之資料進行適當防止洩漏、竊取、竄改、毀損及滅失等之安全維護措施（包括但不限於責其履行輔助人簽署保密書面）。如有前述情事發生時，應立即通知甲方、阻止侵害擴大，並說明違反事項及採取補救措施
+(5) 乙方於本契約期滿、解除、終止或經甲方指示後，不得以任何形式儲存第一項之資料，如由甲方交付者，並應立即返還甲方或刪除之（如經甲方要求，並應以書面聲明已完成）</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-pass">符合</span><span class="card-name pass">【契約終止或解除】需完整涵蓋契約終止或解除條款項目要求</span></div><div class="block-ids-hint">📄 條文對應：第 10 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">● 條款要件缺漏
+?? 未於維護方式第二款約定時限內處理、到場檢修、完成修復、提供相同或同等級之備 用機器設備，且逾12小時者
+?? 未於維護方式第二款約定時限內完成修復，且單月達3次（含）者
+?? 同一維護標的發生故障達10次（ 含）；或當月發生故障達3次（含）者
+?? 材料不全或更換之設備零件品質與原設備零件之品質不相當（即非同級品）者
+?? 維護人員 欠缺維護能力，經甲方認定有不能履行本契約之虞者
+?? 違反保密義務、保證條款、次承攬禁止、消費者權益及個資保障、資安條款任 一條約定者
+?? 違約之事項無法補正者
+?? 甲方得隨時終止本契約，但應於60日前以書面預先通知乙方
+?? 甲方除給付乙方已完成維 護之維護費用外，乙方不得為其他請求
+?? 甲方因主管機關通知或法令規定應終止本契約時，不受前項但書事前通知之限制
+?? 本契約之終止或解除，不妨礙甲方損害賠償、罰款或違約金之請求
+
+● 條款要件不完整
+=== ( 1 / 1 ) ===
+【條款要件】
+本契約因前條約定原因終止/解除時，甲方不負給付當期維護費用之義務，乙方如已收受者，應返還之
+【合約條文內容】
+如因可歸責於乙方之事由 致本合約提前終止者，乙方應按實際情形結算維護費用，如甲方所撥付費用有超額之情形時，乙方應無息返還予甲方。
+【不一致原因】
+合約僅規定乙方返還超額費用，未明確規定甲方不負給付當期維護費用之義務，且未說明返還時機與條件，與條款要件不完全一致。
+
+● 條款要件充分完整
+無</div><div class="detail-label">應當遵循的標準</div><div class="detail-text">(1) 未於維護方式第二款約定時限內處理、到場檢修、完成修復、提供相同或同等級之備用機器設備 ，且逾12小時者
+(2) 未於維護方式第二款約定時限內完成修復，且單月達3次（含）者
+(3) 同一維護標的發生故障達10次（含）；或 當月發生故障達3次（含）者
+(4) 材料不全或更換之設備零件品質與原設備零件之品質不相當（即非同級品）者
+(5) 維護人員欠缺維 護能力，經甲方認定有不能履行本契約之虞者
+(6) 違反保密義務、保證條款、次承攬禁止、消費者權益及個資保障、資安條款任一條約定者
+(7) 違約之事項無法補正者
+(8) 本契約因前條約定原因終止/解除時，甲方不負給付當期維護費用之義務，乙方如已收受者，應 返還之
+(9) 甲方得隨時終止本契約，但應於60日前以書面預先通知乙方
+(10) 甲方除給付乙方已完成維護之維護費用外，乙方不得為 其他請求
+(11) 甲方因主管機關通知或法令規定應終止本契約時，不受前項但書事前通知之限制
+(12) 本契約之終止或解除，不妨礙甲方損害賠償、罰款或違約金之請求</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-pass">符合</span><span class="card-name pass">【維護方式】不應有清潔工作列表的項目</span></div><div class="block-ids-hint">📄 條文對應：第 5,6 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">符合，本條文未有清潔工作項目或類似義務要求及限制。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-pass">符合</span><span class="card-name pass">【維護方式】不應有例行到場檢測維護要求</span></div><div class="block-ids-hint">📄 條文對應：第 5,6 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">符合，本條文未有例行到場檢測維護要求或類似義務要求及限制。</div></div></div><div class="section-title">合理性</div><div class="review-card"><div class="card-header"><span class="card-badge badge-pass">符合</span><span class="card-name pass">【維護方式】到場檢修通知時限與電話及遠端連線修復通知時限應不相同</span></div><div class="block-ids-hint">📄 條文對應：第 5,6 區塊</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">● 所有條款要件結果
+=== ( 1 / 2 ) ===
+【條款要件】
+到場檢修通知時限
+【合約條文內容】
+如甲 方要求乙方基本維護時間外提供維護服務，雙方可另議計費辦法，且於選定維護時間兩天前通知乙方安排配合。
+=== ( 2 / 2 ) ===
+ 【條款要件】
+遠端連線修復通知時限
+【合約條文內容】
+維護需求發生時，乙方接獲甲方提出「需求反應單」；但情況急迫時，甲方得逕以電話或其他方式通知乙方即時處理，乙方不得拒絕，惟事後甲方仍應填列「需求反應單」。
+
+● 判斷原因
+符合，到場檢修通 知時限與遠端連線修復通知時限不相同。</div></div></div><div class="section-title">完整性</div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">除外責任</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【除外責任】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">維護標的因下列原因故障時，乙方不負維護保養之責，惟就該故障之排除、修復，乙方仍應提供必要之協助 ，並得向甲方酌收維護費用：
+一、甲方未依正常使用方式操作或使用維護標的者。
+二、經乙方測定並通知甲方改善維護標的作業（工作）環境，而甲方仍未改善者。
+三、非由乙方或未通知乙方，就維護標的所為之修護、調整或搬遷，致維護標的不能正常運作者。
+四、甲方使用非經乙方提供或認可之零件或軟、硬體設備者。
+五、天災或其他不可抗力之事故所致者。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">安全責任</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【安全責任】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方所派遣之技術人員須為合格技術人員，並投保意外險。
+乙方於本契約工作期間應做好安全防範措施， 以維護人員及設備安全，如發生意外事故造成人員傷亡或財物損失，概由乙方負完全責任，與甲方無涉。
+乙方於本契約工作期間所發生之任何傷亡事故，致甲方因法令規定遭主管機關裁罰或須向第三人負連帶賠償責任者，甲方於繳納罰款或賠償後，對乙方有求償權。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">資安條款</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【資安條款】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方於履行本契約時，應遵守下列事項：
+一、遵循資訊安全相關法令及甲方資訊安全管理相關規定。如發 現有違反約定時，應於知悉後4小時內通知甲方，並配合甲方之要求採取補救措施。
+二、資安事件之處理方式如下：
+ （一）如發現有資訊安全事件（包括但不限於甲方客戶、員工之個人資料、交易往來資料等資料遭棄置、非法入侵或病毒攻擊等），除應立即採取防制措施外，並應即時通報甲方及協助甲方進行相關處理程序。
+ （二）如有前目之情事發生，應配合甲方維持現場環境及設備（包括但不限 於所使用之連線裝置）狀況，以避免造成重要資料或數位證據遺失，如需進行系統重建，應取得甲方同意。
+三、機敏文件（包括但不限於個人資料、身分認證資料、信用卡卡號、信用卡驗證碼或個人化資料等）如以電子方式傳輸者，應使用加密機制。
+四、交付之系統或程式碼，應先行進行安全性檢測（包括但不限於病毒、蠕蟲、特洛伊木馬或間諜軟體等），甲方並得要求乙方以書面聲明所提供之系統或程式碼無植入惡意程式及後門程式。
+五、乙方無法交付設備予甲方時，甲方得要求乙方依指定方式進行設備檢測後，將檢測報告交付甲方；或要求乙方依指定方式以書面聲明設備無植入惡意程式或後門程式之虞。
+六、若相關系統或依本契約有備用機器者，除經甲方事前書面同意者外，該相關系統及備用機器使用之特權帳號不得綁定預設密碼，正式上線前，應協助甲方變更相關密碼，並刪除測試相關資訊（包括但不限於資料、帳號等）。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">次承攬禁止</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【次承攬禁止】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方應自行完成本契約約定之全部工作。除依法令規定須由專業廠商辦理或經甲方事前書面同意者外，乙方 不得將本契約工作之一部或全部委由第三人為之。
+乙方依前項約定將本契約工作之一部或全部委由第三人為之者，該第三人關於本契約工作之履行有故意或過失時，乙方應與自己之故意或過失負同一責任。
+甲方如認為第三人有不能履行本契約之虞者，甲方得通知乙方，乙方應於接獲甲方通知之日起15日內無條件更換。
+如本契約工作為保險業作業委託他人處理應注意事項所規範，且乙方依本條約定委由第三人辦理者，其與該第三人間應約定工作範圍、限制或條件，並準用前述注意事項相關規定訂之。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">權益及個資保障</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【權益及個資保障】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方履行本契約時，如涉及甲方客戶之權益或其個人資料者，應遵守下列事項：
+一、就甲方客戶權益之保 障訂定標準作業程序（如附件四），執行消費者權益保障及風險管理，並進行定期與不定期內部查核，且留存紀錄以供查核。
+二、設置專責處理單位並指定專人擔任申訴窗口，如接獲甲方客戶申訴，應即以電話及書面（含傳真或電子郵件）通知甲方，並分別依下列方式處理：
+ （一）一般客戶申訴案件：
+     乙方接獲甲方通報申訴案件後，甲乙雙方應即進行發生原因之徹查與釐清，若為乙方之作業疏失，乙方應於48小時內以書面回覆甲方，且須清楚詳述發生時間、原因經過及處理情形。
+ （二）緊急或重大申訴案件：
+     乙方接獲申訴案件後，甲乙雙方應即進行發生原因之徹查與釐清，若查證確為乙方故意或重大過失導致甲方客戶發生損害者，乙方應於24小時內以書面回覆甲方，詳述發生時間、原因經過及處理情形。如甲方為保障客戶權益，而先行賠償客戶之損害時，得向乙方求償。
+ （三） 「一般客戶申訴案件」或「緊急或重大申訴案件」認定有疑義時，以甲方之認定為準。
+三、為保障甲方客戶權益及保護甲方客戶資料，乙方應採取下列措施：
+ （一）配置管理之專責人員及相當資源。
+ （二）界定個人資料之範圍。
+ （三）個人資料之風險評估及管 理機制。
+ （四）事故之預防、通報及應變機制。
+ （五）個人資料之蒐集、處理及利用之內部管理程序。
+ （六）資料安全管理及 人員管理。 
+ （七）認知宣導及教育訓練。
+ （八）設備安全管理。
+ （九）資料安全稽核機制。
+ （十）使用紀錄、軌跡資料及 證據保存。
+ （十一）個人資料安全維護之整體持續改善。
+四、方對甲方之指示認為有違反個人資料保護法或其他相關法令規定之情 事者，應於24小時內通知甲方。
+五、乙方應擔保並責其履行輔助人妥善保管因履行本契約所取得之個人資料，不得外洩。
+六、如個人資料有被竊取、外洩、竄改或受其他侵害之情事者，乙方應即進行防制且通知甲方，並於24小時內詳細說明事件經過及採取之補救措施。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">損害賠償</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【損害賠償】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方有下列情事之一者，對甲方應負損害賠償之責：
+一、使用之材料、機具或人員施工、維護不當或延誤 、怠忽維修時間，致甲方設備毀損或人員傷亡者。
+二、將送修或接受委託運送之設備遺失或毀損者。
+三、違反本契約任一條約定或相關法令規定，致甲方受有損害、遭主管機關裁罰或為第三人求償，除應依本契約約定給付罰款或違約金外，對甲方因此所受之損害、遭裁處之罰款或支出費用（包括但不限於律師費及訴訟費）者。
+乙方依本契約應給付甲方之罰款、違約金或賠償，甲方得逕自應給付乙方之維護費用扣抵。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">保證條款</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【保證條款】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方聲明並保證就本契約所約定之工作事項，係乙方合法得辦理之營業事項。
+於履行本契約期間若有重大 異常或缺失，乙方應立即通知甲方。
+乙方保證其就本契約所約定之工作事項，絕無侵害他人智慧財產權或其他權利之情事。
+如乙方依本契約約定所完成之工作事項涉及利用非其自行開發之資源者，乙方應以書面說明非自行開發之內容及其來源，並將第三人之授權證明文件提供甲方。
+任一方接獲第三人通知本契約所約定之工作事項有侵害他人權利之虞時，乙方應即進行發生原因之徹查與釐清，並於10日內委請專業第三方出具評估報告（包括但不限於著作權侵害鑑定或專利技術分析比對資料等），且應提出相關證明資料予甲方，乙方並應積極與主張權利之人協商。
+乙方未於約定期限委請專業第三方出具評估報告者，甲方得自行委託之，乙方除應提供評估報告所需資料外，並應負擔甲方因此支出之一切費用（包括但不限於委請專業第三方出具評估報告之費用）。
+如本契約所約定之工作事項等因侵害他人權利致甲方不得繼續利用時，乙方應於知悉或接獲甲方通知後10日內，修改侵害部分（包括但不限於取得他人授權），使甲方得以合法繼續利用，其所產生之一切費用，概由乙方負擔。
+乙方違反本條約定者，其相關之法律責任概由乙方負責，與甲方無關。如第三人因此對甲方為任何之主張、請求或訴訟時，乙方應負責排除或為甲方從事相關和解、談判及其他賠償事宜；如甲方因此受有任何損害（包括但不限於甲方所支出之律師費及訴訟費），乙方並應負賠償之責。
+乙方於履行本契約時，不得於甲方之電腦植入任何病毒、後門程式或讀取任何資料，且不得影響甲方電腦系統之正常運作。
+乙方所提供之物聯網設備，應關閉不必要之網路連線及服務（包含但不限於FTP、SMTP等）。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">法令遵循與企業社會責任</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【法令遵循與企業社會責任】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方於履行本契約時，不得違反法令強制或禁止規定、公共秩序或善良風俗，並應遵循保險法、洗錢防制法 、資恐防制法、個人資料保護法、消費者保護法、金融消費者保護法、環保法規及其他甲方主管機關訂定之相關法令規定。
+乙方於履行本契約時，應確實遵守各項勞動條件、職業安全衛生、勞動人權及環境保護等相關法令規定。如有違反，乙方應負完全責任，概與甲方無涉。
+乙方如有違反或未達前二項所列法令規定之虞時，甲方得隨時就乙方之遵循情形進行查核或要求乙方提供檢驗（查）報告。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">內部控制及稽核</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【內部控制及稽核】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">乙方應就本契約工作之作業流程訂定標準作業程序（如附件五），執行內部控制及進行定期與不定期內部稽 核，並留存紀錄以供查核。
+乙方同意甲方得派員或委由專業第三人就本契約工作之作業流程、內部控制、內部稽核及其他事項進行定期或不定期之稽核，並同意甲方之主管機關得取得本契約相關事項之資料或報告及進行檢查，或命令其於限期內提供相關資料或報告。
+甲方依前【二】項約定進行（查）稽核後，若認定乙方有待改善情形，得定相當期限催告乙方改善完成，乙方於期限內未改善完成者，甲方得終止或解除本契約。</div></div></div><div class="review-card"><div class="card-header"><span class="card-badge badge-fail">不符合</span><span class="card-name fail">法律關係</span></div><div class="block-ids-hint">📄 條文對應：合約缺漏</div><div class="card-detail"><div class="detail-label">審查說明</div><div class="detail-text">【法律關係】存在性</div><div class="detail-label">條文範例</div><div class="detail-text">甲乙雙方為獨立之契約當事人，並非互為他方之受僱人、代理人、代表人、經銷人或保證人。
+甲乙任一方 未於事前取得他方書面同意，不得使用他方之商標、服務標章、名稱、或對外表示（包括但不限於廣告）與他方或其子公司、關係企業之營業或服務有任何關係或關連，亦不得為其他使人對提供營業或服務之主體發生混淆之任何行為或為其他不公平競爭之行為。</div></div></div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  /* State */
+  let htmlLoaded = false;
+  let parsedData = null;
+  let currentSelected = null;
+
+  /* DOM refs */
+  const htmlInput = document.getElementById('htmlInput');
+  const jsonInput = document.getElementById('jsonInput');
+  const htmlStatus = document.getElementById('htmlStatus');
+  const jsonStatus = document.getElementById('jsonStatus');
+  const contractBody = document.getElementById('contractBody');
+  const contractContent = document.getElementById('contractContent');
+  const contractPanelHeader = document.getElementById('contractPanelHeader');
+  const contractTitleText = document.getElementById('contractTitleText');
+  const missingBanner = document.getElementById('missingBanner');
+  const reviewCards = document.getElementById('reviewCards');
+
+  /* 1. Upload contract HTML */
+  htmlInput.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    htmlStatus.textContent = '讀取中...';
+    htmlStatus.className = 'status-badge';
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      injectContractHTML(ev.target.result, file.name);
+      htmlLoaded = true;
+      htmlStatus.textContent = '✓ ' + file.name;
+      htmlStatus.className = 'status-badge loaded';
+      if (parsedData) runBlockMapping(parsedData);
+    };
+    reader.onerror = () => {
+      htmlStatus.textContent = '❌ 讀取失敗';
+      htmlStatus.className = 'status-badge error';
+    };
+    reader.readAsText(file, 'UTF-8');
+  });
+
+  function injectContractHTML(htmlContent, fileName) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
+
+    // Inject styles from uploaded HTML (once)
+    if (!document.querySelector('style[data-pdfhtml]')) {
+      doc.querySelectorAll('style').forEach(style => {
+        const s = document.createElement('style');
+        s.setAttribute('data-pdfhtml', '1');
+        s.textContent = style.textContent;
+        document.head.appendChild(s);
+      });
+
+      const override = document.createElement('style');
+      override.setAttribute('data-pdfhtml', 'override');
+      override.textContent = `#page-container { position: relative !important; top: auto !important; left: auto !important; bottom: auto !important; right: auto !important; overflow: visible !important; }`;
+      document.head.appendChild(override);
+    }
+
+    // clear old content (but keep editor iframe in #editorEmbed)
+    contractContent.innerHTML = '';
+
+    const pageContainer = doc.getElementById('page-container');
+    if (pageContainer) {
+      contractContent.appendChild(document.adoptNode(pageContainer));
+    } else {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = doc.body.innerHTML;
+      contractContent.appendChild(wrapper);
+    }
+
+    contractPanelHeader.style.display = 'block';
+    contractTitleText.textContent = fileName.replace(/\.[^.]+$/, '');
+  }
+
+  /* 2. Upload API JSON/TXT */
+  jsonInput.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    jsonStatus.textContent = '讀取中...';
+    jsonStatus.className = 'status-badge';
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        parsedData = JSON.parse(ev.target.result);
+        renderReviewCards(parsedData);
+        jsonStatus.textContent = '✓ ' + file.name;
+        jsonStatus.className = 'status-badge loaded';
+        if (htmlLoaded) runBlockMapping(parsedData);
+      } catch(err) {
+        jsonStatus.textContent = '❌ 解析失敗：' + err.message;
+        jsonStatus.className = 'status-badge error';
+      }
+    };
+    reader.readAsText(file, 'UTF-8');
+  });
+
+  // --- Sample JSON (embedded) for quick testing ---
+  const SAMPLE_JSON = {
+  "request_id": "req-20260309143722",
+  "proc_start_time": "2026-03-09 14:54:02",
+  "proc_end_time": "2026-03-09 14:54:02",
+  "return_content": {
+    "contract_id": "202603091437",
+    "version": "00",
+    "status": 1,
+    "message": "全部條款皆已審閱完成",
+    "contract_chunks": {
+      "0": {
+        "title": "合約前言",
+        "article_no": "",
+        "content": "維 護 合 約 書\n甲方  佛光大學\n立合約書人:\n乙方  宏思科技\n茲因乙方提供甲方電腦應用軟體系統維護服 務，雙方同意並基於平等互惠之原則訂定本契約，共同遵守，其條款如下："
+      },
+      "1": {
+        "title": "標的物",
+        "article_no": "第一條",
+        "content": "本合約維護標的物係指甲方委由乙方開發之「合約管理系統」（以下簡稱本系統）。"
+      },
+      "2": {
+        "title": "維護範圍及內容",
+        "article_no": "第二條",
+        "content": "一、電話諮詢，線上即時服務：\n*本系統基本操作解說。\n*本系統環境基本設定解說。\n二、Q&A傳真或E-mail 即時服務：\n*本系統基本操作步驟/程序說明。\n*本系統使用常見問題與處理說明。\n*資訊環境一般狀況排除方法。\n三、遠端通訊連線服務(WIN:遠端桌面、TeamViewer、Skype、Email):\n*問題偵測與判斷處理。\n*程式潛在錯誤(BUG)更新。\n*遠端資料重整作業等。\n四、系統維護範圍係指簽約當時為使本系統正常運作所產生的所有程式，以及本合約書維護期間所產生的程式。\n五、甲方因校務研究 暨資訊整合需要，乙方需無償提供甲方所需標的物data\nview資料供介接使用。"
+      },
+      "3": {"title":"維護期間","article_no":"第三條","content":"本系統之維護日期自2026年12月31日至止。"},
+      "4": {"title":"維護費用及付款方式","article_no":"第四條","content":"本合約維護費用總額計新台幣10,000元整(含稅)。\n本維護費用於甲乙雙方簽署合約生效後，乙方一次請款開立統一發票向甲方請款，甲方匯入乙方指定帳戶。"},
+      "5": {"title":"維護方式","article_no":"第五條","content":"..."},
+      "6": {"title":"保密及權利義務","article_no":"第六條","content":"..."},
+      "7": {"title":"違約罰則","article_no":"第七條","content":"..."}
+    },
+    "sow_review_result": "",
+    "quotation_review_result": "",
+    "review_results": SAMPLE_REVIEW_RESULTS_PLACEHOLDER
+  }
+};
+
+  // Build a smaller placeholder review_results object using the external test file will be inserted by server-side when needed.
+  // For now we will lazily load full sample content from the test file via fetch is not available; instead we'll store only a minimal placeholder
+  const SAMPLE_REVIEW_RESULTS_PLACEHOLDER = {
+    "合規性": [],
+    "合理性": [],
+    "完整性": []
+  };
+
+  // Button handler: load sample JSON into page
+  const loadSampleBtn = document.getElementById('loadSampleBtn');
+  if (loadSampleBtn) {
+    loadSampleBtn.addEventListener('click', () => {
+      try {
+        // Attempt to read test file via fetch (served path may not exist). Fallback to embedded SAMPLE_JSON.
+        fetch('/test/智能審約API回傳審核結果.txt').then(r => {
+          if (!r.ok) throw new Error('not-found');
+          return r.text();
+        }).then(txt => {
+          try {
+            parsedData = JSON.parse(txt);
+          } catch (e) {
+            parsedData = SAMPLE_JSON; // fallback
+          }
+          renderReviewCards(parsedData);
+          jsonStatus.textContent = '✓ 範例載入';
+          jsonStatus.className = 'status-badge loaded';
+          if (htmlLoaded) runBlockMapping(parsedData);
+        }).catch(_ => {
+          parsedData = SAMPLE_JSON;
+          renderReviewCards(parsedData);
+          jsonStatus.textContent = '✓ 範例載入';
+          jsonStatus.className = 'status-badge loaded';
+          if (htmlLoaded) runBlockMapping(parsedData);
+        });
+      } catch (err) {
+        parsedData = SAMPLE_JSON;
+        renderReviewCards(parsedData);
+        jsonStatus.textContent = '✓ 範例載入';
+        jsonStatus.className = 'status-badge loaded';
+        if (htmlLoaded) runBlockMapping(parsedData);
+      }
+    });
+  }
+
+  // Test highlight button: send a synthetic chunk containing the anchor text
+  const testHighlightBtn = document.getElementById('testHighlightBtn');
+  if (testHighlightBtn) {
+    testHighlightBtn.addEventListener('click', () => {
+      const frame = document.getElementById('editorFrame');
+      if (!frame || !frame.contentWindow) {
+        console.warn('editor iframe not available');
+        return;
+      }
+      // Compose a minimal chunks object where id '0' contains the anchor text
+      const chunks = { '0': { content: '維 護 合 約 書' } };
+      const payload = {
+        type: 'HIGHLIGHT_BLOCKS',
+        blockIds: ['0'],
+        result: '不符合',
+        chunks: chunks,
+      };
+      // show popup
+      const popup = document.getElementById('testHighlightPopup');
+      if (popup) {
+        popup.textContent = '發送中…';
+        popup.style.display = 'block';
+      }
+      console.log('posting test highlight', payload);
+      // store last sent ids for potential parent-side highlighting
+      window._lastHighlightIds = ids;
+      window._lastHighlightResult = result;
+      frame.contentWindow.postMessage(payload, '*');
+
+      // hide popup after timeout if no ack
+      if (popup) {
+        window._testHighlightAckTimer = window.setTimeout(() => {
+          popup.textContent = '未收到回應 (timeout)';
+          setTimeout(() => { popup.style.display = 'none'; }, 2500);
+        }, 3000);
+      }
+    });
+  }
+
+  /* 3. Block mapping */
+  function runBlockMapping(data) {
+    const chunks = data.return_content && data.return_content.contract_chunks;
+    if (!chunks) return;
+
+    const articleToBlock = {};
+    Object.entries(chunks).forEach(([key, chunk]) => {
+      if (chunk.article_no && chunk.article_no.trim()) {
+        articleToBlock[chunk.article_no.trim()] = key;
+      }
+    });
+
+    let currentBlock = '0';
+    const divTs = contractContent.querySelectorAll('.t');
+    divTs.forEach(div => {
+      const text = div.textContent.trim();
+      if (articleToBlock[text] !== undefined) {
+        currentBlock = articleToBlock[text];
+      }
+      div.setAttribute('data-block', currentBlock);
+    });
+  }
+
+  /* 4. Render review cards */
+  function renderReviewCards(data) {
+    const reviewResults = data.return_content && data.return_content.review_results || {};
+    document.getElementById('reviewContent').style.display = 'block';
+    reviewCards.innerHTML = '';
+
+    const categoryOrder = ['合規性', '合理性', '完整性'];
+    categoryOrder.forEach(cat => {
+      if (!reviewResults[cat] || !reviewResults[cat].length) return;
+      const sec = document.createElement('div');
+      sec.className = 'section-title';
+      sec.textContent = cat;
+      reviewCards.appendChild(sec);
+      reviewResults[cat].forEach(item => reviewCards.appendChild(buildCard(item)));
+    });
+
+    Object.keys(reviewResults).forEach(cat => {
+      if (categoryOrder.includes(cat) || !reviewResults[cat] || !reviewResults[cat].length) return;
+      const sec = document.createElement('div');
+      sec.className = 'section-title';
+      sec.textContent = cat;
+      reviewCards.appendChild(sec);
+      reviewResults[cat].forEach(item => reviewCards.appendChild(buildCard(item)));
+    });
+  }
+
+  function buildCard(item) {
+    const detail = item.detail || {};
+    const result = detail['審查結果'] || '';
+    const isFail = result === '不符合';
+
+    const card = document.createElement('div');
+    card.className = 'review-card';
+
+    const header = document.createElement('div');
+    header.className = 'card-header';
+
+    const badge = document.createElement('span');
+    badge.className = `card-badge ${isFail ? 'badge-fail' : 'badge-pass'}`;
+    badge.textContent = result || '—';
+
+    const name = document.createElement('span');
+    name.className = `card-name ${isFail ? 'fail' : 'pass'}`;
+    name.textContent = item.name;
+
+    header.appendChild(badge);
+    header.appendChild(name);
+    card.appendChild(header);
+
+    const hint = document.createElement('div');
+    hint.className = 'block-ids-hint';
+    hint.textContent = item.block_ids === '無' ? '📄 條文對應：合約缺漏' : `📄 條文對應：第 ${item.block_ids} 區塊`;
+    card.appendChild(hint);
+
+    const detailEl = document.createElement('div');
+    detailEl.className = 'card-detail';
+    ['審查說明', '應當遵循的標準', '條文範例'].forEach(field => {
+      if (!detail[field]) return;
+      const lbl = document.createElement('div');
+      lbl.className = 'detail-label';
+      lbl.textContent = field;
+      const txt = document.createElement('div');
+      txt.className = 'detail-text';
+      txt.textContent = detail[field];
+      detailEl.appendChild(lbl);
+      detailEl.appendChild(txt);
+    });
+    card.appendChild(detailEl);
+
+    card.addEventListener('click', () => {
+      if (currentSelected && currentSelected !== card) {
+        currentSelected.classList.remove('card-selected');
+        currentSelected.querySelector('.card-detail').classList.remove('open');
+      }
+      detailEl.classList.add('open');
+      card.classList.add('card-selected');
+      currentSelected = card;
+      highlightBlocks(item.block_ids, result);
+    });
+
+    return card;
+  }
+
+  /* 5. Highlight */
+  function highlightBlocks(blockIds, result) {
+    // Use postMessage to instruct the iframe editor to highlight via ProseMirror decorations
+    missingBanner.style.display = 'none';
+
+    if (!blockIds || blockIds === '無') {
+      missingBanner.style.animation = 'none';
+      missingBanner.offsetHeight;
+      missingBanner.style.animation = '';
+      missingBanner.style.display = 'block';
+      return;
+    }
+
+    const ids = blockIds.split(',').map(s => s.trim()).filter(Boolean);
+    const frame = document.getElementById('editorFrame');
+    if (!frame || !frame.contentWindow) return;
+
+    // Prefer chunks from parsed API result, but build a DOM-fallback when missing.
+    let chunks = parsedData && parsedData.return_content && parsedData.return_content.contract_chunks;
+    if (!chunks) {
+      chunks = {};
+      ids.forEach(id => {
+        // Try to find a .t element with matching data-block
+        let content = '';
+        try {
+          const el = contractContent.querySelector(`.t[data-block="${id}"]`);
+          if (el && el.textContent && el.textContent.trim()) {
+            content = el.textContent.trim();
+          }
+        } catch (e) {
+          // ignore selector errors
+        }
+
+        // If not available from DOM, try parsedData contract_chunks (defensive)
+        if (!content && parsedData && parsedData.return_content && parsedData.return_content.contract_chunks && parsedData.return_content.contract_chunks[id]) {
+          content = String(parsedData.return_content.contract_chunks[id].content || '').trim();
+        }
+
+        // Limit size for messages
+        if (content && content.length > 8000) content = content.slice(0, 8000);
+
+        chunks[id] = { content };
+      });
+    }
+
+    frame.contentWindow.postMessage(
+      {
+        type: 'HIGHLIGHT_BLOCKS',
+        blockIds: ids,
+        result: result,
+        chunks: chunks,
+      },
+      '*'
+    );
+  }
+
+
+// Listen for ACK messages from iframe editor (diagnostic)
+window.addEventListener('message', (ev) => {
+  if (!ev.data) return;
+  if (ev.data.type === 'HIGHLIGHT_ACK') {
+    console.log('[parent] HIGHLIGHT_ACK', ev.data);
+    const popup = document.getElementById('testHighlightPopup');
+    if (popup) {
+      if (window._testHighlightAckTimer) { clearTimeout(window._testHighlightAckTimer); window._testHighlightAckTimer = null; }
+      popup.textContent = `回傳 decorations=${ev.data.decorations}, firstFrom=${String(ev.data.firstFrom)}`;
+      setTimeout(() => { popup.style.display = 'none'; }, 2500);
+    }
+    try {
+      alert(`HIGHLIGHT_ACK: decorations=${ev.data.decorations}, firstFrom=${String(ev.data.firstFrom)}`);
+    } catch (e) {}
+    // If decorations were applied in the editor, also apply classes to the
+    // corresponding `.t[data-block]` elements in the parent-side DOM so the
+    // visible contract preview shows the highlight immediately.
+    try {
+      const ids = window._lastHighlightIds || [];
+      const result = window._lastHighlightResult || '';
+      const cls = result === '不符合' ? 'hl-fail' : 'hl-pass';
+      // clear previous highlights
+      document.querySelectorAll('.t.hl-fail, .t.hl-pass').forEach(el => el.classList.remove('hl-fail', 'hl-pass', 'hl-focus'));
+      ids.forEach(id => {
+        try {
+          const el = document.querySelector(`.t[data-block="${id}"]`);
+          if (el) {
+            el.classList.add(cls, 'hl-focus');
+            // remove focus after animation
+            setTimeout(() => el.classList.remove('hl-focus'), 1200);
+          }
+        } catch (e) {}
+      });
+    } catch (e) {}
+  }
+});
+</script>
+
+
+
+</body></html>
