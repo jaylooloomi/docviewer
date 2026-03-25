@@ -23,3 +23,15 @@
     display: none;
   }
 }
+
+/* Review highlight styles (ProseMirror Decorations) */
+.hl-review-fail {
+  background-color: rgba(255, 180, 180, 0.5) !important;
+  outline: 2px solid rgba(192, 57, 43, 0.35);
+  border-radius: 2px;
+}
+.hl-review-pass {
+  background-color: rgba(255, 245, 100, 0.5) !important;
+  outline: 2px solid rgba(180, 160, 0, 0.25);
+  border-radius: 2px;
+}

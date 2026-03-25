@@ -1,0 +1,98 @@
+import { Plugin, PluginKey } from 'prosemirror-state';
+import { Decoration, DecorationSet } from 'prosemirror-view';
+import type { EditorView } from 'prosemirror-view';
+
+export const reviewHighlightKey = new PluginKey<DecorationSet>('reviewHighlight');
+
+function createPlugin() {
+  return new Plugin<DecorationSet>({
+    key: reviewHighlightKey,
+    state: {
+      init() {
+        return DecorationSet.empty;
+      },
+      apply(tr, old) {
+        const meta = tr.getMeta(reviewHighlightKey);
+        if (meta === null) return DecorationSet.empty;
+        if (meta && meta instanceof DecorationSet) return meta;
+        return old.map(tr.mapping, tr.doc);
+      },
+    },
+    props: {
+      decorations(state) {
+        return reviewHighlightKey.getState(state) as DecorationSet;
+      },
+    },
+  });
+}
+
+export const reviewHighlightPlugin = createPlugin();
+
+export function clearReviewHighlight(view: EditorView) {
+  view.dispatch(view.state.tr.setMeta(reviewHighlightKey, null));
+}
+
+function normalizeText(s?: string) {
+  return (s || '').replace(/\s+/g, '');
+}
+
+// Find paragraph ranges matching anchor text and create node decorations
+export function setReviewHighlight(
+  view: EditorView,
+  pagedRef: { scrollToPosition: (pos: number) => void } | null,
+  blockIds: string[],
+  chunks: Record<string, { content?: string }>,
+  result: string
+) {
+  if (!view) return;
+
+  const hlClass = result === '不符合' ? 'hl-review-fail' : 'hl-review-pass';
+  const doc = view.state.doc;
+  const decorations: Decoration[] = [];
+  let firstFrom: number | null = null;
+
+  for (const id of blockIds) {
+    const content = chunks?.[id]?.content;
+    if (!content) continue;
+    const anchor = normalizeText(content.slice(0, 20));
+    if (!anchor) continue;
+
+    // Walk document and find paragraph nodes that include the anchor
+    doc.descendants((node, pos) => {
+      if (!node.isBlock || node.type.name !== 'paragraph') return true;
+      const text = normalizeText(node.textContent);
+      if (text.includes(anchor)) {
+        // found start — now accumulate subsequent sibling blocks until next article-like heading or next anchor
+        const from = pos;
+        let to = pos + node.nodeSize;
+        // try to extend to subsequent siblings until a reasonable cutoff (next paragraph starting with 第...條)
+        let curPos = pos + node.nodeSize;
+        while (curPos < doc.content.size) {
+          const next = doc.nodeAt(curPos);
+          if (!next) break;
+          const nextText = normalizeText(next.textContent);
+          if (/^第.{1,6}條/.test(nextText)) break;
+          to = curPos + next.nodeSize;
+          curPos = to;
+        }
+        decorations.push(Decoration.node(from, to, { class: hlClass }));
+        if (firstFrom === null) firstFrom = from;
+        // continue scanning (do not stop) to allow multiple matches
+      }
+      return true;
+    });
+  }
+
+  const decoSet = DecorationSet.create(view.state.doc, decorations);
+  view.dispatch(view.state.tr.setMeta(reviewHighlightKey, decoSet));
+
+  if (firstFrom !== null && pagedRef && typeof pagedRef.scrollToPosition === 'function') {
+    try {
+      pagedRef.scrollToPosition(firstFrom);
+    } catch (e) {
+      // noop
+    }
+  }
+}
+
+export default reviewHighlightPlugin;

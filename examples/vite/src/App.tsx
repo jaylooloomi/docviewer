@@ -6,6 +6,7 @@ import {
   templatePlugin,
   PluginHost,
 } from '@eigenpal/docx-js-editor';
+import { reviewHighlightPlugin } from './reviewHighlightPlugin';
 import { ExampleSwitcher } from '../../shared/ExampleSwitcher';
 import { GitHubBadge } from '../../shared/GitHubBadge';
 
@@ -211,6 +212,7 @@ export function App() {
             documentName={fileName}
             onDocumentNameChange={setFileName}
             renderTitleBarRight={renderTitleBarRight}
+            externalPlugins={[reviewHighlightPlugin]}
           />
         </PluginHost>
       </main>
