@@ -695,9 +695,11 @@
       return infos;
     }
 
-    const container = document.getElementById('contractContent') || document.getElementById('contractBody') || document;
-    // candidate layout nodes: layout-paragraph, layout-line, layout-run, fallback .t
-    const candidates = Array.from(container.querySelectorAll('.layout-paragraph, .layout-line, .layout-run, .t'));
+    // prefer the paged-editor visible pages renderer when present
+    const container = document.querySelector('.paged-editor__pages') || document.getElementById('contractContent') || document.getElementById('contractBody') || document;
+    console.debug('highlightFromCard container:', container && (container.className || container.id || container.tagName));
+    // candidate layout nodes: any element with pm attributes or common layout classes
+    const candidates = Array.from(container.querySelectorAll('[data-pm-start][data-pm-end], .layout-paragraph, .layout-line, .layout-run, .t'));
 
     // normalize function for node text
     const norm = s => (s || '').replace(/\s+/g, ' ').trim();
