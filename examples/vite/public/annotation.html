@@ -767,11 +767,22 @@
         const first = unique[0];
         try {
           first.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          // small upward offset so element appears slightly above center
+          // attempt reliable container scroll: compute container and desired scrollTop
           try {
-            const win = (first.ownerDocument && first.ownerDocument.defaultView) || window;
             const OFFSET = 500;
-            win.scrollBy({ top: -OFFSET, left: 0, behavior: 'smooth' });
+            const container = first.closest && first.closest('.paged-editor__pages')
+              || (first.ownerDocument && first.ownerDocument.scrollingElement)
+              || (first.ownerDocument && first.ownerDocument.body)
+              || document.scrollingElement || document.body;
+
+            if (container && typeof container.getBoundingClientRect === 'function') {
+              const elRect = first.getBoundingClientRect();
+              const contRect = container.getBoundingClientRect();
+              const currentScroll = container.scrollTop || 0;
+              const desired = Math.max(0, Math.round(currentScroll + (elRect.top - contRect.top) - OFFSET));
+              if (typeof container.scrollTo === 'function') container.scrollTo({ top: desired, behavior: 'smooth' });
+              else if (first.ownerDocument && first.ownerDocument.defaultView) first.ownerDocument.defaultView.scrollBy({ top: -OFFSET, behavior: 'smooth' });
+            }
           } catch (e) {
             /* ignore offset failure */
           }
@@ -849,9 +860,18 @@
     if (firstEl) {
       firstEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
       try {
-        const win = (firstEl.ownerDocument && firstEl.ownerDocument.defaultView) || window;
         const OFFSET = 500;
-        win.scrollBy({ top: -OFFSET, left: 0, behavior: 'smooth' });
+        const container = firstEl.closest && firstEl.closest('.paged-editor__pages')
+          || (firstEl.ownerDocument && firstEl.ownerDocument.scrollingElement)
+          || (firstEl.ownerDocument && firstEl.ownerDocument.body)
+          || document.scrollingElement || document.body;
+        if (container && typeof container.getBoundingClientRect === 'function') {
+          const elRect = firstEl.getBoundingClientRect();
+          const contRect = container.getBoundingClientRect();
+          const currentScroll = container.scrollTop || 0;
+          const desired = Math.max(0, Math.round(currentScroll + (elRect.top - contRect.top) - OFFSET));
+          if (typeof container.scrollTo === 'function') container.scrollTo({ top: desired, behavior: 'smooth' });
+        }
       } catch (e) { /* ignore */ }
     }
   }
