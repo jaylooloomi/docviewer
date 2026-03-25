@@ -758,6 +758,8 @@
     console.log('highlightFromCard infos', infos);
     return infos;
   }
+  // expose to console / other scripts
+  try { window.highlightFromCard = highlightFromCard; } catch (e) { /* ignore */ }
   function highlightBlocks(blockIds, result) {
     const hlClass = result === '不符合' ? 'hl-fail' : 'hl-pass';
     contractContent.querySelectorAll('.t.hl-fail, .t.hl-pass').forEach(el => {
