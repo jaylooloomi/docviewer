@@ -46,7 +46,7 @@ export function setReviewHighlight(
 ) {
   if (!view) return;
 
-  const hlClass = result === '不符合' ? 'hl-review-fail' : 'hl-review-pass';
+  const hlClass = result === '不符合' ? 'hl-fail' : 'hl-pass';
   const doc = view.state.doc;
   const decorations: Decoration[] = [];
   let firstFrom: number | null = null;
@@ -73,6 +73,7 @@ export function setReviewHighlight(
           to = curPos + next.nodeSize;
           curPos = to;
         }
+        // set class attr; include 't' prefix in case layout painter uses that class
         decorations.push(Decoration.node(from, to, { class: hlClass }));
         if (firstFrom === null) firstFrom = from;
       }
