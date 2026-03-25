@@ -33,7 +33,13 @@ export function clearReviewHighlight(view: EditorView) {
 }
 
 function normalizeText(s?: string) {
-  return (s || '').replace(/\s+/g, '');
+  const src = s || '';
+  // remove standard whitespace and common invisible chars
+  let out = src.replace(/\s+/g, '');
+  out = out.replace(/[\u3000\u200B\uFEFF]/g, '');
+  // convert fullwidth ASCII (FF01-FF5E) to halfwidth (0021-007E)
+  out = out.replace(/[\uFF01-\uFF5E]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xfee0));
+  return out;
 }
 
 // Find paragraph ranges matching anchor text and create node decorations
@@ -61,7 +67,8 @@ export function setReviewHighlight(
   for (const id of blockIds || []) {
     const content = chunks?.[id]?.content;
     if (!content) continue;
-    const anchor = normalizeText(content.slice(0, 20));
+    // use a longer anchor snippet and normalized text to increase match likelihood
+    const anchor = normalizeText(content.slice(0, 40));
     if (!anchor) continue;
 
     doc.descendants((node, pos) => {
