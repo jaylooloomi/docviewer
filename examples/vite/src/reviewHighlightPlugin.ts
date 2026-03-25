@@ -51,21 +51,19 @@ export function setReviewHighlight(
   const decorations: Decoration[] = [];
   let firstFrom: number | null = null;
 
-  for (const id of blockIds) {
+  // For each block id, find an anchor snippet and search the document for matching paragraphs
+  for (const id of blockIds || []) {
     const content = chunks?.[id]?.content;
     if (!content) continue;
     const anchor = normalizeText(content.slice(0, 20));
     if (!anchor) continue;
 
-    // Walk document and find paragraph nodes that include the anchor
     doc.descendants((node, pos) => {
       if (!node.isBlock || node.type.name !== 'paragraph') return true;
       const text = normalizeText(node.textContent);
       if (text.includes(anchor)) {
-        // found start — now accumulate subsequent sibling blocks until next article-like heading or next anchor
         const from = pos;
         let to = pos + node.nodeSize;
-        // try to extend to subsequent siblings until a reasonable cutoff (next paragraph starting with 第...條)
         let curPos = pos + node.nodeSize;
         while (curPos < doc.content.size) {
           const next = doc.nodeAt(curPos);
@@ -77,7 +75,6 @@ export function setReviewHighlight(
         }
         decorations.push(Decoration.node(from, to, { class: hlClass }));
         if (firstFrom === null) firstFrom = from;
-        // continue scanning (do not stop) to allow multiple matches
       }
       return true;
     });
@@ -85,6 +82,16 @@ export function setReviewHighlight(
 
   const decoSet = DecorationSet.create(view.state.doc, decorations);
   view.dispatch(view.state.tr.setMeta(reviewHighlightKey, decoSet));
+
+  // Diagnostic logs for debugging highlight application
+  try {
+    console.debug('[reviewHighlight] decorations:', decorations.length, 'firstFrom:', firstFrom);
+    // Count matching elements in the rendered DOM (paged editor pages)
+    const domMatches = document.querySelectorAll('.hl-review-fail, .hl-review-pass');
+    console.debug('[reviewHighlight] dom matches:', domMatches.length);
+  } catch (e) {
+    // ignore when running in non-browser context
+  }
 
   if (firstFrom !== null && pagedRef && typeof pagedRef.scrollToPosition === 'function') {
     try {
