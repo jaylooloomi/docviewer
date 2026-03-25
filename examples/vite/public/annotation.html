@@ -58,6 +58,8 @@
     color: #888;
     white-space: nowrap;
   }
+  /* hide the HTML file upload group by default (toggleable) */
+  #htmlFileGroup { display: none !important; }
   .status-badge.loaded { background: #e8f8e8; color: #27ae60; }
   .status-badge.error  { background: #fde8e8; color: #c0392b; }
 
@@ -275,7 +277,7 @@
 <body>
 
 <div id="topbar">
-  <div class="file-group">
+  <div id="htmlFileGroup" class="file-group">
     <label>📄 合約文件 (HTML)：</label>
     <input type="file" id="htmlInput" accept=".html,.htm">
     <span id="htmlStatus" class="status-badge">未上傳</span>
