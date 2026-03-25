@@ -658,12 +658,85 @@
       card.classList.add('card-selected');
       currentSelected = card;
       highlightBlocks(item.block_ids, result);
+      // 同步執行更精細的文字比對標記（會在 layout DOM 中尋找匹配的 spans 並加上 highlight class）
+      try {
+        const cls = result === '不符合' ? 'hl-review-fail' : 'hl-review-pass';
+        highlightFromCard(card, cls);
+      } catch (e) {
+        console.warn('highlightFromCard error', e);
+      }
     });
 
     return card;
   }
 
   /* 5. Highlight */
+  /*
+    highlightFromCard:
+    - cardEl: DOM element of the review card
+    - resultClass: highlight class to add (eg 'hl-review-fail' or 'hl-review-pass')
+    Behavior:
+    - collect visible `.block-content-text` strings from the card
+    - normalize and scan the layout DOM under #contractContent for nodes that contain any of those strings
+    - for matched nodes, find child spans with `data-pm-start`/`data-pm-end` and add the class
+    - return an infos[] array of matched ranges for debugging
+  */
+  function highlightFromCard(cardEl, resultClass) {
+    const infos = [];
+    if (!cardEl) return infos;
+
+    // collect block text fragments from the card
+    const texts = Array.from(cardEl.querySelectorAll('.block-content-text'))
+      .map(el => (el.textContent || '').replace(/\s+/g, ' ').trim())
+      .filter(Boolean);
+
+    if (!texts.length) {
+      console.warn('highlightFromCard: no block-content-text found');
+      return infos;
+    }
+
+    const container = document.getElementById('contractContent') || document.getElementById('contractBody') || document;
+    // candidate layout nodes: layout-paragraph, layout-line, layout-run, fallback .t
+    const candidates = Array.from(container.querySelectorAll('.layout-paragraph, .layout-line, .layout-run, .t'));
+
+    // normalize function for node text
+    const norm = s => (s || '').replace(/\s+/g, ' ').trim();
+
+    candidates.forEach(node => {
+      const nodeText = norm(node.textContent || '');
+      if (!nodeText) return;
+
+      // check if any fragment from card appears in this node
+      const matched = texts.some(fragment => {
+        if (!fragment) return false;
+        return nodeText.indexOf(fragment) !== -1;
+      });
+      if (!matched) return;
+
+      // find spans with pm range
+      const pmSpans = Array.from(node.querySelectorAll('span[data-pm-start][data-pm-end]'));
+      if (pmSpans.length) {
+        pmSpans.forEach(sp => {
+          const start = sp.getAttribute('data-pm-start');
+          const end = sp.getAttribute('data-pm-end');
+          infos.push({ start, end, text: norm(sp.textContent) });
+          sp.classList.add(resultClass);
+        });
+      } else if (node.matches('[data-pm-start][data-pm-end]')) {
+        const start = node.getAttribute('data-pm-start');
+        const end = node.getAttribute('data-pm-end');
+        infos.push({ start, end, text: nodeText, foundOn: 'node' });
+        node.classList.add(resultClass);
+      } else {
+        // fallback: try to find any descendant spans with text content and apply class to the node itself
+        infos.push({ start: null, end: null, text: nodeText, foundOn: 'no-pm' });
+        node.classList.add(resultClass);
+      }
+    });
+
+    console.log('highlightFromCard infos', infos);
+    return infos;
+  }
   function highlightBlocks(blockIds, result) {
     const hlClass = result === '不符合' ? 'hl-fail' : 'hl-pass';
     contractContent.querySelectorAll('.t.hl-fail, .t.hl-pass').forEach(el => {
