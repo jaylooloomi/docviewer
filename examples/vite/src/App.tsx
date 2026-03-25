@@ -6,7 +6,7 @@ import {
   templatePlugin,
   PluginHost,
 } from '@eigenpal/docx-js-editor';
-import { reviewHighlightPlugin } from './reviewHighlightPlugin';
+import { reviewHighlightPlugin, setReviewHighlight } from './reviewHighlightPlugin';
 import { ExampleSwitcher } from '../../shared/ExampleSwitcher';
 import { GitHubBadge } from '../../shared/GitHubBadge';
 
@@ -101,6 +101,30 @@ export function App() {
   const [status, setStatus] = useState<string>('');
 
   const { zoom: autoZoom, isMobile } = useResponsiveLayout();
+
+  useEffect(() => {
+    const handler = (event: MessageEvent) => {
+      if (event.data?.type !== 'HIGHLIGHT_BLOCKS') return;
+      const { blockIds, result, chunks } = event.data as {
+        blockIds: string[];
+        result: string;
+        chunks: Record<string, { content?: string }>;
+      };
+
+      const pagedRef = editorRef.current?.getEditorRef();
+      const view = pagedRef?.getView();
+      if (!view || !pagedRef) return;
+
+      try {
+        setReviewHighlight(view, pagedRef, blockIds, chunks, result);
+      } catch (err) {
+        console.warn('setReviewHighlight failed', err);
+      }
+    };
+
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
+  }, []);
 
   useEffect(() => {
     // Start with an empty document by default (do not auto-load sample DOCX)

@@ -609,11 +609,7 @@
 
   /* 5. Highlight */
   function highlightBlocks(blockIds, result) {
-    const hlClass = result === '不符合' ? 'hl-fail' : 'hl-pass';
-    contractContent.querySelectorAll('.t.hl-fail, .t.hl-pass').forEach(el => {
-      el.classList.remove('hl-fail', 'hl-pass');
-    });
-
+    // Use postMessage to instruct the iframe editor to highlight via ProseMirror decorations
     missingBanner.style.display = 'none';
 
     if (!blockIds || blockIds === '無') {
@@ -625,16 +621,20 @@
     }
 
     const ids = blockIds.split(',').map(s => s.trim()).filter(Boolean);
-    let firstEl = null;
+    const frame = document.getElementById('editorFrame');
+    if (!frame || !frame.contentWindow) return;
 
-    ids.forEach(id => {
-      contractContent.querySelectorAll(`.t[data-block="${id}"]`).forEach(el => {
-        el.classList.add(hlClass);
-        if (!firstEl) firstEl = el;
-      });
-    });
+    const chunks = parsedData && parsedData.return_content && parsedData.return_content.contract_chunks;
 
-    if (firstEl) firstEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    frame.contentWindow.postMessage(
+      {
+        type: 'HIGHLIGHT_BLOCKS',
+        blockIds: ids,
+        result: result,
+        chunks: chunks,
+      },
+      '*'
+    );
   }
 
 </script>
