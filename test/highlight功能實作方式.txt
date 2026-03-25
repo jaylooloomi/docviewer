@@ -1,0 +1,12 @@
+// 標記(highlight)
+const el = document.querySelector('span[data-pm-start="86"][data-pm-end="95"]');
+if (!el) console.warn('element not found');
+else { el.classList.add('hl-review-fail'); console.log('class added', el); }
+
+// 移除標記
+document.querySelectorAll('span[data-pm-start="86"][data-pm-end="95"]').forEach(el=>{
+  el.classList.remove('hl-review-fail','hl-review-pass');
+  el.style.backgroundColor = '';
+  el.style.outline = '';
+});
+console.log('highlight removed');

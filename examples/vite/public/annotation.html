@@ -430,6 +430,7 @@
     reader.onload = (ev) => {
       try {
         parsedData = JSON.parse(ev.target.result);
+        try { window.parsedData = parsedData; } catch (e) { /* ignore cross-origin */ }
         renderReviewCards(parsedData);
         jsonStatus.textContent = '✓ ' + file.name;
         jsonStatus.className = 'status-badge loaded';
@@ -501,6 +502,7 @@
           try {
             parsedData = JSON.parse(txt);
           } catch (e) {
+            try { window.parsedData = parsedData; } catch (e) { }
             parsedData = SAMPLE_JSON; // fallback
           }
           renderReviewCards(parsedData);
@@ -657,10 +659,12 @@
       detailEl.classList.add('open');
       card.classList.add('card-selected');
       currentSelected = card;
+      // clear any previous highlights before applying new ones
+      try { clearHighlights(); } catch (e) { console.debug('clearHighlights failed', e); }
       highlightBlocks(item.block_ids, result);
       // 同步執行更精細的文字比對標記（會在 layout DOM 中尋找匹配的 spans 並加上 highlight class）
       try {
-        const cls = result === '不符合' ? 'hl-review-fail' : 'hl-review-pass';
+        const cls = result === '不符合' ? 'hl-fail' : 'hl-pass';
         highlightFromCard(card, cls);
       } catch (e) {
         console.warn('highlightFromCard error', e);
@@ -682,86 +686,132 @@
     - return an infos[] array of matched ranges for debugging
   */
   function highlightFromCard(cardEl, resultClass) {
+    // merged robust matcher (uses forceHighlight approach) and still returns infos
     const infos = [];
     if (!cardEl) return infos;
 
-    // collect block text fragments from the card
-    const texts = Array.from(cardEl.querySelectorAll('.block-content-text'))
-      .map(el => (el.textContent || '').replace(/\s+/g, ' ').trim())
-      .filter(Boolean);
+    const fragments = Array.from(cardEl.querySelectorAll('.block-content-text')).map(el => (el.textContent||'').replace(/\s+/g,' ').trim()).filter(Boolean);
+    if (!fragments.length) { console.warn('highlightFromCard: no block-content-text found'); return infos; }
 
-    if (!texts.length) {
-      console.warn('highlightFromCard: no block-content-text found');
-      return infos;
-    }
+    const isFail = resultClass && resultClass.indexOf('fail') !== -1;
+    const bg = isFail ? 'rgba(255,120,120,0.9)' : 'rgba(255,230,120,0.95)';
+    const ring = isFail ? '0 0 0 4px rgba(192,57,43,0.12)' : '0 0 0 4px rgba(74,144,226,0.10)';
 
-    // prefer the paged-editor visible pages renderer when present
-    const container = document.querySelector('.paged-editor__pages') || document.getElementById('contractContent') || document.getElementById('contractBody') || document;
-    console.debug('highlightFromCard container:', container && (container.className || container.id || container.tagName));
-    // candidate layout nodes: any element with pm attributes or common layout classes
-    const candidates = Array.from(container.querySelectorAll('[data-pm-start][data-pm-end], .layout-paragraph, .layout-line, .layout-run, .t'));
+    // iframe-aware container
+    let iframeDoc = null;
+    const iframe = document.getElementById('editorFrame');
+    try { if (iframe) iframeDoc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document); } catch(e) { iframeDoc = null; }
+    const container = (iframeDoc && (iframeDoc.querySelector('.paged-editor__pages') || iframeDoc.body))
+                    || document.querySelector('.paged-editor__pages') || document.getElementById('contractContent') || document;
 
-    // normalize function for node text
-    const norm = s => (s || '').replace(/\s+/g, ' ').trim();
+    console.debug('highlightFromCard container ->', container && (container.className || container.id || container.tagName));
+
+    const candidates = Array.from(container.querySelectorAll('[data-pm-start][data-pm-end], .t, .layout-paragraph, .layout-line, .layout-run'));
+    console.debug('highlightFromCard: candidates', candidates.length, 'fragments', fragments.length);
+
+    const norm = s => (s||'').replace(/\s+/g,' ').trim();
+    const matchedEls = [];
 
     candidates.forEach(node => {
-      const nodeText = norm(node.textContent || '');
-      if (!nodeText) return;
-
-      // check if any fragment from card appears in this node
-      const matched = texts.some(fragment => {
-        if (!fragment) return false;
-        const f = norm(fragment);
+      const nt = norm(node.textContent || '');
+      if (!nt) return;
+      const matched = fragments.some(f => {
         if (!f) return false;
-        // build candidate snippets to increase chance of matching despite whitespace/punctuation differences
-        const snippets = [];
-        snippets.push(f);
-        // first sentence/line (split by newline or Chinese/Japanese/ASCII period)
+        if (f.length >= 20 && nt.indexOf(f) !== -1) return true;
         const firstLine = f.split(/[\n。．.]/)[0].trim();
-        if (firstLine) snippets.push(firstLine);
-        // prefix snippet
-        if (f.length > 40) snippets.push(f.slice(0, 40));
-        // try snippets with a minimum length to avoid very short matches
-        for (const s of snippets) {
-          if (s.length >= 6 && nodeText.indexOf(s) !== -1) return true;
-        }
-        // fallback: check any 8-char sliding window from the fragment
+        if (firstLine && firstLine.length >= 8 && nt.indexOf(firstLine) !== -1) return true;
         if (f.length >= 8) {
-          for (let i = 0; i <= f.length - 8; i += 8) {
-            const sub = f.substr(i, 8);
-            if (nodeText.indexOf(sub) !== -1) return true;
-          }
+          for (let i=0;i<=f.length-8;i+=8) if (nt.indexOf(f.substr(i,8)) !== -1) return true;
         }
         return false;
       });
       if (!matched) return;
 
-      // find spans with pm range
-      const pmSpans = Array.from(node.querySelectorAll('span[data-pm-start][data-pm-end]'));
+      const pmSpans = (node.querySelectorAll && Array.from(node.querySelectorAll('span[data-pm-start][data-pm-end]'))) || [];
       if (pmSpans.length) {
         pmSpans.forEach(sp => {
           const start = sp.getAttribute('data-pm-start');
           const end = sp.getAttribute('data-pm-end');
-          infos.push({ start, end, text: norm(sp.textContent) });
-          sp.classList.add(resultClass);
+          infos.push({ start, end, text: norm(sp.textContent || '') });
+          matchedEls.push(sp);
         });
-      } else if (node.matches('[data-pm-start][data-pm-end]')) {
+      } else if (node.matches && node.matches('[data-pm-start][data-pm-end]')) {
         const start = node.getAttribute('data-pm-start');
         const end = node.getAttribute('data-pm-end');
-        infos.push({ start, end, text: nodeText, foundOn: 'node' });
-        node.classList.add(resultClass);
+        infos.push({ start, end, text: nt, foundOn: 'node' });
+        matchedEls.push(node);
       } else {
-        // fallback: try to find any descendant spans with text content and apply class to the node itself
-        infos.push({ start: null, end: null, text: nodeText, foundOn: 'no-pm' });
-        node.classList.add(resultClass);
+        infos.push({ start: null, end: null, text: nt, foundOn: 'no-pm' });
+        matchedEls.push(node);
       }
     });
+
+    // dedupe
+    const unique = Array.from(new Set(matchedEls));
+
+    // apply strong inline styles so highlight is visible
+    unique.forEach(el => {
+      try {
+        el.style.setProperty('background-color', bg, 'important');
+        el.style.setProperty('box-shadow', ring, 'important');
+        el.style.setProperty('position', el.style.position || 'relative', 'important');
+        el.style.setProperty('z-index', '9999', 'important');
+      } catch (e) {
+        console.debug('highlightFromCard: setProperty failed', e, el);
+      }
+    });
+
+    // scroll & focus first match (iframe-aware)
+    try {
+      if (unique.length) {
+        const first = unique[0];
+        try {
+          first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          first.classList.add('hl-focus');
+          setTimeout(() => first.classList.remove('hl-focus'), 1400);
+        } catch (e) { console.debug('highlightFromCard scroll failed', e); }
+      }
+    } catch (e) { console.debug('highlightFromCard post-match focus failed', e); }
 
     console.log('highlightFromCard infos', infos);
     return infos;
   }
   // expose to console / other scripts
   try { window.highlightFromCard = highlightFromCard; } catch (e) { /* ignore */ }
+  
+  // clear inline/highlighted styles and classes applied by previous card selections
+  function clearHighlights() {
+    // helper to clear in a document/container
+    const clearIn = (root) => {
+      if (!root) return;
+      // remove our inline style overrides
+      const els = Array.from(root.querySelectorAll('.t, span[data-pm-start][data-pm-end], .layout-paragraph, .layout-line, .layout-run'));
+      els.forEach(el => {
+        try {
+          el.style.removeProperty('background-color');
+          el.style.removeProperty('box-shadow');
+          el.style.removeProperty('z-index');
+          // keep position if it existed before — best-effort: remove if we set it
+          if (el.style.position === 'relative') el.style.removeProperty('position');
+        } catch (e) { /* ignore */ }
+        el.classList.remove('hl-fail','hl-pass','hl-focus','hl-review-fail','hl-review-pass');
+      });
+    };
+
+    // clear in parent
+    try { clearIn(document); } catch (e) { console.debug('clearHighlights: parent clear failed', e); }
+
+    // clear in iframe if accessible
+    const iframe = document.getElementById('editorFrame');
+    if (iframe) {
+      try {
+        const idoc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+        if (idoc) clearIn(idoc);
+      } catch (e) {
+        console.debug('clearHighlights: iframe clear failed', e);
+      }
+    }
+  }
   function highlightBlocks(blockIds, result) {
     const hlClass = result === '不符合' ? 'hl-fail' : 'hl-pass';
     contractContent.querySelectorAll('.t.hl-fail, .t.hl-pass').forEach(el => {
